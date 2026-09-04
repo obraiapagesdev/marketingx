@@ -403,7 +403,7 @@
             <span class="text-xs font-bold text-emerald-900">Ganhe Selo de "Obra Verificada"</span>
           </div>
           <p class="text-[11px] text-emerald-800 mb-2">
-            Comprou os materiais na ConsultoriaSoft / Loja Parceira? Informe o nº do pedido ou cupom:
+            Comprou os materiais na Obra.IA / Loja Parceira? Informe o nº do pedido ou cupom:
           </p>
           <input type="text" id="avaliacaoNumeroPedido" placeholder="Ex: CS-2026-9988" class="w-full px-3 py-1.5 bg-white border border-emerald-300 rounded-lg text-xs font-medium">
         </div>
@@ -558,7 +558,7 @@
   <!-- Footer -->
   <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-      <span>© 2026 ConsultoriaSoft · Plataforma de Integração de Mão de Obra e Materiais</span>
+      <span>© 2026 Obra.IA · Plataforma de Integração de Mão de Obra e Materiais</span>
       <div class="flex items-center gap-4">
         <a href="https://consultoriasoft.com.br/prestadores" class="hover:text-brand-red font-semibold">Vitrine</a>
         <a href="https://consultoriasoft.com.br/catalogo" class="hover:text-brand-red font-semibold">Catálogo</a>
@@ -678,7 +678,7 @@
 
       container.innerHTML = prestadoresList.map(p => {
         const zapClean = p.whatsapp ? p.whatsapp.replace(/\D/g, '') : '';
-        const msg = encodeURIComponent(p.mensagem_padrao || `Olá ${p.nome_comercial}, vi seu perfil na ConsultoriaSoft e gostaria de solicitar um orçamento.`);
+        const msg = encodeURIComponent(p.mensagem_padrao || `Olá ${p.nome_comercial}, vi seu perfil na Obra.IA e gostaria de solicitar um orçamento.`);
         const zapLink = `https://wa.me/55${zapClean}?text=${msg}`;
 
         return `
@@ -1060,7 +1060,7 @@
 
       // Montar mensagem para o WhatsApp do Prestador
       let msg = `*SOLICITAÇÃO DE ORÇAMENTO · CONSULTORIASOFT*%0A%0A`;
-      msg += `Olá *${encodeURIComponent(nomePrestador)}*, vi seu perfil verificado no portal ConsultoriaSoft e gostaria de solicitar um orçamento para o meu projeto:%0A%0A`;
+      msg += `Olá *${encodeURIComponent(nomePrestador)}*, vi seu perfil verificado no portal Obra.IA e gostaria de solicitar um orçamento para o meu projeto:%0A%0A`;
       msg += `👤 *DADOS DO CLIENTE (GMAIL VALIDADO):*%0A`;
       msg += `• *Nome:* ${encodeURIComponent(nome)}%0A`;
       msg += `• *WhatsApp:* ${encodeURIComponent(zap)}%0A`;
