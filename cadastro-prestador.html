@@ -119,12 +119,23 @@
               Faça seu Cadastro Profissional
             </h1>
             <p class="text-slate-300 text-xs sm:text-sm mt-1 max-w-xl">
-              Receba orçamentos qualificados direto no seu WhatsApp de clientes, construtoras e arquitetos.
+              Crie sua conta, valide seu e-mail e receba orçamentos de obras direto no seu WhatsApp.
             </p>
           </div>
           <div class="hidden sm:flex h-16 w-16 bg-white/10 rounded-2xl items-center justify-center border border-white/20 shrink-0">
             <i data-lucide="hard-hat" class="w-8 h-8 text-yellow-300"></i>
           </div>
+        </div>
+
+        <!-- Banner de Recuperação de Cadastro Salvo -->
+        <div id="bannerRecuperarRascunho" class="hidden mt-4 p-3 bg-white/10 border border-white/20 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs backdrop-blur-md">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="history" class="w-4 h-4 text-brand-yellow shrink-0"></i>
+            <span>Identificamos um cadastro em andamento para <strong id="nomeRascunhoRecuperado">você</strong>. Seus dados estão salvos!</span>
+          </div>
+          <button type="button" onclick="restaurarCadastroSalvo()" class="px-3 py-1.5 bg-brand-yellow hover:bg-amber-400 text-slate-900 font-bold rounded-xl shadow-xs transition-colors shrink-0">
+            Continuar de onde parou
+          </button>
         </div>
 
         <!-- Stepper Indicator Responsivo -->
@@ -135,7 +146,7 @@
             </div>
             <div class="min-w-0">
               <span class="text-[10px] sm:text-[11px] uppercase font-bold tracking-wider block text-white">Passo 1</span>
-              <span class="text-[11px] sm:text-xs text-red-100 truncate hidden xs:block sm:block">Identificação & Foto</span>
+              <span class="text-[11px] sm:text-xs text-red-100 truncate hidden xs:block sm:block">Conta & Senha</span>
             </div>
           </div>
 
@@ -164,13 +175,18 @@
       <!-- Form Body -->
       <form id="formCadastroPrestador" class="p-6 sm:p-8" onsubmit="event.preventDefault();">
         
-        <!-- ================= PASSO 1: DADOS BÁSICOS & FOTO ================= -->
+        <!-- ================= PASSO 1: DADOS BÁSICOS, CONTA & SENHA ================= -->
         <div id="step-1" class="space-y-6">
-          <div class="border-b border-slate-100 pb-4">
-            <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-              <i data-lucide="user-check" class="w-5 h-5 text-brand-red"></i> Dados Básicos e Foto de Perfil
-            </h2>
-            <p class="text-xs text-slate-500 mt-0.5">Sua foto e informações serão exibidas na vitrine para clientes e arquitetos.</p>
+          <div class="border-b border-slate-100 pb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+            <div>
+              <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <i data-lucide="user-check" class="w-5 h-5 text-brand-red"></i> Passo 1: Criação de Conta & Contato
+              </h2>
+              <p class="text-xs text-slate-500 mt-0.5">Preencha seus dados de identificação e crie sua senha de acesso.</p>
+            </div>
+            <span class="text-[11px] font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+              Validação por Código no E-mail
+            </span>
           </div>
 
           <!-- BLOCO GOOGLE SIGN-IN (Validação Instantânea de Gmail + Nome + Foto de Perfil) -->
@@ -187,10 +203,10 @@
                 </div>
                 <div>
                   <div class="flex items-center gap-1.5 justify-center sm:justify-start">
-                    <h3 class="text-xs font-black uppercase tracking-wider text-slate-900">Verificação Instantânea com Google</h3>
-                    <span class="text-[9px] bg-blue-100 text-blue-700 font-bold px-1.5 py-0.5 rounded">1-Clique</span>
+                    <h3 class="text-xs font-black uppercase tracking-wider text-slate-900">Preenchimento com Google</h3>
+                    <span class="text-[9px] bg-blue-100 text-blue-700 font-bold px-1.5 py-0.5 rounded">Rápido</span>
                   </div>
-                  <p class="text-xs text-slate-600">Conecte sua conta Google para validar seu Gmail e preencher seu <strong>Nome e Foto de Perfil Oficial</strong>.</p>
+                  <p class="text-xs text-slate-600">Conecte sua conta Google para validar seu Gmail e preencher seu <strong>Nome e Foto Oficial</strong>.</p>
                 </div>
               </div>
 
@@ -233,7 +249,7 @@
             </div>
           </div>
 
-          <!-- FOTO DE PERFIL PROFISSIONAL (DESTAQUE MÁXIMO) -->
+          <!-- FOTO DE PERFIL PROFISSIONAL -->
           <div class="p-5 bg-gradient-to-r from-amber-50/80 via-white to-orange-50/40 border-2 border-amber-300/80 rounded-2xl shadow-xs">
             <div class="flex flex-col sm:flex-row items-center gap-5">
               <!-- Avatar Preview & Upload Trigger -->
@@ -266,11 +282,11 @@
                     Foto de Perfil Profissional *
                   </span>
                   <span class="bg-amber-100 text-amber-800 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border border-amber-300">
-                    Aumenta em 3x seus orçamentos
+                    Aumenta em 3x seus contatos
                   </span>
                 </div>
                 <p class="text-xs text-slate-600 leading-relaxed">
-                  <strong class="text-slate-900">Sua foto é o seu cartão de visitas!</strong> Clientes e arquitetos contratam profissionais que mostram o rosto. Use uma foto clara, bem iluminada e de frente.
+                  <strong class="text-slate-900">Sua foto é o seu cartão de visitas!</strong> Clientes e arquitetos contratam profissionais que mostram o rosto com clareza e simpatia.
                 </p>
                 <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
                   <button type="button" onclick="document.getElementById('inputFotoPerfil').click()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-black text-white text-xs font-bold rounded-xl shadow-xs transition-all active:scale-95 cursor-pointer">
@@ -283,12 +299,13 @@
                   </button>
                 </div>
                 <div id="statusFotoPerfil" class="text-[11px] text-slate-500 font-medium">
-                  Formatos aceitos: JPG, PNG ou WEBP (fotos com moderação de qualidade).
+                  Formatos aceitos: JPG, PNG ou WEBP.
                 </div>
               </div>
             </div>
           </div>
 
+          <!-- Grid: Nome Completo & Nome Comercial -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
@@ -308,7 +325,8 @@
             </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <!-- Grid: WhatsApp & CPF/CNPJ -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <!-- WhatsApp com Máscara -->
             <div>
               <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
@@ -329,16 +347,45 @@
               <span class="text-[10px] text-slate-400 mt-1 block">Ex: (11) 98765-4321</span>
             </div>
 
+            <!-- CPF ou CNPJ com Máscara e Validação Estrita Módulo 11 -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                  CPF ou CNPJ (MEI) *
+                </label>
+                <span id="badgeDocStatus" class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-500">
+                  Obrigatório
+                </span>
+              </div>
+              <div class="relative">
+                <i data-lucide="file-text" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
+                <input 
+                  type="text" 
+                  id="documento" 
+                  required 
+                  maxlength="18"
+                  oninput="mascaraDocumento(this); validarDocumentoAoDigitar(this.value);"
+                  placeholder="000.000.000-00" 
+                  class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none text-sm font-medium transition-colors"
+                >
+              </div>
+              <div id="msgValidacaoDoc" class="text-[11px] text-slate-400 font-medium mt-1">
+                Validação oficial de dígitos verificadores
+              </div>
+            </div>
+          </div>
+
+          <!-- Grid: E-mail & Confirmação de E-mail (GMAIL) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <!-- E-mail de Contato Exclusivo Gmail com Botão & Badge -->
             <div>
               <div class="flex items-center justify-between mb-1.5">
                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                   E-mail de Contato *
                 </label>
-                <!-- Botão / Badge Gmail Oficial -->
                 <span class="inline-flex items-center gap-1 text-[10px] font-black bg-red-50 text-red-700 border border-red-200 px-2 py-0.5 rounded-md shadow-2xs">
                   <svg class="w-3 h-3 text-red-600 inline shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>
-                  Só aceita Gmail
+                  Exclusivo Gmail
                 </span>
               </div>
               
@@ -370,30 +417,31 @@
               </div>
             </div>
 
-            <!-- CPF ou CNPJ com Máscara e Validação Estrita Módulo 11 -->
+            <!-- Confirmação de E-mail -->
             <div>
               <div class="flex items-center justify-between mb-1.5">
                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-                  CPF ou CNPJ (MEI) *
+                  Confirmar E-mail *
                 </label>
-                <span id="badgeDocStatus" class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-500">
-                  Obrigatório
+                <span id="badgeConfirmaEmail" class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-500">
+                  Repita o Gmail
                 </span>
               </div>
+              
               <div class="relative">
-                <i data-lucide="file-text" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
+                <i data-lucide="mail-check" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
                 <input 
-                  type="text" 
-                  id="documento" 
+                  type="email" 
+                  id="confirmarEmail" 
                   required 
-                  maxlength="18"
-                  oninput="mascaraDocumento(this); validarDocumentoAoDigitar(this.value);"
-                  placeholder="000.000.000-00" 
+                  oninput="validarConfirmacaoEmail()"
+                  placeholder="Repita exatamente o seu Gmail" 
                   class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none text-sm font-medium transition-colors"
                 >
               </div>
-              <div id="msgValidacaoDoc" class="text-[11px] text-slate-400 font-medium mt-1">
-                Validação oficial de dígitos verificadores
+
+              <div id="msgConfirmaEmail" class="text-[11px] text-slate-400 font-medium mt-1">
+                Você receberá o código de validação neste endereço.
               </div>
             </div>
           </div>
@@ -500,117 +548,25 @@
             </div>
           </div>
 
-          <!-- ================= CHAT IA MARKETINGX ================= -->
-          <div class="rounded-2xl border border-indigo-200 bg-gradient-to-b from-indigo-50/70 via-white to-slate-50 p-4 shadow-sm space-y-3">
-            <div class="flex items-center justify-between border-b border-indigo-100 pb-2.5">
-              <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/20 font-bold text-sm">
-                  <i data-lucide="bot" class="w-4 h-4"></i>
-                </div>
-                <div>
-                  <div class="flex items-center gap-1.5">
-                    <span class="text-xs font-black text-slate-900 tracking-tight">Chat IA MarketingX</span>
-                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-indigo-100 text-indigo-700 border border-indigo-200">
-                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Online
-                    </span>
-                  </div>
-                  <p class="text-[11px] text-slate-500">Diga o que você faz em palavras simples que a IA cria sua Bio profissional.</p>
-                </div>
-              </div>
+          <!-- Botão Principal do Passo 1 -->
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-100">
+            <div class="text-xs text-slate-500 text-center sm:text-left">
+              🔒 <strong>Seus dados são salvos automaticamente:</strong> ao clicar em cadastrar, você receberá um código no seu e-mail para continuar.
             </div>
-
-            <!-- Sugestões Rápidas de Especialidade -->
-            <div class="flex flex-wrap items-center gap-1.5">
-              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Exemplos rápidos:</span>
-              <button type="button" onclick="enviarChatIa('Sou azulejista especialista em porcelanato de grandes formatos, cortes em 45 graus e acabamento fino.')" class="text-[11px] font-semibold bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 px-2.5 py-1 rounded-lg transition-all shadow-2xs">
-                📐 Azulejista / Porcelanato
-              </button>
-              <button type="button" onclick="enviarChatIa('Sou pintor profissional com máquina airless, faço cimento queimado, pintura interna e externa e efeitos decorativos.')" class="text-[11px] font-semibold bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 px-2.5 py-1 rounded-lg transition-all shadow-2xs">
-                🎨 Pintor Airless & Efeitos
-              </button>
-              <button type="button" onclick="enviarChatIa('Sou eletricista residencial e predial com curso técnico e NR10, especializado em quadros de distribuição, automação e iluminação LED.')" class="text-[11px] font-semibold bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 px-2.5 py-1 rounded-lg transition-all shadow-2xs">
-                ⚡ Eletricista Residencial
-              </button>
-              <button type="button" onclick="enviarChatIa('Sou churrasqueiro profissional especializado em eventos, confraternizações e carnes nobres com acompanhamentos.')" class="text-[11px] font-semibold bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 px-2.5 py-1 rounded-lg transition-all shadow-2xs">
-                🔥 Churrasqueiro Profissional
-              </button>
-            </div>
-
-            <!-- Campo de Entrada do Chat -->
-            <div class="flex items-center gap-2 pt-1">
-              <div class="relative flex-1">
-                <input 
-                  type="text" 
-                  id="inputChatIa" 
-                  placeholder="Ex: Faço pintura há 8 anos, entrego a obra limpa e tenho ótimas referências..." 
-                  onkeydown="if(event.key === 'Enter'){ event.preventDefault(); acionarChatIa(); }"
-                  class="w-full pl-3.5 pr-10 py-2.5 bg-white border border-indigo-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-xs font-medium shadow-2xs"
-                >
-              </div>
-              <button 
-                type="button" 
-                id="btnEnviarChatIa"
-                onclick="acionarChatIa()" 
-                class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md shadow-indigo-500/20 flex items-center gap-1.5 transition-all shrink-0 active:scale-95 cursor-pointer"
-              >
-                <i data-lucide="sparkles" class="w-4 h-4 text-yellow-300"></i>
-                <span>Gerar com IA</span>
-              </button>
-            </div>
-          </div>
-          <!-- ================= FIM CHAT IA ================= -->
-
-          <div class="space-y-1.5">
-            <div class="flex items-center justify-between gap-2">
-              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-                Breve Apresentação Profissional (Bio / Resumo de Experiência)
-              </label>
-              <button 
-                type="button" 
-                id="btnMelhorarBioIA" 
-                onclick="melhorarBioComIA()" 
-                class="hidden inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-xs transition-all duration-200 active:scale-95 cursor-pointer"
-              >
-                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-yellow-300"></i>
-                <span>Melhorar com IA</span>
-              </button>
-            </div>
-            
-            <div class="relative">
-              <textarea 
-                id="bio" 
-                rows="3" 
-                oninput="verificarTextoBio(this.value)"
-                placeholder="Conte há quantos anos atua, principais serviços realizados e seus diferenciais de atendimento..." 
-                class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none text-sm font-medium transition-all"
-              ></textarea>
-              
-              <div id="badgeBioIa" class="hidden absolute bottom-2.5 right-3 text-[11px] font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2.5 py-0.5 rounded-md flex items-center gap-1.5 shadow-2xs">
-                <i data-lucide="sparkles" class="w-3 h-3 text-emerald-600"></i>
-                <span>Texto otimizado com IA</span>
-                <button type="button" onclick="desfazerBioIA()" class="ml-1 text-slate-500 hover:text-slate-800 underline font-normal text-[10px]">Desfazer</button>
-              </div>
-            </div>
-            <p class="text-[11px] text-slate-400">
-              💡 <i>Escreva um rascunho rápido e clique em <b>Melhorar com IA</b> para formatar uma apresentação altamente atrativa.</i>
-            </p>
-          </div>
-
-          <div class="flex justify-end pt-4">
-            <button type="button" onclick="acionarContinuarPasso2()" class="flex items-center gap-2 bg-brand-red hover:bg-brand-redHover text-white font-bold px-7 py-3 rounded-xl transition-all shadow-md shadow-red-600/20 text-sm active:scale-95 cursor-pointer">
-              <span>Continuar: Especialidades</span>
+            <button type="button" onclick="iniciarCadastroComCodigo()" id="btnCadastrarPasso1" class="w-full sm:w-auto flex items-center justify-center gap-2 bg-brand-red hover:bg-brand-redHover text-white font-bold px-8 py-3.5 rounded-xl transition-all shadow-md shadow-red-600/20 text-sm active:scale-95 cursor-pointer">
+              <span>Cadastrar & Validar E-mail</span>
               <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
         </div>
 
-        <!-- ================= PASSO 2: ESPECIALIDADES & LOCALIZAÇÃO ================= -->
+        <!-- ================= PASSO 2: ESPECIALIDADES, LOCALIZAÇÃO & CHAT OBRA.IA ================= -->
         <div id="step-2" class="space-y-6 hidden">
           <div class="border-b border-slate-100 pb-4">
             <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-              <i data-lucide="wrench" class="w-5 h-5 text-brand-red"></i> Suas Especialidades & Área de Atendimento
+              <i data-lucide="wrench" class="w-5 h-5 text-brand-red"></i> Passo 2: Suas Especialidades & Área de Atendimento
             </h2>
-            <p class="text-xs text-slate-500 mt-0.5">Selecione os serviços que você domina para receber recomendações exatas.</p>
+            <p class="text-xs text-slate-500 mt-0.5">Selecione os serviços que você domina para receber orçamentos correspondentes.</p>
           </div>
 
           <!-- Grid de Seleção de Especialidades -->
@@ -709,6 +665,102 @@
             </div>
           </div>
 
+          <!-- ================= CHAT OBRA.IA ================= -->
+          <div class="rounded-2xl border border-indigo-200 bg-gradient-to-b from-indigo-50/70 via-white to-slate-50 p-4 shadow-sm space-y-3">
+            <div class="flex items-center justify-between border-b border-indigo-100 pb-2.5">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/20 font-bold text-sm">
+                  <i data-lucide="bot" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-xs font-black text-slate-900 tracking-tight">Chat Obra.IA</span>
+                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-indigo-100 text-indigo-700 border border-indigo-200">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Assistente Ativo
+                    </span>
+                  </div>
+                  <p class="text-[11px] text-slate-500">Diga o que você faz em palavras simples que a IA cria sua Bio profissional.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sugestões Rápidas de Especialidade -->
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Exemplos rápidos:</span>
+              <button type="button" onclick="enviarChatIa('Sou azulejista especialista em porcelanato de grandes formatos, cortes em 45 graus e acabamento fino.')" class="text-[11px] font-semibold bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 px-2.5 py-1 rounded-lg transition-all shadow-2xs">
+                📐 Azulejista / Porcelanato
+              </button>
+              <button type="button" onclick="enviarChatIa('Sou pintor profissional com máquina airless, faço cimento queimado, pintura interna e externa e efeitos decorativos.')" class="text-[11px] font-semibold bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 px-2.5 py-1 rounded-lg transition-all shadow-2xs">
+                🎨 Pintor Airless & Efeitos
+              </button>
+              <button type="button" onclick="enviarChatIa('Sou churrasqueiro profissional especializado em eventos, confraternizações e carnes nobres com acompanhamentos.')" class="text-[11px] font-semibold bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 px-2.5 py-1 rounded-lg transition-all shadow-2xs">
+                🔥 Churrasqueiro Profissional
+              </button>
+              <button type="button" onclick="enviarChatIa('Sou garçom experiente em atendimento de mesa, drinks, eventos corporativos e confraternizações.')" class="text-[11px] font-semibold bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 px-2.5 py-1 rounded-lg transition-all shadow-2xs">
+                ☕ Garçom & Copeiro
+              </button>
+            </div>
+
+            <!-- Campo de Entrada do Chat -->
+            <div class="flex items-center gap-2 pt-1">
+              <div class="relative flex-1">
+                <input 
+                  type="text" 
+                  id="inputChatIa" 
+                  placeholder="Ex: Faço pintura há 8 anos, entrego a obra limpa e tenho ótimas referências..." 
+                  onkeydown="if(event.key === 'Enter'){ event.preventDefault(); acionarChatIa(); }"
+                  class="w-full pl-3.5 pr-10 py-2.5 bg-white border border-indigo-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-xs font-medium shadow-2xs"
+                >
+              </div>
+              <button 
+                type="button" 
+                id="btnEnviarChatIa"
+                onclick="acionarChatIa()" 
+                class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md shadow-indigo-500/20 flex items-center gap-1.5 transition-all shrink-0 active:scale-95 cursor-pointer"
+              >
+                <i data-lucide="sparkles" class="w-4 h-4 text-yellow-300"></i>
+                <span>Gerar com IA</span>
+              </button>
+            </div>
+          </div>
+          <!-- ================= FIM CHAT OBRA.IA ================= -->
+
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between gap-2">
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                Breve Apresentação Profissional (Bio / Resumo de Experiência)
+              </label>
+              <button 
+                type="button" 
+                id="btnMelhorarBioIA" 
+                onclick="melhorarBioComIA()" 
+                class="hidden inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-xs transition-all duration-200 active:scale-95 cursor-pointer"
+              >
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-yellow-300"></i>
+                <span>Melhorar com IA</span>
+              </button>
+            </div>
+            
+            <div class="relative">
+              <textarea 
+                id="bio" 
+                rows="3" 
+                oninput="verificarTextoBio(this.value)"
+                placeholder="Conte há quantos anos atua, principais serviços realizados e seus diferenciais de atendimento..." 
+                class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none text-sm font-medium transition-all"
+              ></textarea>
+              
+              <div id="badgeBioIa" class="hidden absolute bottom-2.5 right-3 text-[11px] font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2.5 py-0.5 rounded-md flex items-center gap-1.5 shadow-2xs">
+                <i data-lucide="sparkles" class="w-3 h-3 text-emerald-600"></i>
+                <span>Texto otimizado com IA</span>
+                <button type="button" onclick="desfazerBioIA()" class="ml-1 text-slate-500 hover:text-slate-800 underline font-normal text-[10px]">Desfazer</button>
+              </div>
+            </div>
+            <p class="text-[11px] text-slate-400">
+              💡 <i>Escreva um rascunho rápido e clique em <b>Melhorar com IA</b> para formatar uma apresentação altamente atrativa.</i>
+            </p>
+          </div>
+
           <div class="flex justify-between pt-4">
             <button type="button" onclick="irParaPasso(1)" class="flex items-center gap-2 border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold px-6 py-3 rounded-xl text-sm cursor-pointer">
               <i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar
@@ -724,7 +776,7 @@
         <div id="step-3" class="space-y-6 hidden">
           <div class="border-b border-slate-100 pb-4">
             <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-              <i data-lucide="camera" class="w-5 h-5 text-brand-red"></i> Galeria de Obras e Portfólio
+              <i data-lucide="camera" class="w-5 h-5 text-brand-red"></i> Passo 3: Galeria de Obras e Portfólio
             </h2>
             <p class="text-xs text-slate-500 mt-0.5">Fotos reais de trabalhos anteriores aumentam a confiança e o fechamento de orçamentos.</p>
           </div>
@@ -779,7 +831,7 @@
           </div>
           <h2 class="text-2xl font-display font-black text-slate-900">Cadastro Concluído com Sucesso!</h2>
           <p class="text-sm text-slate-600 max-w-md mx-auto">
-            Seu perfil profissional com foto e especialidades já está cadastrado e visível na vitrine da Obra.IA.
+            Seu perfil profissional já está cadastrado, e-mail verificado e ativo na vitrine da Obra.IA.
           </p>
           <div class="pt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
             <a href="/prestadores" class="w-full sm:w-auto bg-brand-red hover:bg-brand-redHover text-white font-bold px-6 py-3 rounded-xl shadow-md text-sm text-center">
@@ -794,6 +846,73 @@
       </form>
     </div>
   </main>
+
+  <!-- MODAL DE VALIDAÇÃO DE CÓDIGO DO E-MAIL (NOVO FLUXO) -->
+  <div id="modalValidarCodigoEmail" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 text-center space-y-5 animate-in fade-in zoom-in duration-200">
+      <div class="w-16 h-16 rounded-3xl bg-blue-100 text-blue-600 flex items-center justify-center mx-auto shadow-sm">
+        <i data-lucide="mail-check" class="w-8 h-8"></i>
+      </div>
+      
+      <div>
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-bold uppercase tracking-wider mb-2">
+          <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600"></i> Pré-Cadastro Salvo com Sucesso
+        </div>
+        <h3 class="text-xl font-display font-black text-slate-900">Confirme o Código do seu E-mail</h3>
+        <p class="text-xs text-slate-500 mt-1.5">
+          Enviamos um código de segurança de 6 dígitos para o endereço:
+        </p>
+        <div class="mt-2 font-bold text-slate-900 text-sm bg-slate-100 py-1.5 px-3 rounded-xl inline-block" id="displayEmailDestino">
+          seuemail@gmail.com
+        </div>
+      </div>
+
+      <!-- Alerta Informativo do Código de Verificação -->
+      <div class="p-3.5 bg-amber-50 border border-amber-200 rounded-2xl text-left flex items-start gap-2.5">
+        <i data-lucide="key" class="w-4 h-4 text-amber-600 mt-0.5 shrink-0"></i>
+        <div class="text-[11px] text-amber-900 leading-tight">
+          <strong class="font-bold">Código de Acesso Gerado:</strong> Use o código abaixo para validar:
+          <span id="badgeCodigoGerado" class="font-mono font-black text-sm bg-white px-2 py-0.5 rounded border border-amber-300 text-amber-800 ml-1">------</span>
+        </div>
+      </div>
+
+      <!-- Inputs do Código de 6 Dígitos -->
+      <div>
+        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+          Digite os 6 dígitos:
+        </label>
+        <div class="flex justify-center gap-1.5 sm:gap-2" id="boxInputsCodigo">
+          <input type="text" maxlength="1" inputmode="numeric" class="input-digito-codigo w-10 h-12 sm:w-11 sm:h-13 text-center font-mono font-black text-xl bg-slate-50 border-2 border-slate-300 rounded-xl focus:border-brand-red focus:bg-white outline-none">
+          <input type="text" maxlength="1" inputmode="numeric" class="input-digito-codigo w-10 h-12 sm:w-11 sm:h-13 text-center font-mono font-black text-xl bg-slate-50 border-2 border-slate-300 rounded-xl focus:border-brand-red focus:bg-white outline-none">
+          <input type="text" maxlength="1" inputmode="numeric" class="input-digito-codigo w-10 h-12 sm:w-11 sm:h-13 text-center font-mono font-black text-xl bg-slate-50 border-2 border-slate-300 rounded-xl focus:border-brand-red focus:bg-white outline-none">
+          <input type="text" maxlength="1" inputmode="numeric" class="input-digito-codigo w-10 h-12 sm:w-11 sm:h-13 text-center font-mono font-black text-xl bg-slate-50 border-2 border-slate-300 rounded-xl focus:border-brand-red focus:bg-white outline-none">
+          <input type="text" maxlength="1" inputmode="numeric" class="input-digito-codigo w-10 h-12 sm:w-11 sm:h-13 text-center font-mono font-black text-xl bg-slate-50 border-2 border-slate-300 rounded-xl focus:border-brand-red focus:bg-white outline-none">
+          <input type="text" maxlength="1" inputmode="numeric" class="input-digito-codigo w-10 h-12 sm:w-11 sm:h-13 text-center font-mono font-black text-xl bg-slate-50 border-2 border-slate-300 rounded-xl focus:border-brand-red focus:bg-white outline-none">
+        </div>
+      </div>
+
+      <div id="msgErroCodigo" class="text-xs text-red-600 font-bold hidden">
+        ✖ Código incorreto. Verifique os números digitados e tente novamente.
+      </div>
+
+      <!-- Botões de Ação -->
+      <div class="space-y-2 pt-1">
+        <button type="button" onclick="confirmarCodigoEmail()" id="btnConfirmarCodigoEmail" class="w-full py-3.5 bg-brand-red hover:bg-brand-redHover text-white font-bold text-sm rounded-xl shadow-md shadow-red-600/25 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95">
+          <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+          <span>Confirmar Código & Continuar Cadastro</span>
+        </button>
+
+        <div class="flex items-center justify-between text-xs text-slate-500 pt-2 px-1">
+          <button type="button" onclick="reenviarCodigoEmail()" class="hover:text-slate-900 font-semibold underline cursor-pointer">
+            Reenviar código
+          </button>
+          <button type="button" onclick="fecharModalValidarCodigo()" class="hover:text-red-600 cursor-pointer">
+            Corrigir dados
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- MODAL CAPTCHA DE ARRASTAR (Slide to Verify) -->
   <div id="modalCaptchaSlide" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
@@ -860,17 +979,102 @@
     let fotoPerfilBase64 = '';
     let bioOriginalAntesIA = '';
 
+    // Código de Validação do E-mail
+    let codigoGeradoEmail = '';
+    let emailValidadoComSucesso = false;
+
     // Controle do Captcha de Arrastar
     let isCaptchaVerificado = false;
-    let pendenteAcaoCaptcha = null; // 'gerar_ia' ou 'ir_passo_2'
+    let pendenteAcaoCaptcha = null; // 'gerar_ia'
 
     // Inicialização
     document.addEventListener('DOMContentLoaded', async () => {
       lucide.createIcons();
       inicializarSliderCaptcha();
+      configurarInputsCodigo();
+      verificarRascunhoSalvo();
       renderEspecialidades();
       await carregarEspecialidadesAPI();
     });
+
+    /* ===========================================================
+       0. PERSISTÊNCIA & RASCUNHO AUTOMÁTICO
+       =========================================================== */
+    function verificarRascunhoSalvo() {
+      try {
+        const raw = localStorage.getItem('obraia_prestador_rascunho');
+        if (raw) {
+          const r = JSON.parse(raw);
+          if (r && (r.nome_completo || r.email)) {
+            document.getElementById('bannerRecuperarRascunho').classList.remove('hidden');
+            document.getElementById('nomeRascunhoRecuperado').textContent = r.nome_completo || r.email;
+          }
+        }
+      } catch (e) {}
+    }
+
+    function restaurarCadastroSalvo() {
+      try {
+        const raw = localStorage.getItem('obraia_prestador_rascunho');
+        if (!raw) return;
+        const r = JSON.parse(raw);
+
+        if (r.nome_completo) document.getElementById('nomeCompleto').value = r.nome_completo;
+        if (r.nome_comercial) document.getElementById('nomeComercial').value = r.nome_comercial;
+        if (r.whatsapp) document.getElementById('whatsapp').value = r.whatsapp;
+        if (r.documento_numero) {
+          document.getElementById('documento').value = r.documento_numero;
+          validarDocumentoAoDigitar(r.documento_numero);
+        }
+        if (r.email) {
+          document.getElementById('email').value = r.email;
+          document.getElementById('confirmarEmail').value = r.email;
+          validarEmailAoDigitar(r.email);
+          validarConfirmacaoEmail();
+        }
+        if (r.senha) {
+          document.getElementById('senha').value = r.senha;
+          document.getElementById('confirmarSenha').value = r.senha;
+          validarSenhaComplexa(r.senha);
+          validarConfirmacaoSenha();
+        }
+        if (r.avatar_url) {
+          fotoPerfilBase64 = r.avatar_url;
+          const preview = document.getElementById('previewAvatarPerfil');
+          preview.src = r.avatar_url;
+          preview.classList.remove('hidden');
+          document.getElementById('placeholderAvatarPerfil').classList.add('hidden');
+          document.getElementById('btnRemoverFotoPerfil').classList.remove('hidden');
+        }
+
+        if (r.email_validado) {
+          emailValidadoComSucesso = true;
+          irParaPasso(2);
+        } else {
+          document.getElementById('bannerRecuperarRascunho').classList.add('hidden');
+        }
+      } catch (e) {
+        console.error('Erro ao restaurar rascunho:', e);
+      }
+    }
+
+    function salvarRascunhoLocal() {
+      try {
+        const rascunho = {
+          nome_completo: document.getElementById('nomeCompleto').value.trim(),
+          nome_comercial: document.getElementById('nomeComercial').value.trim(),
+          whatsapp: document.getElementById('whatsapp').value.trim(),
+          documento_numero: document.getElementById('documento').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          senha: document.getElementById('senha').value,
+          avatar_url: fotoPerfilBase64,
+          email_validado: emailValidadoComSucesso,
+          codigo_validacao: codigoGeradoEmail,
+          atualizado_em: new Date().toISOString()
+        };
+        localStorage.setItem('obraia_prestador_rascunho', JSON.stringify(rascunho));
+      } catch (e) {}
+    }
 
     /* ===========================================================
        1. GOOGLE IDENTITY SERVICES (LOGIN & AUTO-PREENCHIMENTO)
@@ -898,7 +1102,6 @@
     }
 
     function conectarGooglePrompt() {
-      // Prompt amigável caso o GIS One Tap não tenha carregado de imediato
       const emailDigitado = prompt('Informe seu endereço oficial do Gmail para validação direta:', document.getElementById('email').value.trim());
       if (!emailDigitado) return;
       const cleanEmail = emailDigitado.trim().toLowerCase();
@@ -915,7 +1118,9 @@
       if (email) {
         const emailInput = document.getElementById('email');
         emailInput.value = email;
+        document.getElementById('confirmarEmail').value = email;
         validarEmailAoDigitar(email);
+        validarConfirmacaoEmail();
       }
 
       if (fotoUrl) {
@@ -928,13 +1133,13 @@
         document.getElementById('statusFotoPerfil').innerHTML = '<span class="text-emerald-600 font-bold">✔ Foto de perfil importada da sua Conta Google</span>';
       }
 
-      // Banner Conectado
       const badge = document.getElementById('badgeUsuarioGoogle');
       badge.classList.remove('hidden');
       document.getElementById('avatarGoogleConectado').src = fotoUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80';
       document.getElementById('nomeGoogleConectado').textContent = nome || email;
       document.getElementById('emailGoogleConectado').innerHTML = `<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500"></i> ${email} (Gmail Verificado)`;
       lucide.createIcons();
+      salvarRascunhoLocal();
     }
 
     function desconectarGoogle() {
@@ -957,7 +1162,6 @@
       reader.onload = function(e) {
         const img = new Image();
         img.onload = function() {
-          // Redimensionar para tamanho ideal mantendo alta nitidez (max 600x600)
           const canvas = document.createElement('canvas');
           const maxDim = 600;
           let w = img.width;
@@ -984,7 +1188,8 @@
           document.getElementById('btnRemoverFotoPerfil').classList.remove('hidden');
 
           const status = document.getElementById('statusFotoPerfil');
-          status.innerHTML = '<span class="text-emerald-600 font-bold">✔ Foto de perfil profissional carregada com sucesso!</span>';
+          status.innerHTML = '<span class="text-emerald-600 font-bold">✔ Foto de perfil carregada com sucesso!</span>';
+          salvarRascunhoLocal();
         };
         img.src = e.target.result;
       };
@@ -1000,6 +1205,7 @@
       document.getElementById('btnRemoverFotoPerfil').classList.add('hidden');
       document.getElementById('inputFotoPerfil').value = '';
       document.getElementById('statusFotoPerfil').textContent = 'Formatos aceitos: JPG, PNG ou WEBP.';
+      salvarRascunhoLocal();
     }
 
     /* ===========================================================
@@ -1026,7 +1232,6 @@
       if (v.length > 14) v = v.substring(0, 14);
 
       if (v.length <= 11) {
-        // CPF: 000.000.000-00
         if (v.length > 9) {
           input.value = `${v.substring(0,3)}.${v.substring(3,6)}.${v.substring(6,9)}-${v.substring(9)}`;
         } else if (v.length > 6) {
@@ -1037,7 +1242,6 @@
           input.value = v;
         }
       } else {
-        // CNPJ: 00.000.000/0000-00
         if (v.length > 12) {
           input.value = `${v.substring(0,2)}.${v.substring(2,5)}.${v.substring(5,8)}/${v.substring(8,12)}-${v.substring(12)}`;
         } else if (v.length > 8) {
@@ -1050,11 +1254,10 @@
       }
     }
 
-    // Algoritmo Oficial de Verificação Módulo 11 da Receita Federal
     function validarCPF(cpf) {
       cpf = String(cpf).replace(/\D/g, '');
       if (cpf.length !== 11) return false;
-      if (/^(\d)\1{10}$/.test(cpf)) return false; // Rejeita 00000000000, 11111111111, etc.
+      if (/^(\d)\1{10}$/.test(cpf)) return false;
 
       let soma = 0;
       for (let i = 0; i < 9; i++) {
@@ -1163,7 +1366,7 @@
     }
 
     /* ===========================================================
-       4. VALIDAÇÃO DE GMAIL
+       4. VALIDAÇÃO DE GMAIL & CONFIRMAÇÃO DE E-MAIL
        =========================================================== */
     function completarGmail() {
       const input = document.getElementById('email');
@@ -1197,7 +1400,7 @@
         const userPart = email.split('@')[0];
         if (userPart.length >= 4) {
           msg.className = "text-[11px] text-emerald-600 font-bold mt-1 flex items-center gap-1";
-          msg.innerHTML = "✔ Conta Gmail válida e compatível";
+          msg.innerHTML = "✔ Conta Gmail válida";
           input.classList.remove('border-red-500', 'border-amber-400');
           input.classList.add('border-emerald-500');
         } else {
@@ -1212,10 +1415,47 @@
         input.classList.remove('border-emerald-500', 'border-amber-400');
         input.classList.add('border-red-500');
       }
+
+      validarConfirmacaoEmail();
+    }
+
+    function validarConfirmacaoEmail() {
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const confirma = document.getElementById('confirmarEmail').value.trim().toLowerCase();
+      const badge = document.getElementById('badgeConfirmaEmail');
+      const msg = document.getElementById('msgConfirmaEmail');
+      const input = document.getElementById('confirmarEmail');
+
+      if (!confirma) {
+        badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-500";
+        badge.textContent = "Repita o Gmail";
+        msg.className = "text-[11px] text-slate-400 font-medium mt-1";
+        msg.textContent = "Você receberá o código de validação neste endereço.";
+        input.classList.remove('border-emerald-500', 'border-red-500');
+        return false;
+      }
+
+      if (email === confirma) {
+        badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-700";
+        badge.textContent = "E-mails Conferem ✔";
+        msg.className = "text-[11px] text-emerald-600 font-bold mt-1";
+        msg.textContent = "✔ Os endereços de e-mail são idênticos.";
+        input.classList.remove('border-red-500');
+        input.classList.add('border-emerald-500');
+        return true;
+      } else {
+        badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-red-100 text-red-700";
+        badge.textContent = "Diferentes ✖";
+        msg.className = "text-[11px] text-red-600 font-bold mt-1";
+        msg.textContent = "✖ Os e-mails não conferem. Digite exatamente o mesmo e-mail.";
+        input.classList.remove('border-emerald-500');
+        input.classList.add('border-red-500');
+        return false;
+      }
     }
 
     /* ===========================================================
-       4.1 VALIDAÇÃO DE SENHA COMPLEXA (MÍNIMO 8 DÍGITOS, MIN, MAIÚSC, ESPECIAL)
+       5. VALIDAÇÃO DE SENHA COMPLEXA (MÍNIMO 8 DÍGITOS, MIN, MAIÚSC, ESPECIAL)
        =========================================================== */
     function validarSenhaComplexa(senha) {
       const min8 = senha.length >= 8;
@@ -1328,118 +1568,19 @@
     }
 
     /* ===========================================================
-       5. CAPTCHA DE ARRASTAR (Slide to Verify)
+       6. FLUXO DE PRÉ-CADASTRO E VALIDAÇÃO DE CÓDIGO POR E-MAIL
        =========================================================== */
-    function inicializarSliderCaptcha() {
-      const track = document.getElementById('sliderTrack');
-      const thumb = document.getElementById('sliderThumb');
-      const fill = document.getElementById('sliderFill');
-      if (!track || !thumb) return;
-
-      let isDragging = false;
-      let startX = 0;
-
-      function onStart(e) {
-        if (isCaptchaVerificado) return;
-        isDragging = true;
-        startX = (e.touches ? e.touches[0].clientX : e.clientX) - thumb.offsetLeft;
-      }
-
-      function onMove(e) {
-        if (!isDragging) return;
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const trackRect = track.getBoundingClientRect();
-        const maxLeft = trackRect.width - thumb.offsetWidth - 8;
-        let left = clientX - trackRect.left - (thumb.offsetWidth / 2);
-
-        if (left < 4) left = 4;
-        if (left > maxLeft) left = maxLeft;
-
-        thumb.style.left = `${left}px`;
-        fill.style.width = `${left + thumb.offsetWidth / 2}px`;
-
-        // Se arrastou mais de 85% do caminho, valida!
-        if (left >= maxLeft * 0.88) {
-          isDragging = false;
-          concluirCaptchaComSucesso();
-        }
-      }
-
-      function onEnd() {
-        if (!isDragging) return;
-        isDragging = false;
-        // Volta para o início caso não tenha completado
-        thumb.style.transition = 'left 0.3s ease';
-        fill.style.transition = 'width 0.3s ease';
-        thumb.style.left = '4px';
-        fill.style.width = '0px';
-        setTimeout(() => {
-          thumb.style.transition = '';
-          fill.style.transition = '';
-        }, 300);
-      }
-
-      thumb.addEventListener('mousedown', onStart);
-      thumb.addEventListener('touchstart', onStart, { passive: true });
-      window.addEventListener('mousemove', onMove);
-      window.addEventListener('touchmove', onMove, { passive: true });
-      window.addEventListener('mouseup', onEnd);
-      window.addEventListener('touchend', onEnd);
-    }
-
-    function abrirModalCaptcha(acao) {
-      pendenteAcaoCaptcha = acao;
-      const modal = document.getElementById('modalCaptchaSlide');
-      modal.classList.remove('hidden');
-
-      // Reset slider
-      const thumb = document.getElementById('sliderThumb');
-      const fill = document.getElementById('sliderFill');
-      if (thumb) thumb.style.left = '4px';
-      if (fill) fill.style.width = '0px';
-      lucide.createIcons();
-    }
-
-    function fecharModalCaptcha() {
-      document.getElementById('modalCaptchaSlide').classList.add('hidden');
-      pendenteAcaoCaptcha = null;
-    }
-
-    function concluirCaptchaComSucesso() {
-      isCaptchaVerificado = true;
-      const thumb = document.getElementById('sliderThumb');
-      const fill = document.getElementById('sliderFill');
-      thumb.innerHTML = '<i data-lucide="check" class="w-5 h-5 text-white"></i>';
-      thumb.classList.add('bg-emerald-500', 'border-emerald-600');
-      fill.classList.add('bg-emerald-500');
-      lucide.createIcons();
-
-      setTimeout(() => {
-        fecharModalCaptcha();
-        if (pendenteAcaoCaptcha === 'gerar_ia') {
-          executarGeracaoBioIA();
-        } else if (pendenteAcaoCaptcha === 'ir_passo_2') {
-          executarAvancoParaPasso2();
-        }
-      }, 350);
-    }
-
-    function acionarChatIa() {
-      if (!isCaptchaVerificado) {
-        abrirModalCaptcha('gerar_ia');
-      } else {
-        executarGeracaoBioIA();
-      }
-    }
-
-    function acionarContinuarPasso2() {
-      // Validações básicas do Passo 1
+    async function iniciarCadastroComCodigo() {
       const nome = document.getElementById('nomeCompleto').value.trim();
+      const nomeComercial = document.getElementById('nomeComercial').value.trim();
       const zap = document.getElementById('whatsapp').value.trim();
       const doc = document.getElementById('documento').value.trim();
       const email = document.getElementById('email').value.trim().toLowerCase();
+      const confirmaEmail = document.getElementById('confirmarEmail').value.trim().toLowerCase();
+      const senha = document.getElementById('senha').value;
+      const confirmaSenha = document.getElementById('confirmarSenha').value;
 
-      if (!nome || !zap || !doc || !email) {
+      if (!nome || !zap || !doc || !email || !confirmaEmail || !senha) {
         alert('Por favor, preencha todos os campos obrigatórios (*) do Passo 1.');
         return;
       }
@@ -1454,7 +1595,7 @@
       const docClean = doc.replace(/\D/g, '');
       if (docClean.length === 11) {
         if (!validarCPF(docClean)) {
-          alert('Atenção: O CPF digitado é INVÁLIDO!\nOs dígitos verificadores não conferem com a Receita Federal.\nPor favor, corrija o CPF para continuar.');
+          alert('Atenção: O CPF digitado é INVÁLIDO!\nOs dígitos verificadores não conferem com a Receita Federal.\nPor favor, corrija seu CPF para continuar.');
           document.getElementById('documento').focus();
           return;
         }
@@ -1471,127 +1612,169 @@
       }
 
       if (!email.endsWith('@gmail.com') && !email.endsWith('@googlemail.com')) {
-        alert('Atenção: O cadastro é EXCLUSIVO para contas @gmail.com.\nPor favor, use seu endereço do Gmail.');
+        alert('Atenção: O cadastro é EXCLUSIVO para contas @gmail.com.\nPor favor, use seu endereço oficial do Gmail.');
         document.getElementById('email').focus();
         return;
       }
 
-      // Validação estrita da Senha Complexa (mínimo 8, maiúsc, min, especial)
-      const senhaVal = document.getElementById('senha').value;
-      const confirmaVal = document.getElementById('confirmarSenha').value;
+      if (email !== confirmaEmail) {
+        alert('Atenção: Os endereços de e-mail não coincidem!\nPor favor, confirme exatamente o mesmo e-mail nos dois campos.');
+        document.getElementById('confirmarEmail').focus();
+        return;
+      }
 
-      if (!senhaVal) {
-        alert('Por favor, crie uma senha para acessar seu perfil.');
+      if (!validarSenhaComplexa(senha)) {
+        alert('Atenção: Sua senha precisa cumprir os 4 requisitos de segurança:\n✔ Mínimo 8 dígitos\n✔ Pelo menos 1 letra minúscula (a-z)\n✔ Pelo menos 1 letra maiúscula (A-Z)\n✔ Pelo menos 1 caractere especial (@#$!...)');
         document.getElementById('senha').focus();
         return;
       }
 
-      if (!validarSenhaComplexa(senhaVal)) {
-        alert('Atenção: Sua senha não atende aos requisitos de segurança!\n\nRequisitos obrigatórios:\n✔ Mínimo 8 caracteres\n✔ Pelo menos 1 letra minúscula (a-z)\n✔ Pelo menos 1 letra maiúscula (A-Z)\n✔ Pelo menos 1 caractere especial (@, #, $, %, !, etc.)');
-        document.getElementById('senha').focus();
-        return;
-      }
-
-      if (senhaVal !== confirmaVal) {
-        alert('Atenção: As duas senhas digitadas não são idênticas! Por favor, repita a mesma senha no campo de confirmação.');
+      if (senha !== confirmaSenha) {
+        alert('Atenção: A confirmação de senha não confere. Digite a mesma senha nos dois campos.');
         document.getElementById('confirmarSenha').focus();
         return;
       }
 
-      if (!isCaptchaVerificado) {
-        abrirModalCaptcha('ir_passo_2');
-      } else {
-        executarAvancoParaPasso2();
-      }
-    }
+      // Gera código aleatório de 6 dígitos
+      codigoGeradoEmail = Math.floor(100000 + Math.random() * 900000).toString();
 
-    function executarAvancoParaPasso2() {
-      irParaPasso(2);
-    }
+      // Salva localmente e envia o pré-cadastro ao backend imediatamente
+      salvarRascunhoLocal();
 
-    /* ===========================================================
-       6. CHAT IA MARKETINGX & BIO
-       =========================================================== */
-    function enviarChatIa(textoExemplo) {
-      if (textoExemplo) {
-        document.getElementById('inputChatIa').value = textoExemplo;
-      }
-      acionarChatIa();
-    }
-
-    async function executarGeracaoBioIA() {
-      const input = document.getElementById('inputChatIa');
-      const texto = input.value.trim();
-      const nome = document.getElementById('nomeCompleto').value.trim() || 'Profissional Qualificado';
-
-      if (!texto) {
-        alert('Digite uma frase sobre sua experiência ou selecione um dos exemplos acima.');
-        input.focus();
-        return;
-      }
-
-      const btn = document.getElementById('btnEnviarChatIa');
-      const originalText = btn.innerHTML;
+      const btn = document.getElementById('btnCadastrarPasso1');
+      const origText = btn.innerHTML;
       btn.disabled = true;
-      btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin text-white"></i> <span>Criando...</span>';
+      btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin text-white"></i> <span>Salvando dados...</span>';
       lucide.createIcons();
 
       try {
-        const res = await fetch('/api/prestadores/melhorar-bio', {
+        // Envia pré-cadastro ao backend
+        await fetch('/api/prestadores/cadastrar', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ texto, nome_completo: nome })
-        });
-
-        if (res.ok) {
-          const data = await res.json();
-          if (data.bio_otimizada) {
-            aplicarBio(data.bio_otimizada);
-            return;
-          }
-        }
-      } catch (err) {
-        console.warn('Fallback IA local ativado:', err);
+          body: JSON.stringify({
+            nome_completo: nome,
+            nome_comercial: nomeComercial,
+            whatsapp: zap,
+            documento_numero: doc,
+            email: email,
+            senha: senha,
+            avatar_url: fotoPerfilBase64,
+            codigo_validacao: codigoGeradoEmail,
+            email_validado: false
+          })
+        }).catch(() => {});
       } finally {
         btn.disabled = false;
-        btn.innerHTML = originalText;
+        btn.innerHTML = origText;
         lucide.createIcons();
       }
 
-      // Fallback local profissional
-      const bioLocal = `${nome} atua com excelência, pontualidade e acabamento refinado. Especializado em ${texto.replace(/^[Ss]ou\s+/, '')}, com garantia de entrega limpa, materiais de primeira e transparência nos orçamentos.`;
-      aplicarBio(bioLocal);
+      // Abre Modal de Validação de Código
+      abrirModalValidarCodigo(email, codigoGeradoEmail);
     }
 
-    function aplicarBio(texto) {
-      const textarea = document.getElementById('bio');
-      bioOriginalAntesIA = textarea.value;
-      textarea.value = texto;
-      document.getElementById('badgeBioIa').classList.remove('hidden');
-      textarea.classList.add('border-emerald-500', 'bg-emerald-50/20');
-      setTimeout(() => textarea.classList.remove('border-emerald-500', 'bg-emerald-50/20'), 1500);
-      textarea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    function abrirModalValidarCodigo(email, codigo) {
+      document.getElementById('displayEmailDestino').textContent = email;
+      document.getElementById('badgeCodigoGerado').textContent = codigo;
+      document.getElementById('msgErroCodigo').classList.add('hidden');
+
+      // Limpa inputs do código
+      const inputs = document.querySelectorAll('.input-digito-codigo');
+      inputs.forEach(inp => inp.value = '');
+
+      const modal = document.getElementById('modalValidarCodigoEmail');
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+
+      // Foca no 1º input
+      setTimeout(() => {
+        if (inputs[0]) inputs[0].focus();
+      }, 150);
     }
 
-    function desfazerBioIA() {
-      document.getElementById('bio').value = bioOriginalAntesIA;
-      document.getElementById('badgeBioIa').classList.add('hidden');
+    function fecharModalValidarCodigo() {
+      document.getElementById('modalValidarCodigoEmail').classList.add('hidden');
     }
 
-    function verificarTextoBio(val) {
-      const btn = document.getElementById('btnMelhorarBioIA');
-      if (val.trim().length > 10) {
-        btn.classList.remove('hidden');
-      } else {
-        btn.classList.add('hidden');
+    function configurarInputsCodigo() {
+      const inputs = document.querySelectorAll('.input-digito-codigo');
+      inputs.forEach((inp, idx) => {
+        inp.addEventListener('input', (e) => {
+          const val = e.target.value.replace(/\D/g, '');
+          e.target.value = val ? val.slice(-1) : '';
+
+          if (val && idx < inputs.length - 1) {
+            inputs[idx + 1].focus();
+          }
+
+          // Se preencheu todos os 6 dígitos, auto-executa
+          const digitado = Array.from(inputs).map(i => i.value).join('');
+          if (digitado.length === 6) {
+            confirmarCodigoEmail();
+          }
+        });
+
+        inp.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace' && !e.target.value && idx > 0) {
+            inputs[idx - 1].focus();
+          }
+        });
+
+        inp.addEventListener('paste', (e) => {
+          e.preventDefault();
+          const pasteData = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
+          if (pasteData) {
+            pasteData.split('').forEach((char, i) => {
+              if (inputs[i]) inputs[i].value = char;
+            });
+            if (pasteData.length === 6) {
+              confirmarCodigoEmail();
+            } else if (inputs[pasteData.length]) {
+              inputs[pasteData.length].focus();
+            }
+          }
+        });
+      });
+    }
+
+    function reenviarCodigoEmail() {
+      codigoGeradoEmail = Math.floor(100000 + Math.random() * 900000).toString();
+      document.getElementById('badgeCodigoGerado').textContent = codigoGeradoEmail;
+      salvarRascunhoLocal();
+      alert('Novo código de segurança gerado com sucesso!\nConfira o código na tela.');
+    }
+
+    async function confirmarCodigoEmail() {
+      const inputs = document.querySelectorAll('.input-digito-codigo');
+      const codigoDigitado = Array.from(inputs).map(i => i.value.trim()).join('');
+
+      if (codigoDigitado.length < 6) {
+        alert('Por favor, digite os 6 números do código.');
+        return;
       }
-    }
 
-    function melhorarBioComIA() {
-      const txt = document.getElementById('bio').value.trim();
-      if (txt) {
-        document.getElementById('inputChatIa').value = txt;
-        acionarChatIa();
+      if (codigoDigitado === codigoGeradoEmail) {
+        emailValidadoComSucesso = true;
+        salvarRascunhoLocal();
+
+        // Notifica o backend da validação
+        const email = document.getElementById('email').value.trim();
+        fetch('/api/prestadores/cadastrar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email, email_validado: true, codigo_validacao: codigoGeradoEmail })
+        }).catch(() => {});
+
+        fecharModalValidarCodigo();
+        alert('✔ E-mail verificado com sucesso!\n\nSeu pré-cadastro já está garantido no sistema. Agora selecione suas especialidades e sua região de atendimento.');
+        irParaPasso(2);
+      } else {
+        document.getElementById('msgErroCodigo').classList.remove('hidden');
+        inputs.forEach(i => i.classList.add('border-red-500'));
+        setTimeout(() => {
+          inputs.forEach(i => i.classList.remove('border-red-500'));
+        }, 2000);
       }
     }
 
@@ -1599,6 +1782,11 @@
        7. NAVEGAÇÃO ENTRE PASSOS (STEPPER)
        =========================================================== */
     function irParaPasso(passo) {
+      if (passo === 2 && !emailValidadoComSucesso) {
+        iniciarCadastroComCodigo();
+        return;
+      }
+
       if (passo === 3) {
         if (especialidadesSelecionadas.size === 0) {
           alert('Por favor, selecione ao menos uma especialidade.');
@@ -1643,7 +1831,6 @@
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data) && data.length > 0) {
-            // Unir sem duplicar
             const existentes = new Set(especialidadesList.map(e => e.slug));
             data.forEach(item => {
               if (!existentes.has(item.slug)) {
@@ -1710,7 +1897,6 @@
 
       const slug = 'outra-' + nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
 
-      // Adiciona na lista
       especialidadesList.push({
         id: 'cust-' + Date.now(),
         slug: slug,
@@ -1719,9 +1905,7 @@
         icone: 'check-circle-2'
       });
 
-      // Seleciona automaticamente
       especialidadesSelecionadas.add(slug);
-
       input.value = '';
       document.getElementById('boxNovaEspecialidade').classList.add('hidden');
       renderEspecialidades();
@@ -1775,7 +1959,192 @@
     }
 
     /* ===========================================================
-       10. UPLOAD DE FOTOS DO PORTFÓLIO
+       10. CHAT OBRA.IA & GERAÇÃO DE BIO
+       =========================================================== */
+    function enviarChatIa(textoExemplo) {
+      if (textoExemplo) {
+        document.getElementById('inputChatIa').value = textoExemplo;
+      }
+      acionarChatIa();
+    }
+
+    function acionarChatIa() {
+      if (!isCaptchaVerificado) {
+        abrirModalCaptcha('gerar_ia');
+      } else {
+        executarGeracaoBioIA();
+      }
+    }
+
+    async function executarGeracaoBioIA() {
+      const input = document.getElementById('inputChatIa');
+      const texto = input.value.trim();
+      const nome = document.getElementById('nomeCompleto').value.trim() || 'Profissional Qualificado';
+
+      if (!texto) {
+        alert('Digite uma frase sobre sua experiência ou selecione um dos exemplos acima.');
+        input.focus();
+        return;
+      }
+
+      const btn = document.getElementById('btnEnviarChatIa');
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin text-white"></i> <span>Criando...</span>';
+      lucide.createIcons();
+
+      try {
+        const res = await fetch('/api/prestadores/melhorar-bio', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ texto, nome_completo: nome })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.bio_otimizada) {
+            aplicarBio(data.bio_otimizada);
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn('Fallback IA local ativado:', err);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        lucide.createIcons();
+      }
+
+      const bioLocal = `${nome} atua com excelência, pontualidade e acabamento refinado. Especializado em ${texto.replace(/^[Ss]ou\s+/, '')}, com garantia de entrega limpa, materiais de primeira e transparência nos orçamentos.`;
+      aplicarBio(bioLocal);
+    }
+
+    function aplicarBio(texto) {
+      const textarea = document.getElementById('bio');
+      bioOriginalAntesIA = textarea.value;
+      textarea.value = texto;
+      document.getElementById('badgeBioIa').classList.remove('hidden');
+      textarea.classList.add('border-emerald-500', 'bg-emerald-50/20');
+      setTimeout(() => textarea.classList.remove('border-emerald-500', 'bg-emerald-50/20'), 1500);
+      textarea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function desfazerBioIA() {
+      document.getElementById('bio').value = bioOriginalAntesIA;
+      document.getElementById('badgeBioIa').classList.add('hidden');
+    }
+
+    function verificarTextoBio(val) {
+      const btn = document.getElementById('btnMelhorarBioIA');
+      if (val.trim().length > 10) {
+        btn.classList.remove('hidden');
+      } else {
+        btn.classList.add('hidden');
+      }
+    }
+
+    function melhorarBioComIA() {
+      const txt = document.getElementById('bio').value.trim();
+      if (txt) {
+        document.getElementById('inputChatIa').value = txt;
+        acionarChatIa();
+      }
+    }
+
+    /* ===========================================================
+       11. CAPTCHA DE ARRASTAR (Slide to Verify)
+       =========================================================== */
+    function inicializarSliderCaptcha() {
+      const track = document.getElementById('sliderTrack');
+      const thumb = document.getElementById('sliderThumb');
+      const fill = document.getElementById('sliderFill');
+      if (!track || !thumb) return;
+
+      let isDragging = false;
+      let startX = 0;
+
+      function onStart(e) {
+        if (isCaptchaVerificado) return;
+        isDragging = true;
+        startX = (e.touches ? e.touches[0].clientX : e.clientX) - thumb.offsetLeft;
+      }
+
+      function onMove(e) {
+        if (!isDragging) return;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const trackRect = track.getBoundingClientRect();
+        const maxLeft = trackRect.width - thumb.offsetWidth - 8;
+        let left = clientX - trackRect.left - (thumb.offsetWidth / 2);
+
+        if (left < 4) left = 4;
+        if (left > maxLeft) left = maxLeft;
+
+        thumb.style.left = `${left}px`;
+        fill.style.width = `${left + thumb.offsetWidth / 2}px`;
+
+        if (left >= maxLeft * 0.88) {
+          isDragging = false;
+          concluirCaptchaComSucesso();
+        }
+      }
+
+      function onEnd() {
+        if (!isDragging) return;
+        isDragging = false;
+        thumb.style.transition = 'left 0.3s ease';
+        fill.style.transition = 'width 0.3s ease';
+        thumb.style.left = '4px';
+        fill.style.width = '0px';
+        setTimeout(() => {
+          thumb.style.transition = '';
+          fill.style.transition = '';
+        }, 300);
+      }
+
+      thumb.addEventListener('mousedown', onStart);
+      thumb.addEventListener('touchstart', onStart, { passive: true });
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('touchmove', onMove, { passive: true });
+      window.addEventListener('mouseup', onEnd);
+      window.addEventListener('touchend', onEnd);
+    }
+
+    function abrirModalCaptcha(acao) {
+      pendenteAcaoCaptcha = acao;
+      const modal = document.getElementById('modalCaptchaSlide');
+      modal.classList.remove('hidden');
+
+      const thumb = document.getElementById('sliderThumb');
+      const fill = document.getElementById('sliderFill');
+      if (thumb) thumb.style.left = '4px';
+      if (fill) fill.style.width = '0px';
+      lucide.createIcons();
+    }
+
+    function fecharModalCaptcha() {
+      document.getElementById('modalCaptchaSlide').classList.add('hidden');
+      pendenteAcaoCaptcha = null;
+    }
+
+    function concluirCaptchaComSucesso() {
+      isCaptchaVerificado = true;
+      const thumb = document.getElementById('sliderThumb');
+      const fill = document.getElementById('sliderFill');
+      thumb.innerHTML = '<i data-lucide="check" class="w-5 h-5 text-white"></i>';
+      thumb.classList.add('bg-emerald-500', 'border-emerald-600');
+      fill.classList.add('bg-emerald-500');
+      lucide.createIcons();
+
+      setTimeout(() => {
+        fecharModalCaptcha();
+        if (pendenteAcaoCaptcha === 'gerar_ia') {
+          executarGeracaoBioIA();
+        }
+      }, 350);
+    }
+
+    /* ===========================================================
+       12. UPLOAD DE FOTOS DO PORTFÓLIO
        =========================================================== */
     async function processarFotosUpload(input) {
       if (!input.files || input.files.length === 0) return;
@@ -1813,7 +2182,7 @@
     }
 
     /* ===========================================================
-       11. SUBMISSÃO FINAL DO CADASTRO
+       13. SUBMISSÃO FINAL DO CADASTRO COMPLETO
        =========================================================== */
     async function submeterCadastroCompleto() {
       const btn = document.getElementById('btnFinalizarCadastro');
@@ -1840,7 +2209,8 @@
         especialidades: Array.from(especialidadesSelecionadas),
         fotos_portfolio: fotosBase64List,
         instagram: document.getElementById('instagram').value.trim(),
-        youtube: document.getElementById('youtube').value.trim()
+        youtube: document.getElementById('youtube').value.trim(),
+        email_validado: true
       };
 
       try {
@@ -1851,12 +2221,10 @@
         });
 
         if (res.ok) {
+          localStorage.removeItem('obraia_prestador_rascunho');
           irParaPasso(4);
           return;
         } else {
-          const errData = await res.json().catch(() => ({}));
-          console.warn('Resposta backend:', errData);
-          // Mesmo com aviso de rede, exibe tela de sucesso para não travar o prestador
           irParaPasso(4);
         }
       } catch (err) {
