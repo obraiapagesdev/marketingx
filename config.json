@@ -1,0 +1,10 @@
+{
+  "project_name": "obraia",
+  "cloudflare_domain": "https://obraia.pages.dev",
+  "cloudflare_account_id": "960a35848d3c753d88910be60f947d11",
+  "github_repo": "https://github.com/obraiapagesdev/marketingx",
+  "github_user": "obraiapagesdev",
+  "email": "obraia.pages.dev@proton.me",
+  "api_backend_url": "https://consultoriasoft.com.br",
+  "vps_ip": "84.247.189.155"
+}
