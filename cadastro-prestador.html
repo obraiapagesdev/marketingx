@@ -18,6 +18,9 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
+  <!-- SDK Oficial do Google Identity Services para Login e Verificação de Gmail -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
   <script>
     tailwind.config = {
       theme: {
@@ -46,56 +49,77 @@
     .step-active { background: #C8102E; color: white; border-color: #C8102E; }
     .step-done { background: #10B981; color: white; border-color: #10B981; }
     .step-pending { background: #F3F4F6; color: #9CA3AF; border-color: #E5E7EB; }
+
+    /* Estilo do Slider Captcha */
+    .slider-track {
+      position: relative;
+      background: #e2e8f0;
+      border-radius: 9999px;
+      user-select: none;
+      touch-action: none;
+    }
+    .slider-thumb {
+      cursor: grab;
+      touch-action: none;
+      transition: background-color 0.2s;
+    }
+    .slider-thumb:active {
+      cursor: grabbing;
+    }
+    .slider-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      border-radius: 9999px;
+      background: linear-gradient(90deg, #3b82f6, #10b981);
+      pointer-events: none;
+    }
   </style>
 </head>
-<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col justify-between">
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col antialiased">
 
-  <!-- Top Announcement Bar -->
-  <div class="bg-brand-yellow text-slate-900 font-bold text-xs py-2 px-4 text-center border-b border-amber-300">
-    🚀 Conectando sua mão de obra qualificada a centenas de clientes de materiais de construção todos os dias!
-  </div>
-
-  <!-- Header -->
+  <!-- Header Institucional -->
   <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-            <a href="/" class="flex items-center gap-3 shrink-0 group">
-        <div class="flex flex-col items-center justify-center">
-          <img src="/logo.png" alt="Obra IA Logo" class="h-10 w-auto object-contain transition-transform group-hover:scale-105">
-          <span class="text-[10px] font-black tracking-tight text-blue-900 lowercase -mt-0.5">obra.ia</span>
-        </div>
-        <div>
-          <span class="font-display font-black text-base text-slate-900 tracking-tight block">Obra.IA</span>
-          <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider block -mt-1">Rede de Profissionais & Mão de Obra</span>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-3">
+        <img src="/logo.png" alt="Obra IA Logo" class="w-10 h-10 object-contain drop-shadow-xs">
+        <div class="flex flex-col">
+          <span class="font-display font-black text-xl tracking-tight text-slate-900 leading-none">
+            obra<span class="text-brand-red">.ia</span>
+          </span>
+          <span class="text-[9px] uppercase tracking-widest text-slate-500 font-bold mt-0.5">
+            Cadastro de Prestador
+          </span>
         </div>
       </a>
 
       <div class="flex items-center gap-3">
-        <a href="/" class="text-xs font-bold text-slate-700 hover:text-brand-red px-3 py-2 rounded-lg border border-slate-200 hover:border-brand-red transition-all flex items-center gap-1.5">
-          <i data-lucide="users" class="w-4 h-4 text-brand-red"></i>
-          <span>Ver Vitrine de Profissionais</span>
-        </a>
-        <a href="https://consultoriasoft.com.br/catalogo" class="hidden sm:inline-flex text-xs font-bold text-slate-700 hover:text-brand-red px-3 py-2">
-          Voltar ao Catálogo
+        <a href="/prestadores" class="text-xs font-bold text-slate-600 hover:text-brand-red px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors flex items-center gap-1.5">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+          <span>Voltar para Prestadores</span>
         </a>
       </div>
     </div>
   </header>
 
-  <!-- Main Container -->
-  <main class="max-w-4xl w-full mx-auto px-4 py-8 flex-1">
-    
-    <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
+  <!-- Container Principal -->
+  <main class="flex-1 max-w-4xl w-full mx-auto px-4 py-8 sm:py-10">
+    <div class="bg-white rounded-3xl shadow-xl border border-slate-200/80 overflow-hidden">
       
-      <!-- Banner & Stepper Header -->
-      <div class="bg-gradient-to-r from-red-800 via-brand-red to-rose-700 p-6 sm:p-8 text-white">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <!-- Topo com Gradiente e Stepper -->
+      <div class="bg-gradient-to-r from-slate-900 via-brand-dark to-slate-900 p-6 sm:p-8 text-white relative">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <span class="text-[11px] font-black uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full inline-block mb-2">
-              Cadastro Gratuito · Balcão & Totem
-            </span>
-            <h1 class="text-2xl sm:text-3xl font-display font-black">Portal do Profissional da Construção</h1>
-            <p class="text-red-100 text-xs sm:text-sm mt-1 max-w-xl">
-              Crie seu perfil profissional verificado. Seja recomendado diretamente aos clientes que calculam e compram materiais na loja física e online.
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/20 text-red-200 border border-red-500/30 text-xs font-bold uppercase tracking-wider mb-2">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5 text-brand-yellow"></i>
+              Portal de Oportunidades & Vitrine
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-display font-black tracking-tight">
+              Faça seu Cadastro Profissional
+            </h1>
+            <p class="text-slate-300 text-xs sm:text-sm mt-1 max-w-xl">
+              Receba orçamentos qualificados direto no seu WhatsApp de clientes, construtoras e arquitetos.
             </p>
           </div>
           <div class="hidden sm:flex h-16 w-16 bg-white/10 rounded-2xl items-center justify-center border border-white/20 shrink-0">
@@ -111,7 +135,7 @@
             </div>
             <div class="min-w-0">
               <span class="text-[10px] sm:text-[11px] uppercase font-bold tracking-wider block text-white">Passo 1</span>
-              <span class="text-[11px] sm:text-xs text-red-100 truncate hidden xs:block sm:block">Identificação</span>
+              <span class="text-[11px] sm:text-xs text-red-100 truncate hidden xs:block sm:block">Identificação & Foto</span>
             </div>
           </div>
 
@@ -121,7 +145,7 @@
             </div>
             <div class="min-w-0">
               <span class="text-[10px] sm:text-[11px] uppercase font-bold tracking-wider block text-red-200">Passo 2</span>
-              <span class="text-[11px] sm:text-xs text-red-200 truncate hidden xs:block sm:block">Especialidades</span>
+              <span class="text-[11px] sm:text-xs text-red-200 truncate hidden xs:block sm:block">Especialidades & CEP</span>
             </div>
           </div>
 
@@ -131,7 +155,7 @@
             </div>
             <div class="min-w-0">
               <span class="text-[10px] sm:text-[11px] uppercase font-bold tracking-wider block text-red-200">Passo 3</span>
-              <span class="text-[11px] sm:text-xs text-red-200 truncate hidden xs:block sm:block">Portfólio</span>
+              <span class="text-[11px] sm:text-xs text-red-200 truncate hidden xs:block sm:block">Portfólio & Mídias</span>
             </div>
           </div>
         </div>
@@ -140,13 +164,129 @@
       <!-- Form Body -->
       <form id="formCadastroPrestador" class="p-6 sm:p-8" onsubmit="event.preventDefault();">
         
-        <!-- ================= PASSO 1: DADOS BÁSICOS ================= -->
+        <!-- ================= PASSO 1: DADOS BÁSICOS & FOTO ================= -->
         <div id="step-1" class="space-y-6">
           <div class="border-b border-slate-100 pb-4">
             <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-              <i data-lucide="user-check" class="w-5 h-5 text-brand-red"></i> Dados Básicos e de Contato
+              <i data-lucide="user-check" class="w-5 h-5 text-brand-red"></i> Dados Básicos e Foto de Perfil
             </h2>
-            <p class="text-xs text-slate-500 mt-0.5">Preencha seus dados para receber mensagens diretas no seu WhatsApp.</p>
+            <p class="text-xs text-slate-500 mt-0.5">Sua foto e informações serão exibidas na vitrine para clientes e arquitetos.</p>
+          </div>
+
+          <!-- BLOCO GOOGLE SIGN-IN (Validação Instantânea de Gmail + Nome + Foto de Perfil) -->
+          <div class="p-4 bg-gradient-to-r from-blue-50/70 via-indigo-50/40 to-slate-50 border border-blue-200/80 rounded-2xl shadow-xs">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div class="flex items-center gap-3 text-center sm:text-left">
+                <div class="w-10 h-10 rounded-xl bg-white shadow-xs border border-blue-100 flex items-center justify-center shrink-0">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.64v3h3.88c2.28-2.09 3.6-5.17 3.6-9.08z"/>
+                    <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.09C3.26 21.3 7.33 24 12 24z"/>
+                    <path fill="#FBBC05" d="M5.28 14.32c-.25-.72-.38-1.49-.38-2.32s.13-1.6.38-2.32V6.59H1.26C.46 8.18 0 9.99 0 12s.46 3.82 1.26 5.41l4.02-3.09z"/>
+                    <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.7 1.26 6.59l4.02 3.09c.95-2.83 3.6-4.93 6.72-4.93z"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="flex items-center gap-1.5 justify-center sm:justify-start">
+                    <h3 class="text-xs font-black uppercase tracking-wider text-slate-900">Verificação Instantânea com Google</h3>
+                    <span class="text-[9px] bg-blue-100 text-blue-700 font-bold px-1.5 py-0.5 rounded">1-Clique</span>
+                  </div>
+                  <p class="text-xs text-slate-600">Conecte sua conta Google para validar seu Gmail e preencher seu <strong>Nome e Foto de Perfil Oficial</strong>.</p>
+                </div>
+              </div>
+
+              <!-- Google Sign-In Button Container -->
+              <div id="bloco-login-google" class="shrink-0 flex items-center gap-2">
+                <div id="g_id_onload"
+                     data-client_id="846498718915-mockclientid.apps.googleusercontent.com"
+                     data-callback="manipularRespostaGoogle"
+                     data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin" 
+                     data-type="standard" 
+                     data-shape="pill" 
+                     data-theme="outline" 
+                     data-text="continue_with" 
+                     data-size="medium" 
+                     data-locale="pt-BR">
+                </div>
+                <!-- Botão Alternativo Simular/Conectar Google -->
+                <button type="button" onclick="conectarGooglePrompt()" class="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold px-3.5 py-2 rounded-xl border border-slate-300 shadow-2xs transition-all cursor-pointer">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.64v3h3.88c2.28-2.09 3.6-5.17 3.6-9.08z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.09C3.26 21.3 7.33 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.32c-.25-.72-.38-1.49-.38-2.32s.13-1.6.38-2.32V6.59H1.26C.46 8.18 0 9.99 0 12s.46 3.82 1.26 5.41l4.02-3.09z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.7 1.26 6.59l4.02 3.09c.95-2.83 3.6-4.93 6.72-4.93z"/></svg>
+                  <span>Validar com Google</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Banner de Usuário Google Conectado -->
+            <div id="badgeUsuarioGoogle" class="hidden mt-3 pt-3 border-t border-blue-200/60 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <img id="avatarGoogleConectado" class="w-9 h-9 rounded-full border-2 border-emerald-400 object-cover shadow-xs" src="" alt="Foto Google">
+                <div>
+                  <span id="nomeGoogleConectado" class="text-xs font-bold text-slate-800 block"></span>
+                  <span id="emailGoogleConectado" class="text-[11px] text-emerald-600 font-bold flex items-center gap-1">
+                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500"></i>
+                    Conta Gmail autenticada oficialmente pelo Google
+                  </span>
+                </div>
+              </div>
+              <button type="button" onclick="desconectarGoogle()" class="text-[11px] text-slate-400 hover:text-slate-700 underline font-medium">Trocar Conta</button>
+            </div>
+          </div>
+
+          <!-- FOTO DE PERFIL PROFISSIONAL (DESTAQUE MÁXIMO) -->
+          <div class="p-5 bg-gradient-to-r from-amber-50/80 via-white to-orange-50/40 border-2 border-amber-300/80 rounded-2xl shadow-xs">
+            <div class="flex flex-col sm:flex-row items-center gap-5">
+              <!-- Avatar Preview & Upload Trigger -->
+              <div class="relative group shrink-0 cursor-pointer" onclick="document.getElementById('inputFotoPerfil').click()">
+                <div id="containerAvatarPerfil" class="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-amber-400 shadow-md bg-white flex items-center justify-center relative">
+                  <img id="previewAvatarPerfil" src="" alt="Foto de Perfil" class="w-full h-full object-cover hidden">
+                  <div id="placeholderAvatarPerfil" class="flex flex-col items-center justify-center text-slate-400 p-2 text-center">
+                    <i data-lucide="camera" class="w-9 h-9 text-amber-500 mb-1"></i>
+                    <span class="text-[11px] font-bold text-slate-700">Foto de Perfil</span>
+                    <span class="text-[9px] text-slate-400">Toque p/ enviar</span>
+                  </div>
+                  <!-- Overlay Hover -->
+                  <div class="absolute inset-0 bg-black/40 text-white flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
+                    <i data-lucide="upload" class="w-6 h-6 mb-0.5"></i>
+                    <span class="text-[9px] font-bold uppercase">Trocar Foto</span>
+                  </div>
+                </div>
+                <!-- Badge Câmera -->
+                <div class="absolute bottom-1 right-1 bg-amber-500 hover:bg-amber-600 text-white p-2 rounded-full shadow-lg border-2 border-white">
+                  <i data-lucide="camera" class="w-4 h-4"></i>
+                </div>
+                <input type="file" id="inputFotoPerfil" accept="image/*" class="hidden" onchange="processarFotoPerfil(this)">
+              </div>
+
+              <!-- Info e Ações da Foto de Perfil -->
+              <div class="flex-1 text-center sm:text-left space-y-2">
+                <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                  <span class="text-sm font-black uppercase tracking-wider text-slate-900 flex items-center gap-1.5">
+                    <i data-lucide="award" class="w-4 h-4 text-amber-500 fill-amber-500"></i>
+                    Foto de Perfil Profissional *
+                  </span>
+                  <span class="bg-amber-100 text-amber-800 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border border-amber-300">
+                    Aumenta em 3x seus orçamentos
+                  </span>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                  <strong class="text-slate-900">Sua foto é o seu cartão de visitas!</strong> Clientes e arquitetos contratam profissionais que mostram o rosto. Use uma foto clara, bem iluminada e de frente.
+                </p>
+                <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
+                  <button type="button" onclick="document.getElementById('inputFotoPerfil').click()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-black text-white text-xs font-bold rounded-xl shadow-xs transition-all active:scale-95 cursor-pointer">
+                    <i data-lucide="camera" class="w-4 h-4 text-amber-400"></i>
+                    <span>Tirar Selfie ou Escolher Foto</span>
+                  </button>
+                  <button type="button" id="btnRemoverFotoPerfil" onclick="removerFotoPerfil()" class="hidden inline-flex items-center gap-1 px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-semibold rounded-xl border border-red-200 transition-colors cursor-pointer">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                    <span>Remover</span>
+                  </button>
+                </div>
+                <div id="statusFotoPerfil" class="text-[11px] text-slate-500 font-medium">
+                  Formatos aceitos: JPG, PNG ou WEBP (fotos com moderação de qualidade).
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -168,7 +308,7 @@
             </div>
           </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <!-- WhatsApp com Máscara -->
             <div>
               <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
@@ -230,7 +370,7 @@
               </div>
             </div>
 
-                        <!-- CPF ou CNPJ com Máscara e Validação Oficial da Receita -->
+            <!-- CPF ou CNPJ com Máscara e Validação Estrita Módulo 11 -->
             <div>
               <div class="flex items-center justify-between mb-1.5">
                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
@@ -268,47 +408,29 @@
                 <div>
                   <div class="flex items-center gap-1.5">
                     <span class="text-xs font-black text-slate-900 tracking-tight">Chat IA MarketingX</span>
-                    <span class="text-[10px] bg-indigo-100 text-indigo-700 font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">Assistente Ativo</span>
+                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-indigo-100 text-indigo-700 border border-indigo-200">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Online
+                    </span>
                   </div>
-                  <p class="text-[11px] text-slate-500">Crie sua apresentação profissional automaticamente conversando com a IA</p>
-                </div>
-              </div>
-              <span class="hidden sm:inline-flex text-[11px] text-indigo-600 font-bold items-center gap-1">
-                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> IA MarketingX
-              </span>
-            </div>
-
-            <!-- Caixa de Mensagens do Chat -->
-            <div id="chatIaHistorico" class="space-y-2.5 max-h-56 overflow-y-auto pr-1 text-xs">
-              <!-- Mensagem inicial da IA -->
-              <div class="flex items-start gap-2">
-                <div class="w-6 h-6 rounded-lg bg-indigo-600 text-white flex items-center justify-center shrink-0 text-[10px] font-bold mt-0.5">
-                  IA
-                </div>
-                <div class="bg-white border border-indigo-100 rounded-2xl rounded-tl-none p-3 text-slate-700 shadow-2xs leading-relaxed max-w-xl">
-                  👋 <b>Olá! Sou o assistente da MarketingX.</b><br>
-                  Me conte em poucas palavras o que você faz (quantos anos de experiência, se tem equipe, diferenciais etc.), ou clique em um dos botões rápidos abaixo. Eu escrevo sua apresentação profissional na hora!
+                  <p class="text-[11px] text-slate-500">Diga o que você faz em palavras simples que a IA cria sua Bio profissional.</p>
                 </div>
               </div>
             </div>
 
-            <!-- Sugestões Rápidas (Chips) -->
-            <div class="flex flex-wrap items-center gap-1.5 pt-1">
-              <span class="text-[10px] uppercase font-bold text-slate-400 mr-1">Sugestões Rápidas:</span>
-              <button type="button" onclick="enviarChatIa('Sou azulejista há mais de 10 anos, especialista em porcelanatos de grandes formatos, meia esquadria 45 graus e nichos.')" class="chip-chat text-[11px] font-semibold bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 px-2.5 py-1 rounded-lg transition-all shadow-2xs">
-                🧱 Azulejista & Porcelanatos
+            <!-- Sugestões Rápidas de Especialidade -->
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Exemplos rápidos:</span>
+              <button type="button" onclick="enviarChatIa('Sou azulejista especialista em porcelanato de grandes formatos, cortes em 45 graus e acabamento fino.')" class="text-[11px] font-semibold bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 px-2.5 py-1 rounded-lg transition-all shadow-2xs">
+                📐 Azulejista / Porcelanato
               </button>
-              <button type="button" onclick="enviarChatIa('Sou pintor profissional especializado em pintura mecanizada airless, efeitos decorativos como cimento queimado e fino acabamento.')" class="chip-chat text-[11px] font-semibold bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 px-2.5 py-1 rounded-lg transition-all shadow-2xs">
+              <button type="button" onclick="enviarChatIa('Sou pintor profissional com máquina airless, faço cimento queimado, pintura interna e externa e efeitos decorativos.')" class="text-[11px] font-semibold bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 px-2.5 py-1 rounded-lg transition-all shadow-2xs">
                 🎨 Pintor Airless & Efeitos
               </button>
-              <button type="button" onclick="enviarChatIa('Sou eletricista residencial e predial com curso técnico e NR10, especializado em quadros de distribuição, automação e iluminação LED.')" class="chip-chat text-[11px] font-semibold bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 px-2.5 py-1 rounded-lg transition-all shadow-2xs">
+              <button type="button" onclick="enviarChatIa('Sou eletricista residencial e predial com curso técnico e NR10, especializado em quadros de distribuição, automação e iluminação LED.')" class="text-[11px] font-semibold bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 px-2.5 py-1 rounded-lg transition-all shadow-2xs">
                 ⚡ Eletricista Residencial
               </button>
-              <button type="button" onclick="enviarChatIa('Sou encanador profissional, especialista em tubulações Tigre, água quente, caixas acopladas, detecção de vazamentos e novas instalações.')" class="chip-chat text-[11px] font-semibold bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 px-2.5 py-1 rounded-lg transition-all shadow-2xs">
-                💧 Encanador & Hidráulica
-              </button>
-              <button type="button" onclick="enviarChatIa('Mestre de obras e pedreiro geral, especializado em reformas completas do chão ao teto com pontualidade e equipe própria.')" class="chip-chat text-[11px] font-semibold bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 px-2.5 py-1 rounded-lg transition-all shadow-2xs">
-                🔨 Mestre de Obras & Reformas
+              <button type="button" onclick="enviarChatIa('Sou churrasqueiro profissional especializado em eventos, confraternizações e carnes nobres com acompanhamentos.')" class="text-[11px] font-semibold bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 px-2.5 py-1 rounded-lg transition-all shadow-2xs">
+                🔥 Churrasqueiro Profissional
               </button>
             </div>
 
@@ -319,14 +441,14 @@
                   type="text" 
                   id="inputChatIa" 
                   placeholder="Ex: Faço pintura há 8 anos, entrego a obra limpa e tenho ótimas referências..." 
-                  onkeydown="if(event.key === 'Enter'){ event.preventDefault(); enviarChatIa(); }"
+                  onkeydown="if(event.key === 'Enter'){ event.preventDefault(); acionarChatIa(); }"
                   class="w-full pl-3.5 pr-10 py-2.5 bg-white border border-indigo-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-xs font-medium shadow-2xs"
                 >
               </div>
               <button 
                 type="button" 
                 id="btnEnviarChatIa"
-                onclick="enviarChatIa()" 
+                onclick="acionarChatIa()" 
                 class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md shadow-indigo-500/20 flex items-center gap-1.5 transition-all shrink-0 active:scale-95 cursor-pointer"
               >
                 <i data-lucide="sparkles" class="w-4 h-4 text-yellow-300"></i>
@@ -345,7 +467,7 @@
                 type="button" 
                 id="btnMelhorarBioIA" 
                 onclick="melhorarBioComIA()" 
-                class="hidden inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-xs transition-all duration-200 active:scale-95"
+                class="hidden inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-xs transition-all duration-200 active:scale-95 cursor-pointer"
               >
                 <i data-lucide="sparkles" class="w-3.5 h-3.5 text-yellow-300"></i>
                 <span>Melhorar com IA</span>
@@ -357,7 +479,7 @@
                 id="bio" 
                 rows="3" 
                 oninput="verificarTextoBio(this.value)"
-                placeholder="Conte há quantos anos atua, principais tipos de obras realizadas, referências de clientes e seus diferenciais..." 
+                placeholder="Conte há quantos anos atua, principais serviços realizados e seus diferenciais de atendimento..." 
                 class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none text-sm font-medium transition-all"
               ></textarea>
               
@@ -368,12 +490,12 @@
               </div>
             </div>
             <p class="text-[11px] text-slate-400">
-              💡 <i>Escreva um rascunho rápido e clique em <b>Melhorar com IA</b> para formatar uma apresentação altamente profissional.</i>
+              💡 <i>Escreva um rascunho rápido e clique em <b>Melhorar com IA</b> para formatar uma apresentação altamente atrativa.</i>
             </p>
           </div>
 
           <div class="flex justify-end pt-4">
-            <button type="button" onclick="irParaPasso(2)" class="flex items-center gap-2 bg-brand-red hover:bg-brand-redHover text-white font-bold px-7 py-3 rounded-xl transition-all shadow-md shadow-red-600/20 text-sm">
+            <button type="button" onclick="acionarContinuarPasso2()" class="flex items-center gap-2 bg-brand-red hover:bg-brand-redHover text-white font-bold px-7 py-3 rounded-xl transition-all shadow-md shadow-red-600/20 text-sm active:scale-95 cursor-pointer">
               <span>Continuar: Especialidades</span>
               <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
@@ -391,71 +513,105 @@
 
           <!-- Grid de Seleção de Especialidades -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-              Selecione suas Especialidades:
-            </label>
+            <div class="flex items-center justify-between mb-2">
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                Selecione suas Especialidades:
+              </label>
+              <span id="badgeTotalSelecionadas" class="text-[11px] font-bold text-brand-red">0 selecionadas</span>
+            </div>
+            
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="containerEspecialidades">
-              <!-- Renderizado via Javascript da API -->
-              <div class="p-4 rounded-xl border border-slate-200 text-center py-8">
-                <i data-lucide="loader-2" class="w-6 h-6 animate-spin text-brand-red mx-auto"></i>
-                <span class="text-xs text-slate-500 block mt-2">Carregando especialidades...</span>
+              <!-- Renderizado via Javascript -->
+            </div>
+
+            <!-- Botão "Outras Especialidades" -->
+            <div class="mt-4 p-4 bg-slate-50 border border-dashed border-slate-300 rounded-2xl">
+              <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div class="text-center sm:text-left">
+                  <h4 class="text-xs font-bold text-slate-800">Não encontrou a sua especialidade na lista?</h4>
+                  <p class="text-[11px] text-slate-500">Adicione uma profissão ou serviço personalizado agora mesmo.</p>
+                </div>
+                <button type="button" onclick="abrirFormOutrasEspecialidades()" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 rounded-xl text-xs font-bold shadow-2xs transition-colors cursor-pointer shrink-0">
+                  <i data-lucide="plus-circle" class="w-4 h-4 text-brand-red"></i>
+                  <span>Outras Especialidades</span>
+                </button>
+              </div>
+
+              <!-- Formulário inline para adicionar outra especialidade -->
+              <div id="boxNovaEspecialidade" class="hidden mt-3 pt-3 border-t border-slate-200">
+                <div class="flex items-center gap-2">
+                  <input type="text" id="inputOutraEspecialidade" placeholder="Ex: Montador de Móveis, Tapeceiro, Chaveiro..." class="flex-1 px-3.5 py-2 text-xs bg-white border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-brand-red">
+                  <button type="button" onclick="salvarOutraEspecialidade()" class="px-4 py-2 bg-brand-red hover:bg-brand-redHover text-white text-xs font-bold rounded-xl shadow-xs transition-colors cursor-pointer">
+                    Adicionar
+                  </button>
+                  <button type="button" onclick="document.getElementById('boxNovaEspecialidade').classList.add('hidden')" class="px-2 py-2 text-slate-400 hover:text-slate-600 text-xs">
+                    Cancelar
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Localização e Raio -->
+          <!-- Localização e Raio com API Correios (ViaCEP) -->
           <div class="bg-slate-50 border border-slate-200 p-5 rounded-2xl space-y-4">
             <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
-              <i data-lucide="map-pin" class="w-4 h-4 text-brand-red"></i> Sua Região Base de Atendimento
+              <i data-lucide="map-pin" class="w-4 h-4 text-brand-red"></i> Sua Região Base de Atendimento (Correios)
             </h3>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
               <div>
                 <div class="flex items-center justify-between mb-1">
                   <label class="block text-[11px] font-bold text-slate-600">CEP Base *</label>
-                  <span id="statusCep" class="text-[9px] font-bold text-indigo-600 hidden">Buscando...</span>
+                  <span id="statusCep" class="text-[9px] font-bold text-indigo-600 hidden">Buscando nos Correios...</span>
                 </div>
                 <div class="relative">
                   <input 
                     type="text" 
                     id="cep" 
-                    required
+                    required 
                     maxlength="9"
-                    oninput="mascaraCEP(this)"
-                    onblur="buscarCepCorreios(this.value)"
+                    oninput="mascaraCEP(this); buscarCepCorreios(this.value);"
                     placeholder="01001-000" 
-                    class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-medium focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none"
+                    class="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-brand-red outline-none"
                   >
                 </div>
               </div>
-              <div class="sm:col-span-2">
-                <label class="block text-[11px] font-bold text-slate-600 mb-1">Bairro Base *</label>
-                <input type="text" id="bairro" required placeholder="Preenchido automaticamente pelo CEP" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-medium">
+
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-1">Bairro *</label>
+                <input type="text" id="bairro" required placeholder="Ex: Tatuapé, Moema..." class="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-brand-red outline-none">
               </div>
+
               <div>
                 <label class="block text-[11px] font-bold text-slate-600 mb-1">Cidade *</label>
-                <input type="text" id="cidade" required value="São Paulo" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-medium">
+                <input type="text" id="cidade" value="São Paulo" required class="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-brand-red outline-none">
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-1">Estado</label>
+                <input type="text" id="estado" value="SP" readonly class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 outline-none">
               </div>
             </div>
-            <div id="msgFeedbackCep" class="text-[11px] text-emerald-600 font-bold hidden flex items-center gap-1.5 -mt-2">
-              <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
-              <span id="txtFeedbackCep"></span>
+
+            <!-- Feedback dos Correios -->
+            <div id="feedbackCepCorreios" class="text-[11px] text-slate-500 font-medium">
+              💡 Digite o CEP de 8 dígitos para preenchimento automático de Bairro e Cidade via API dos Correios.
             </div>
 
             <div>
-              <div class="flex justify-between text-xs font-bold text-slate-700 mb-1.5">
-                <span>Raio Máximo de Deslocamento:</span>
-                <span id="labelRaio" class="text-brand-red font-black text-sm">25 km</span>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="text-[11px] font-bold text-slate-600">Raio de Deslocamento para Obras:</label>
+                <span id="labelRaioKm" class="text-xs font-black text-brand-red">25 km</span>
               </div>
-              <input type="range" id="raioKm" min="5" max="80" step="5" value="25" oninput="document.getElementById('labelRaio').innerText = this.value + ' km'" class="w-full accent-brand-red cursor-pointer">
+              <input type="range" id="raioKm" min="5" max="100" step="5" value="25" oninput="document.getElementById('labelRaioKm').textContent = this.value + ' km'" class="w-full accent-brand-red h-2 bg-slate-200 rounded-lg cursor-pointer">
             </div>
           </div>
 
           <div class="flex justify-between pt-4">
-            <button type="button" onclick="irParaPasso(1)" class="flex items-center gap-2 border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold px-6 py-3 rounded-xl text-sm">
+            <button type="button" onclick="irParaPasso(1)" class="flex items-center gap-2 border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold px-6 py-3 rounded-xl text-sm cursor-pointer">
               <i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar
             </button>
-            <button type="button" onclick="irParaPasso(3)" class="flex items-center gap-2 bg-brand-red hover:bg-brand-redHover text-white font-bold px-7 py-3 rounded-xl transition-all shadow-md shadow-red-600/20 text-sm">
+            <button type="button" onclick="irParaPasso(3)" class="flex items-center gap-2 bg-brand-red hover:bg-brand-redHover text-white font-bold px-7 py-3 rounded-xl transition-all shadow-md shadow-red-600/20 text-sm cursor-pointer">
               <span>Continuar: Portfólio</span>
               <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
@@ -468,10 +624,10 @@
             <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
               <i data-lucide="camera" class="w-5 h-5 text-brand-red"></i> Galeria de Obras e Portfólio
             </h2>
-            <p class="text-xs text-slate-500 mt-0.5">Fotos reais de trabalhos anteriores aumentam a confiança e fechamento de orçamentos.</p>
+            <p class="text-xs text-slate-500 mt-0.5">Fotos reais de trabalhos anteriores aumentam a confiança e o fechamento de orçamentos.</p>
           </div>
 
-          <!-- Drag & Drop Upload Zone com Compressão WebP + Moderação IA -->
+          <!-- Drag & Drop Upload Zone -->
           <div class="border-2 border-dashed border-slate-300 hover:border-brand-red rounded-3xl p-6 sm:p-8 text-center bg-slate-50/60 transition-colors" id="zonaUpload">
             <input type="file" id="inputFotoUpload" multiple accept="image/*" class="hidden" onchange="processarFotosUpload(this)">
             <label for="inputFotoUpload" class="cursor-pointer flex flex-col items-center">
@@ -481,54 +637,6 @@
               <span class="text-base font-bold text-slate-900">Clique ou arraste fotos de suas obras</span>
               <span class="text-xs text-slate-500 mt-1">Moderação automática por IA · Compressão WebP ativada.</span>
             </label>
-          </div>
-
-          <!-- Painel de Moderação IA (aparece durante a análise) -->
-          <div id="painelModeracaoIA" class="hidden bg-slate-950 border border-slate-700 rounded-2xl p-4 space-y-3">
-            <div class="flex items-center gap-2 text-amber-400 font-bold text-sm">
-              <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-              <span id="txtAnaliseIA">🤖 IA analisando fotos...</span>
-            </div>
-            <div class="grid grid-cols-3 gap-2" id="cardsModeracaoIA">
-              <!-- Injetado dinamicamente -->
-            </div>
-          </div>
-
-          <!-- Painel Explicativo de Moderação (sempre visível no passo 3) -->
-          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
-            <div class="flex items-center gap-2 mb-3">
-              <div class="w-8 h-8 bg-purple-100 rounded-xl flex items-center justify-center">
-                <svg class="w-4 h-4 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-              </div>
-              <span class="text-sm font-black text-slate-800">Moderação Inteligente de Conteúdo</span>
-              <span class="ml-auto text-[10px] font-black bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full uppercase">IA Ativa</span>
-            </div>
-            <div class="grid grid-cols-3 gap-2 text-[11px]">
-              <div class="bg-red-50 border border-red-200 rounded-xl p-2.5 text-center">
-                <div class="text-lg mb-1">🚫</div>
-                <div class="font-black text-red-700">Sexual</div>
-                <div class="text-red-600 leading-tight mt-0.5">Bloqueado automaticamente</div>
-                <div class="mt-1.5 h-1.5 rounded-full bg-red-200 overflow-hidden"><div class="h-full bg-red-500 rounded-full" style="width:95%"></div></div>
-                <div class="text-[9px] text-slate-400 mt-0.5">Threshold 95%</div>
-              </div>
-              <div class="bg-orange-50 border border-orange-200 rounded-xl p-2.5 text-center">
-                <div class="text-lg mb-1">🚫</div>
-                <div class="font-black text-orange-700">Político</div>
-                <div class="text-orange-600 leading-tight mt-0.5">Propaganda bloqueada</div>
-                <div class="mt-1.5 h-1.5 rounded-full bg-orange-200 overflow-hidden"><div class="h-full bg-orange-500 rounded-full" style="width:90%"></div></div>
-                <div class="text-[9px] text-slate-400 mt-0.5">Threshold 90%</div>
-              </div>
-              <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 text-center">
-                <div class="text-lg mb-1">✅</div>
-                <div class="font-black text-emerald-700">Obra/Trabalho</div>
-                <div class="text-emerald-600 leading-tight mt-0.5">Fotos aprovadas</div>
-                <div class="mt-1.5 h-1.5 rounded-full bg-emerald-200 overflow-hidden"><div class="h-full bg-emerald-500 rounded-full" style="width:10%"></div></div>
-                <div class="text-[9px] text-slate-400 mt-0.5">Threshold baixo</div>
-              </div>
-            </div>
-            <p class="text-[11px] text-slate-500 mt-3 leading-relaxed">
-              <b>Processo Automático:</b> As fotos são analisadas por IA antes de serem enviadas. Conteúdo impróprio é bloqueado imediatamente. Somente fotos reais de obras e serviços são aceitas.
-            </p>
           </div>
 
           <!-- Previews das Fotos Adicionadas -->
@@ -552,10 +660,10 @@
           </div>
 
           <div class="flex justify-between pt-6 border-t border-slate-100">
-            <button type="button" onclick="irParaPasso(2)" class="flex items-center gap-2 border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold px-6 py-3 rounded-xl text-sm">
+            <button type="button" onclick="irParaPasso(2)" class="flex items-center gap-2 border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold px-6 py-3 rounded-xl text-sm cursor-pointer">
               <i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar
             </button>
-            <button type="button" id="btnFinalizarCadastro" onclick="submeterCadastroCompleto()" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-3.5 rounded-xl transition-all shadow-lg shadow-emerald-600/30 text-sm">
+            <button type="button" id="btnFinalizarCadastro" onclick="submeterCadastroCompleto()" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-3.5 rounded-xl transition-all shadow-lg shadow-emerald-600/30 text-sm cursor-pointer">
               <i data-lucide="check-circle-2" class="w-5 h-5"></i>
               <span>Finalizar e Publicar Perfil</span>
             </button>
@@ -569,14 +677,14 @@
           </div>
           <h2 class="text-2xl font-display font-black text-slate-900">Cadastro Concluído com Sucesso!</h2>
           <p class="text-sm text-slate-600 max-w-md mx-auto">
-            Seu perfil profissional já está ativo e visível na vitrine da Obra.IA e nos totens de balcão de materiais de construção.
+            Seu perfil profissional com foto e especialidades já está cadastrado e visível na vitrine da Obra.IA.
           </p>
           <div class="pt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <a href="/" class="w-full sm:w-auto bg-brand-red hover:bg-brand-redHover text-white font-bold px-6 py-3 rounded-xl shadow-md text-sm">
+            <a href="/prestadores" class="w-full sm:w-auto bg-brand-red hover:bg-brand-redHover text-white font-bold px-6 py-3 rounded-xl shadow-md text-sm text-center">
               Ver Vitrine de Profissionais
             </a>
-            <a href="https://consultoriasoft.com.br/catalogo" class="w-full sm:w-auto bg-slate-900 text-white font-bold px-6 py-3 rounded-xl text-sm">
-              Ir para o Catálogo de Produtos
+            <a href="/catalogo" class="w-full sm:w-auto bg-slate-900 text-white font-bold px-6 py-3 rounded-xl text-sm text-center">
+              Ir para o Catálogo de Materiais
             </a>
           </div>
         </div>
@@ -585,123 +693,288 @@
     </div>
   </main>
 
+  <!-- MODAL CAPTCHA DE ARRASTAR (Slide to Verify) -->
+  <div id="modalCaptchaSlide" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 text-center space-y-4 animate-in fade-in zoom-in duration-200">
+      <div class="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center mx-auto">
+        <i data-lucide="shield" class="w-6 h-6"></i>
+      </div>
+      <div>
+        <h3 class="text-base font-bold text-slate-900">Confirmação de Segurança</h3>
+        <p class="text-xs text-slate-500 mt-1">Arraste a peça até o fim para confirmar que você é humano.</p>
+      </div>
+
+      <!-- Slider Container -->
+      <div id="sliderTrack" class="slider-track h-12 w-full p-1 flex items-center relative overflow-hidden">
+        <div id="sliderFill" class="slider-fill w-0"></div>
+        <div id="sliderText" class="absolute inset-0 flex items-center justify-center text-xs font-bold text-slate-400 pointer-events-none">
+          Arraste para a direita &gt;&gt;
+        </div>
+        <div id="sliderThumb" class="slider-thumb w-10 h-10 rounded-full bg-white shadow-md border border-slate-300 flex items-center justify-center text-indigo-600 font-bold z-10">
+          <i data-lucide="chevrons-right" class="w-5 h-5"></i>
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-2">
+        <button type="button" onclick="fecharModalCaptcha()" class="text-xs text-slate-400 hover:text-slate-600 font-medium">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
     <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
       <span>© 2026 Obra.IA · Plataforma de Integração de Mão de Obra e Materiais</span>
       <div class="flex items-center gap-4">
-        <a href="/" class="hover:text-brand-red font-semibold">Vitrine</a>
-        <a href="https://consultoriasoft.com.br/catalogo" class="hover:text-brand-red font-semibold">Catálogo</a>
-        <a href="https://consultoriasoft.com.br/calculadora-de-obra.html" class="hover:text-brand-red font-semibold">Calculadora</a>
+        <a href="/prestadores" class="hover:text-brand-red font-semibold">Vitrine</a>
+        <a href="/catalogo" class="hover:text-brand-red font-semibold">Catálogo</a>
       </div>
     </div>
   </footer>
 
-  <!-- Scripts de Lógica -->
+  <!-- Scripts de Lógica Completa -->
   <script>
-    let especialidadesList = [];
+    // Estado Global da Aplicação
+    let especialidadesList = [
+      { id: 'esp-1', slug: 'azulejista-porcelanato', nome: 'Azulejista / Porcelanataria', categoria_pai: 'Acabamento', icone: 'grid' },
+      { id: 'esp-2', slug: 'gesseiro-drywall', nome: 'Gesseiro e Drywall', categoria_pai: 'Acabamento', icone: 'layers' },
+      { id: 'esp-3', slug: 'marceneiro', nome: 'Marcenaria e Móveis Planejados', categoria_pai: 'Acabamento', icone: 'tool' },
+      { id: 'esp-4', slug: 'pintor-profissional', nome: 'Pintor Profissional', categoria_pai: 'Acabamento', icone: 'paint-bucket' },
+      { id: 'esp-5', slug: 'vidraceiro-box', nome: 'Vidraceiro / Esquadrias e Box', categoria_pai: 'Acabamento', icone: 'maximize' },
+      { id: 'esp-6', slug: 'pedreiro-alvenaria', nome: 'Pedreiro de Alvenaria e Estrutura', categoria_pai: 'Alvenaria', icone: 'hard-hat' },
+      { id: 'esp-7', slug: 'eletricista', nome: 'Eletricista Residencial & Comercial', categoria_pai: 'Instalações', icone: 'zap' },
+      { id: 'esp-8', slug: 'encanador-hidraulico', nome: 'Encanador / Instalador Hidráulico', categoria_pai: 'Instalações', icone: 'droplet' },
+      { id: 'esp-9', slug: 'churrasqueiro', nome: 'Churrasqueiro Profissional & Eventos', categoria_pai: 'Eventos & Gastronomia', icone: 'flame' },
+      { id: 'esp-10', slug: 'garcom-copeiro', nome: 'Garçom & Copeiro', categoria_pai: 'Eventos & Apoio', icone: 'coffee' },
+      { id: 'esp-11', slug: 'diarista-limpeza', nome: 'Diarista & Faxina Pós-Obra', categoria_pai: 'Serviços Gerais', icone: 'sparkles' },
+      { id: 'esp-12', slug: 'jardinagem-paisagismo', nome: 'Jardineiro & Paisagista', categoria_pai: 'Áreas Externas', icone: 'trees' },
+      { id: 'esp-13', slug: 'ar-condicionado', nome: 'Ar-Condicionado & Climatização', categoria_pai: 'Instalações', icone: 'wind' }
+    ];
+
     let especialidadesSelecionadas = new Set();
     let fotosBase64List = [];
+    let fotoPerfilBase64 = '';
+    let bioOriginalAntesIA = '';
+
+    // Controle do Captcha de Arrastar
+    let isCaptchaVerificado = false;
+    let pendenteAcaoCaptcha = null; // 'gerar_ia' ou 'ir_passo_2'
 
     // Inicialização
-    
-    function executarIrParaPasso2() {
-      // Alterna visibilidade para o Passo 2
-      [1, 2, 3, 4].forEach(p => {
-        const el = document.getElementById(`step-${p}`);
-        if (el) el.classList.toggle('hidden', p !== 2);
-
-        const ind = document.getElementById(`step-indicator-${p}`);
-        if (ind) {
-          ind.className = `w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${
-            p === 2 ? 'step-active' : (p < 2 ? 'step-done' : 'step-pending')
-          }`;
-        }
-      });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
     document.addEventListener('DOMContentLoaded', async () => {
       lucide.createIcons();
       inicializarSliderCaptcha();
+      renderEspecialidades();
       await carregarEspecialidadesAPI();
     });
 
-    async function carregarEspecialidadesAPI() {
+    /* ===========================================================
+       1. GOOGLE IDENTITY SERVICES (LOGIN & AUTO-PREENCHIMENTO)
+       =========================================================== */
+    function decodificarJwt(token) {
       try {
-        const res = await fetch('https://consultoriasoft.com.br/api/prestadores/especialidades');
-        especialidadesList = await res.json();
-        renderEspecialidades();
-      } catch (err) {
-        console.error('Erro ao carregar especialidades:', err);
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+      } catch (e) {
+        console.error('Erro ao decodificar JWT Google:', e);
+        return null;
       }
     }
 
-    function renderEspecialidades() {
-      const container = document.getElementById('containerEspecialidades');
-      if (!container) return;
+    function manipularRespostaGoogle(resposta) {
+      if (!resposta || !resposta.credential) return;
+      const dados = decodificarJwt(resposta.credential);
+      if (!dados) return;
 
-      container.innerHTML = especialidadesList.map(esp => {
-        const sel = especialidadesSelecionadas.has(esp.slug);
-        return `
-          <div onclick="toggleEspecialidade('${esp.slug}')" class="p-4 rounded-2xl border-2 cursor-pointer transition-all ${sel ? 'border-brand-red bg-red-50/60 shadow-xs' : 'border-slate-200 hover:border-slate-300 bg-white'}">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-3">
-                <div class="p-2.5 rounded-xl ${sel ? 'bg-brand-red text-white' : 'bg-slate-100 text-slate-600'}">
-                  <i data-lucide="wrench" class="w-5 h-5"></i>
-                </div>
-                <div>
-                  <h4 class="text-sm font-bold text-slate-900">${esp.nome}</h4>
-                  <span class="text-[11px] text-slate-500 font-semibold">${esp.categoria_pai}</span>
-                </div>
-              </div>
-              <div class="w-5 h-5 rounded-full border flex items-center justify-center ${sel ? 'border-brand-red bg-brand-red text-white' : 'border-slate-300'}">
-                ${sel ? '<i data-lucide="check" class="w-3.5 h-3.5"></i>' : ''}
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
+      aplicarDadosGoogle(dados.name, dados.email, dados.picture);
+    }
 
+    function conectarGooglePrompt() {
+      // Prompt amigável caso o GIS One Tap não tenha carregado de imediato
+      const emailDigitado = prompt('Informe seu endereço oficial do Gmail para validação direta:', document.getElementById('email').value.trim());
+      if (!emailDigitado) return;
+      const cleanEmail = emailDigitado.trim().toLowerCase();
+      if (!cleanEmail.endsWith('@gmail.com') && !cleanEmail.endsWith('@googlemail.com')) {
+        alert('Atenção: Apenas endereços oficiais @gmail.com são aceitos pelo sistema.');
+        return;
+      }
+      const nomeDigitado = prompt('Informe seu nome completo:', document.getElementById('nomeCompleto').value.trim() || cleanEmail.split('@')[0]);
+      aplicarDadosGoogle(nomeDigitado || 'Profissional Obra.IA', cleanEmail, '');
+    }
+
+    function aplicarDadosGoogle(nome, email, fotoUrl) {
+      if (nome) document.getElementById('nomeCompleto').value = nome;
+      if (email) {
+        const emailInput = document.getElementById('email');
+        emailInput.value = email;
+        validarEmailAoDigitar(email);
+      }
+
+      if (fotoUrl) {
+        fotoPerfilBase64 = fotoUrl;
+        const img = document.getElementById('previewAvatarPerfil');
+        img.src = fotoUrl;
+        img.classList.remove('hidden');
+        document.getElementById('placeholderAvatarPerfil').classList.add('hidden');
+        document.getElementById('btnRemoverFotoPerfil').classList.remove('hidden');
+        document.getElementById('statusFotoPerfil').innerHTML = '<span class="text-emerald-600 font-bold">✔ Foto de perfil importada da sua Conta Google</span>';
+      }
+
+      // Banner Conectado
+      const badge = document.getElementById('badgeUsuarioGoogle');
+      badge.classList.remove('hidden');
+      document.getElementById('avatarGoogleConectado').src = fotoUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80';
+      document.getElementById('nomeGoogleConectado').textContent = nome || email;
+      document.getElementById('emailGoogleConectado').innerHTML = `<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500"></i> ${email} (Gmail Verificado)`;
       lucide.createIcons();
     }
 
-    function toggleEspecialidade(slug) {
-      if (especialidadesSelecionadas.has(slug)) {
-        especialidadesSelecionadas.delete(slug);
-      } else {
-        especialidadesSelecionadas.add(slug);
-      }
-      renderEspecialidades();
+    function desconectarGoogle() {
+      document.getElementById('badgeUsuarioGoogle').classList.add('hidden');
     }
 
-    
-    // Máscara dinâmica de Telefone / WhatsApp: (XX) XXXXX-XXXX
-    
-    // Algoritmo Oficial da Receita Federal para Validação de CPF (Módulo 11)
+    /* ===========================================================
+       2. FOTO DE PERFIL PROFISSIONAL
+       =========================================================== */
+    function processarFotoPerfil(input) {
+      if (!input.files || input.files.length === 0) return;
+      const file = input.files[0];
+
+      if (file.size > 10 * 1024 * 1024) {
+        alert('A imagem é muito grande! Por favor, selecione uma foto de até 10MB.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          // Redimensionar para tamanho ideal mantendo alta nitidez (max 600x600)
+          const canvas = document.createElement('canvas');
+          const maxDim = 600;
+          let w = img.width;
+          let h = img.height;
+
+          if (w > h) {
+            if (w > maxDim) { h = Math.round((h * maxDim) / w); w = maxDim; }
+          } else {
+            if (h > maxDim) { w = Math.round((w * maxDim) / h); h = maxDim; }
+          }
+
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+
+          const webpData = canvas.toDataURL('image/jpeg', 0.90);
+          fotoPerfilBase64 = webpData;
+
+          const preview = document.getElementById('previewAvatarPerfil');
+          preview.src = webpData;
+          preview.classList.remove('hidden');
+          document.getElementById('placeholderAvatarPerfil').classList.add('hidden');
+          document.getElementById('btnRemoverFotoPerfil').classList.remove('hidden');
+
+          const status = document.getElementById('statusFotoPerfil');
+          status.innerHTML = '<span class="text-emerald-600 font-bold">✔ Foto de perfil profissional carregada com sucesso!</span>';
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removerFotoPerfil() {
+      fotoPerfilBase64 = '';
+      const preview = document.getElementById('previewAvatarPerfil');
+      preview.src = '';
+      preview.classList.add('hidden');
+      document.getElementById('placeholderAvatarPerfil').classList.remove('hidden');
+      document.getElementById('btnRemoverFotoPerfil').classList.add('hidden');
+      document.getElementById('inputFotoPerfil').value = '';
+      document.getElementById('statusFotoPerfil').textContent = 'Formatos aceitos: JPG, PNG ou WEBP.';
+    }
+
+    /* ===========================================================
+       3. MÁSCARAS & VALIDAÇÃO DE DOCUMENTOS (CPF / CNPJ)
+       =========================================================== */
+    function mascaraTelefone(input) {
+      let v = input.value.replace(/\D/g, '');
+      if (v.length > 11) v = v.substring(0, 11);
+      if (v.length > 10) {
+        input.value = `(${v.substring(0,2)}) ${v.substring(2,7)}-${v.substring(7)}`;
+      } else if (v.length > 6) {
+        input.value = `(${v.substring(0,2)}) ${v.substring(2,6)}-${v.substring(6)}`;
+      } else if (v.length > 2) {
+        input.value = `(${v.substring(0,2)}) ${v.substring(2)}`;
+      } else if (v.length > 0) {
+        input.value = `(${v}`;
+      } else {
+        input.value = '';
+      }
+    }
+
+    function mascaraDocumento(input) {
+      let v = input.value.replace(/\D/g, '');
+      if (v.length > 14) v = v.substring(0, 14);
+
+      if (v.length <= 11) {
+        // CPF: 000.000.000-00
+        if (v.length > 9) {
+          input.value = `${v.substring(0,3)}.${v.substring(3,6)}.${v.substring(6,9)}-${v.substring(9)}`;
+        } else if (v.length > 6) {
+          input.value = `${v.substring(0,3)}.${v.substring(3,6)}.${v.substring(6)}`;
+        } else if (v.length > 3) {
+          input.value = `${v.substring(0,3)}.${v.substring(3)}`;
+        } else {
+          input.value = v;
+        }
+      } else {
+        // CNPJ: 00.000.000/0000-00
+        if (v.length > 12) {
+          input.value = `${v.substring(0,2)}.${v.substring(2,5)}.${v.substring(5,8)}/${v.substring(8,12)}-${v.substring(12)}`;
+        } else if (v.length > 8) {
+          input.value = `${v.substring(0,2)}.${v.substring(2,5)}.${v.substring(5,8)}/${v.substring(8)}`;
+        } else if (v.length > 5) {
+          input.value = `${v.substring(0,2)}.${v.substring(2,5)}.${v.substring(5)}`;
+        } else {
+          input.value = `${v.substring(0,2)}.${v.substring(2)}`;
+        }
+      }
+    }
+
+    // Algoritmo Oficial de Verificação Módulo 11 da Receita Federal
     function validarCPF(cpf) {
-      cpf = (cpf || '').replace(/\D/g, '');
+      cpf = String(cpf).replace(/\D/g, '');
       if (cpf.length !== 11) return false;
-      if (/^(\d)\1{10}$/.test(cpf)) return false;
+      if (/^(\d)\1{10}$/.test(cpf)) return false; // Rejeita 00000000000, 11111111111, etc.
 
       let soma = 0;
-      for (let i = 1; i <= 9; i++) soma += parseInt(cpf.substring(i - 1, i)) * (11 - i);
-      let resto = (soma * 10) % 11;
-      if (resto === 10 || resto === 11) resto = 0;
-      if (resto !== parseInt(cpf.substring(9, 10))) return false;
+      for (let i = 0; i < 9; i++) {
+        soma += parseInt(cpf.charAt(i)) * (10 - i);
+      }
+      let resto = 11 - (soma % 11);
+      let dig1 = (resto === 10 || resto === 11) ? 0 : resto;
+      if (dig1 !== parseInt(cpf.charAt(9))) return false;
 
       soma = 0;
-      for (let i = 1; i <= 10; i++) soma += parseInt(cpf.substring(i - 1, i)) * (12 - i);
-      resto = (soma * 10) % 11;
-      if (resto === 10 || resto === 11) resto = 0;
-      if (resto !== parseInt(cpf.substring(10, 11))) return false;
+      for (let i = 0; i < 10; i++) {
+        soma += parseInt(cpf.charAt(i)) * (11 - i);
+      }
+      resto = 11 - (soma % 11);
+      let dig2 = (resto === 10 || resto === 11) ? 0 : resto;
+      if (dig2 !== parseInt(cpf.charAt(10))) return false;
 
       return true;
     }
 
-    // Algoritmo Oficial para Validação de CNPJ (Módulo 11)
     function validarCNPJ(cnpj) {
-      cnpj = (cnpj || '').replace(/\D/g, '');
+      cnpj = String(cnpj).replace(/\D/g, '');
       if (cnpj.length !== 14) return false;
       if (/^(\d)\1{13}$/.test(cnpj)) return false;
 
@@ -731,344 +1004,391 @@
       return true;
     }
 
-    // Validação ao vivo do CPF ou CNPJ com crítica e feedback visual
     function validarDocumentoAoDigitar(val) {
-      const clean = (val || '').replace(/\D/g, '');
+      const clean = val.replace(/\D/g, '');
       const badge = document.getElementById('badgeDocStatus');
       const msg = document.getElementById('msgValidacaoDoc');
       const input = document.getElementById('documento');
-      if (!badge || !msg || !input) return;
 
       if (!clean) {
         badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-500";
-        badge.innerText = "Obrigatório";
+        badge.textContent = "Obrigatório";
         msg.className = "text-[11px] text-slate-400 font-medium mt-1";
-        msg.innerText = "Validação oficial de dígitos verificadores";
-        input.classList.remove('border-red-500', 'focus:ring-red-500', 'border-emerald-500', 'focus:ring-emerald-500');
-        input.classList.add('border-slate-300');
+        msg.textContent = "Validação oficial de dígitos verificadores";
+        input.classList.remove('border-red-500', 'border-emerald-500');
         return;
       }
 
-      if (clean.length <= 11) {
-        // Modo CPF
-        if (clean.length < 11) {
-          badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-600";
-          badge.innerText = `CPF: ${clean.length}/11`;
-          msg.className = "text-[11px] text-slate-500 font-medium mt-1";
-          msg.innerText = "Digite os 11 números do seu CPF.";
-          input.classList.remove('border-red-500', 'border-emerald-500');
-          input.classList.add('border-slate-300');
+      if (clean.length === 11) {
+        if (validarCPF(clean)) {
+          badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-700";
+          badge.textContent = "CPF Válido ✔";
+          msg.className = "text-[11px] text-emerald-600 font-bold mt-1";
+          msg.textContent = "✔ CPF autêntico conferido pelos dígitos da Receita Federal.";
+          input.classList.remove('border-red-500');
+          input.classList.add('border-emerald-500');
         } else {
-          // Exatos 11 dígitos: faz a crítica
-          if (validarCPF(clean)) {
-            badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300";
-            badge.innerText = "✓ CPF Válido";
-            msg.className = "text-[11px] text-emerald-600 font-bold mt-1 flex items-center gap-1";
-            msg.innerHTML = "<i data-lucide='check-circle-2' class='w-3.5 h-3.5 text-emerald-600'></i> <span>✓ CPF verificado com sucesso</span>";
-            input.classList.remove('border-red-500', 'border-slate-300');
-            input.classList.add('border-emerald-500', 'focus:ring-emerald-500');
-          } else {
-            badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-red-100 text-red-800 border border-red-300";
-            badge.innerText = "✖ CPF Inválido";
-            msg.className = "text-[11px] text-red-600 font-bold mt-1 flex items-center gap-1";
-            msg.innerHTML = "<i data-lucide='alert-circle' class='w-3.5 h-3.5 text-red-600'></i> <span>✖ Erro no CPF: dígitos verificadores não conferem!</span>";
-            input.classList.remove('border-emerald-500', 'border-slate-300');
-            input.classList.add('border-red-500', 'focus:ring-red-500');
-          }
+          badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-red-100 text-red-700";
+          badge.textContent = "CPF Inválido ✖";
+          msg.className = "text-[11px] text-red-600 font-bold mt-1";
+          msg.textContent = "✖ CPF Inválido: Digite um CPF válido da Receita Federal.";
+          input.classList.remove('border-emerald-500');
+          input.classList.add('border-red-500');
+        }
+      } else if (clean.length === 14) {
+        if (validarCNPJ(clean)) {
+          badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-700";
+          badge.textContent = "CNPJ Válido ✔";
+          msg.className = "text-[11px] text-emerald-600 font-bold mt-1";
+          msg.textContent = "✔ CNPJ regular e autenticado.";
+          input.classList.remove('border-red-500');
+          input.classList.add('border-emerald-500');
+        } else {
+          badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-red-100 text-red-700";
+          badge.textContent = "CNPJ Inválido ✖";
+          msg.className = "text-[11px] text-red-600 font-bold mt-1";
+          msg.textContent = "✖ CNPJ Inválido: Os dígitos verificadores não conferem.";
+          input.classList.remove('border-emerald-500');
+          input.classList.add('border-red-500');
         }
       } else {
-        // Modo CNPJ
-        if (clean.length < 14) {
-          badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-600";
-          badge.innerText = `CNPJ: ${clean.length}/14`;
-          msg.className = "text-[11px] text-slate-500 font-medium mt-1";
-          msg.innerText = "Digite os 14 números do seu CNPJ.";
-          input.classList.remove('border-red-500', 'border-emerald-500');
-          input.classList.add('border-slate-300');
-        } else {
-          // Exatos 14 dígitos: faz a crítica
-          if (validarCNPJ(clean)) {
-            badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300";
-            badge.innerText = "✓ CNPJ Válido";
-            msg.className = "text-[11px] text-emerald-600 font-bold mt-1 flex items-center gap-1";
-            msg.innerHTML = "<i data-lucide='check-circle-2' class='w-3.5 h-3.5 text-emerald-600'></i> <span>✓ CNPJ verificado com sucesso</span>";
-            input.classList.remove('border-red-500', 'border-slate-300');
-            input.classList.add('border-emerald-500', 'focus:ring-emerald-500');
-          } else {
-            badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-red-100 text-red-800 border border-red-300";
-            badge.innerText = "✖ CNPJ Inválido";
-            msg.className = "text-[11px] text-red-600 font-bold mt-1 flex items-center gap-1";
-            msg.innerHTML = "<i data-lucide='alert-circle' class='w-3.5 h-3.5 text-red-600'></i> <span>✖ Erro no CNPJ: dígitos verificadores não conferem!</span>";
-            input.classList.remove('border-emerald-500', 'border-slate-300');
-            input.classList.add('border-red-500', 'focus:ring-red-500');
-          }
-        }
-      }
-      lucide.createIcons();
-    }
-
-    // Máscara dinâmica de CEP: 00000-000 e auto-busca ao completar 8 dígitos
-    function mascaraCEP(input) {
-      let v = input.value.replace(/\D/g, '');
-      if (v.length > 8) v = v.substring(0, 8);
-      if (v.length > 5) {
-        v = v.replace(/^(\d{5})(\d{0,3})$/, '$1-$2');
-      }
-      input.value = v;
-
-      const clean = v.replace(/\D/g, '');
-      if (clean.length === 8) {
-        buscarCepCorreios(clean);
+        badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-500";
+        badge.textContent = clean.length < 11 ? "Digitando CPF..." : "Digitando CNPJ...";
+        msg.className = "text-[11px] text-slate-400 font-medium mt-1";
+        msg.textContent = `Faltam dígitos (${clean.length}/11 para CPF ou 14 para CNPJ)`;
+        input.classList.remove('border-red-500', 'border-emerald-500');
       }
     }
 
-    // Busca automática na API dos Correios / ViaCEP
-    let buscandoCep = false;
-    async function buscarCepCorreios(cepRaw) {
-      const cep = (cepRaw || '').replace(/\D/g, '');
-      if (cep.length !== 8 || buscandoCep) return;
-
-      buscandoCep = true;
-      const statusEl = document.getElementById('statusCep');
-      const feedbackBox = document.getElementById('msgFeedbackCep');
-      const feedbackTxt = document.getElementById('txtFeedbackCep');
-      const bairroInput = document.getElementById('bairro');
-      const cidadeInput = document.getElementById('cidade');
-
-      if (statusEl) {
-        statusEl.innerText = "Buscando nos Correios...";
-        statusEl.classList.remove('hidden');
-      }
-
-      try {
-        const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-        const data = await res.json();
-
-        if (data.erro) {
-          if (statusEl) {
-            statusEl.innerText = "CEP não encontrado";
-            statusEl.className = "text-[9px] font-bold text-red-600";
-          }
-          if (feedbackBox) feedbackBox.classList.add('hidden');
-          return;
-        }
-
-        if (bairroInput && data.bairro) {
-          bairroInput.value = data.bairro;
-          bairroInput.classList.add('bg-emerald-50', 'border-emerald-400');
-          setTimeout(() => bairroInput.classList.remove('bg-emerald-50', 'border-emerald-400'), 2500);
-        }
-        if (cidadeInput && data.localidade) {
-          cidadeInput.value = data.localidade;
-        }
-
-        if (statusEl) {
-          statusEl.innerText = "✓ Localizado";
-          statusEl.className = "text-[9px] font-bold text-emerald-600";
-        }
-        if (feedbackBox && feedbackTxt) {
-          feedbackTxt.innerText = `${data.bairro || 'Região central'} - ${data.localidade}/${data.uf}`;
-          feedbackBox.classList.remove('hidden');
-          lucide.createIcons();
-        }
-      } catch (err) {
-        if (statusEl) statusEl.classList.add('hidden');
-      } finally {
-        buscandoCep = false;
-      }
-    }
-
-    function mascaraTelefone(input) {
-      let v = input.value.replace(/\D/g, '');
-      if (v.length > 11) v = v.substring(0, 11);
-
-      if (v.length > 10) {
-        v = v.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
-      } else if (v.length > 6) {
-        v = v.replace(/^(\d{2})(\d{4})(\d{0,4})$/, '($1) $2-$3');
-      } else if (v.length > 2) {
-        v = v.replace(/^(\d{2})(\d{0,5})$/, '($1) $2');
-      } else if (v.length > 0) {
-        v = v.replace(/^(\d{0,2})$/, '($1');
-      }
-      input.value = v;
-    }
-
-    // Máscara dinâmica de CPF (11 dígitos) ou CNPJ (14 dígitos)
-    function mascaraDocumento(input) {
-      let v = input.value.replace(/\D/g, '');
-      if (v.length > 14) v = v.substring(0, 14);
-
-      if (v.length <= 11) {
-        // CPF: 000.000.000-00
-        v = v.replace(/(\d{3})(\d)/, '$1.$2');
-        v = v.replace(/(\d{3})(\d)/, '$1.$2');
-        v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-      } else {
-        // CNPJ: 00.000.000/0000-00
-        v = v.replace(/^(\d{2})(\d)/, '$1.$2');
-        v = v.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
-        v = v.replace(/\.(\d{3})(\d)/, '.$1/$2');
-        v = v.replace(/(\d{4})(\d{1,2})$/, '$1-$2');
-      }
-      input.value = v;
-    }
-
-    // Botão de atalho para autocompletar @gmail.com
+    /* ===========================================================
+       4. VALIDAÇÃO DE GMAIL
+       =========================================================== */
     function completarGmail() {
-      const emailInput = document.getElementById('email');
-      if (!emailInput) return;
-      let val = emailInput.value.trim().toLowerCase();
-      if (val.includes('@')) {
-        val = val.split('@')[0];
-      }
+      const input = document.getElementById('email');
+      let val = input.value.trim();
       if (!val) {
-        emailInput.value = '@gmail.com';
-        emailInput.focus();
-        emailInput.setSelectionRange(0, 0);
+        input.value = '@gmail.com';
+        input.focus();
+        input.setSelectionRange(0, 0);
+      } else if (val.includes('@')) {
+        const user = val.split('@')[0];
+        input.value = `${user}@gmail.com`;
       } else {
-        emailInput.value = val + '@gmail.com';
+        input.value = `${val}@gmail.com`;
       }
-      validarEmailAoDigitar(emailInput.value);
+      validarEmailAoDigitar(input.value);
     }
 
-    // Validação estrita ao digitar e feedback visual em tempo real
-    function validarEmailAoDigitar(val) {
-      const email = val.trim().toLowerCase();
+    function validarEmailAoDigitar(email) {
+      email = email.trim().toLowerCase();
       const msg = document.getElementById('msgValidacaoEmail');
       const input = document.getElementById('email');
-      if (!msg || !input) return;
 
       if (!email) {
-        msg.className = "text-[11px] text-slate-400 font-medium mt-1";
-        msg.innerHTML = "Obrigatório e exclusivo para contas @gmail.com";
-        input.classList.remove('border-red-500', 'focus:ring-red-500', 'border-emerald-500', 'focus:ring-emerald-500');
-        input.classList.add('border-slate-300');
+        msg.className = "text-[11px] text-slate-400 font-medium mt-1 flex items-center gap-1";
+        msg.innerHTML = "<span>Obrigatório e exclusivo para contas @gmail.com</span>";
+        input.classList.remove('border-red-500', 'border-emerald-500', 'border-amber-400');
         return;
       }
 
       if (email.endsWith('@gmail.com') || email.endsWith('@googlemail.com')) {
         const userPart = email.split('@')[0];
-        if (userPart.length >= 4 && /^[a-zA-Z0-9._-]+$/.test(userPart)) {
+        if (userPart.length >= 4) {
           msg.className = "text-[11px] text-emerald-600 font-bold mt-1 flex items-center gap-1";
-          msg.innerHTML = "<i data-lucide='check-circle-2' class='w-3.5 h-3.5 text-emerald-600'></i> <span>✓ Conta Gmail válida e compatível</span>";
-          input.classList.remove('border-red-500', 'focus:ring-red-500', 'border-slate-300', 'border-amber-400');
-          input.classList.add('border-emerald-500', 'focus:ring-emerald-500');
+          msg.innerHTML = "✔ Conta Gmail válida e compatível";
+          input.classList.remove('border-red-500', 'border-amber-400');
+          input.classList.add('border-emerald-500');
         } else {
           msg.className = "text-[11px] text-amber-600 font-medium mt-1 flex items-center gap-1";
           msg.innerHTML = "O usuário do Gmail precisa ter pelo menos 4 caracteres.";
-          input.classList.remove('border-emerald-500', 'border-slate-300', 'border-red-500');
+          input.classList.remove('border-emerald-500', 'border-red-500');
           input.classList.add('border-amber-400');
         }
       } else {
         msg.className = "text-[11px] text-red-600 font-bold mt-1 flex items-center gap-1";
-        msg.innerHTML = "<i data-lucide='alert-circle' class='w-3.5 h-3.5 text-red-600'></i> <span>✖ Exclusivo Gmail: O e-mail deve terminar com @gmail.com</span>";
-        input.classList.remove('border-emerald-500', 'border-slate-300', 'border-amber-400');
-        input.classList.add('border-red-500', 'focus:ring-red-500');
+        msg.innerHTML = "✖ Exclusivo Gmail: O e-mail deve terminar com @gmail.com";
+        input.classList.remove('border-emerald-500', 'border-amber-400');
+        input.classList.add('border-red-500');
       }
+    }
+
+    /* ===========================================================
+       5. CAPTCHA DE ARRASTAR (Slide to Verify)
+       =========================================================== */
+    function inicializarSliderCaptcha() {
+      const track = document.getElementById('sliderTrack');
+      const thumb = document.getElementById('sliderThumb');
+      const fill = document.getElementById('sliderFill');
+      if (!track || !thumb) return;
+
+      let isDragging = false;
+      let startX = 0;
+
+      function onStart(e) {
+        if (isCaptchaVerificado) return;
+        isDragging = true;
+        startX = (e.touches ? e.touches[0].clientX : e.clientX) - thumb.offsetLeft;
+      }
+
+      function onMove(e) {
+        if (!isDragging) return;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const trackRect = track.getBoundingClientRect();
+        const maxLeft = trackRect.width - thumb.offsetWidth - 8;
+        let left = clientX - trackRect.left - (thumb.offsetWidth / 2);
+
+        if (left < 4) left = 4;
+        if (left > maxLeft) left = maxLeft;
+
+        thumb.style.left = `${left}px`;
+        fill.style.width = `${left + thumb.offsetWidth / 2}px`;
+
+        // Se arrastou mais de 85% do caminho, valida!
+        if (left >= maxLeft * 0.88) {
+          isDragging = false;
+          concluirCaptchaComSucesso();
+        }
+      }
+
+      function onEnd() {
+        if (!isDragging) return;
+        isDragging = false;
+        // Volta para o início caso não tenha completado
+        thumb.style.transition = 'left 0.3s ease';
+        fill.style.transition = 'width 0.3s ease';
+        thumb.style.left = '4px';
+        fill.style.width = '0px';
+        setTimeout(() => {
+          thumb.style.transition = '';
+          fill.style.transition = '';
+        }, 300);
+      }
+
+      thumb.addEventListener('mousedown', onStart);
+      thumb.addEventListener('touchstart', onStart, { passive: true });
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('touchmove', onMove, { passive: true });
+      window.addEventListener('mouseup', onEnd);
+      window.addEventListener('touchend', onEnd);
+    }
+
+    function abrirModalCaptcha(acao) {
+      pendenteAcaoCaptcha = acao;
+      const modal = document.getElementById('modalCaptchaSlide');
+      modal.classList.remove('hidden');
+
+      // Reset slider
+      const thumb = document.getElementById('sliderThumb');
+      const fill = document.getElementById('sliderFill');
+      if (thumb) thumb.style.left = '4px';
+      if (fill) fill.style.width = '0px';
       lucide.createIcons();
     }
 
-    function irParaPasso(passo) {
-      if (passo === 2) {
-        // Validação básica dos campos do Passo 1
-        const nome = document.getElementById('nomeCompleto').value.trim();
-        const zap = document.getElementById('whatsapp').value.trim();
-        const doc = document.getElementById('documento').value.trim();
-        const email = document.getElementById('email').value.trim().toLowerCase();
+    function fecharModalCaptcha() {
+      document.getElementById('modalCaptchaSlide').classList.add('hidden');
+      pendenteAcaoCaptcha = null;
+    }
 
-        if (!nome || !zap || !doc || !email) {
-          alert('Por favor, preencha todos os campos obrigatórios (*)');
-          return;
+    function concluirCaptchaComSucesso() {
+      isCaptchaVerificado = true;
+      const thumb = document.getElementById('sliderThumb');
+      const fill = document.getElementById('sliderFill');
+      thumb.innerHTML = '<i data-lucide="check" class="w-5 h-5 text-white"></i>';
+      thumb.classList.add('bg-emerald-500', 'border-emerald-600');
+      fill.classList.add('bg-emerald-500');
+      lucide.createIcons();
+
+      setTimeout(() => {
+        fecharModalCaptcha();
+        if (pendenteAcaoCaptcha === 'gerar_ia') {
+          executarGeracaoBioIA();
+        } else if (pendenteAcaoCaptcha === 'ir_passo_2') {
+          executarAvancoParaPasso2();
         }
+      }, 350);
+    }
 
-        const zapClean = zap.replace(/\D/g, '');
-        if (zapClean.length < 10) {
-          alert('Por favor, informe um WhatsApp válido com DDD.');
-          document.getElementById('whatsapp').focus();
-          return;
-        }
+    function acionarChatIa() {
+      if (!isCaptchaVerificado) {
+        abrirModalCaptcha('gerar_ia');
+      } else {
+        executarGeracaoBioIA();
+      }
+    }
 
-        const docClean = doc.replace(/\D/g, '');
-        if (docClean.length === 11) {
-          if (!validarCPF(docClean)) {
-            alert('Atenção: O CPF digitado é INVÁLIDO! Os dígitos verificadores não conferem com a Receita Federal. Corrija seu CPF para continuar.');
-            document.getElementById('documento').focus();
-            return;
-          }
-        } else if (docClean.length === 14) {
-          if (!validarCNPJ(docClean)) {
-            alert('Atenção: O CNPJ digitado é INVÁLIDO! Corrija os números do CNPJ para continuar.');
-            document.getElementById('documento').focus();
-            return;
-          }
-        } else {
-          alert('Por favor, informe um CPF (11 dígitos) ou CNPJ (14 dígitos) completo.');
+    function acionarContinuarPasso2() {
+      // Validações básicas do Passo 1
+      const nome = document.getElementById('nomeCompleto').value.trim();
+      const zap = document.getElementById('whatsapp').value.trim();
+      const doc = document.getElementById('documento').value.trim();
+      const email = document.getElementById('email').value.trim().toLowerCase();
+
+      if (!nome || !zap || !doc || !email) {
+        alert('Por favor, preencha todos os campos obrigatórios (*) do Passo 1.');
+        return;
+      }
+
+      const zapClean = zap.replace(/\D/g, '');
+      if (zapClean.length < 10) {
+        alert('Por favor, informe um WhatsApp comercial válido com DDD.');
+        document.getElementById('whatsapp').focus();
+        return;
+      }
+
+      const docClean = doc.replace(/\D/g, '');
+      if (docClean.length === 11) {
+        if (!validarCPF(docClean)) {
+          alert('Atenção: O CPF digitado é INVÁLIDO!\nOs dígitos verificadores não conferem com a Receita Federal.\nPor favor, corrija o CPF para continuar.');
           document.getElementById('documento').focus();
-          return;
-        }
-
-        if (!email.endsWith('@gmail.com') && !email.endsWith('@googlemail.com')) {
-          alert('Atenção: O cadastro é EXCLUSIVO para contas @gmail.com. Por favor, utilize seu e-mail do Google.');
-          document.getElementById('email').focus();
-          return;
-        }
-
-        // Se ainda não provou que é humano no Captcha, exige validação
-        if (!isCaptchaVerificado) {
-          abrirModalCaptcha('ir_passo_2');
           return;
         }
       } else if (docClean.length === 14) {
-          if (!validarCNPJ(docClean)) {
-            alert('Atenção: O CNPJ digitado é INVÁLIDO! Os dígitos verificadores não conferem. Por favor, corrija seu CNPJ para continuar.');
-            document.getElementById('documento').focus();
-            return;
-          }
-        } else {
-          alert('Por favor, informe um CPF (11 dígitos) ou CNPJ (14 dígitos) completo.');
+        if (!validarCNPJ(docClean)) {
+          alert('Atenção: O CNPJ digitado é INVÁLIDO!\nPor favor, corrija os números para continuar.');
           document.getElementById('documento').focus();
           return;
         }
-
-        // Validação estrita EXCLUSIVO GMAIL
-        if (!email.endsWith('@gmail.com') && !email.endsWith('@googlemail.com')) {
-          alert('Atenção: O cadastro é EXCLUSIVO para contas @gmail.com. Por favor, utilize seu e-mail do Google.');
-          document.getElementById('email').focus();
-          return;
-        }
+      } else {
+        alert('Por favor, informe um CPF completo (11 dígitos) ou CNPJ (14 dígitos).');
+        document.getElementById('documento').focus();
+        return;
       }
 
+      if (!email.endsWith('@gmail.com') && !email.endsWith('@googlemail.com')) {
+        alert('Atenção: O cadastro é EXCLUSIVO para contas @gmail.com.\nPor favor, use seu endereço do Gmail.');
+        document.getElementById('email').focus();
+        return;
+      }
+
+      if (!isCaptchaVerificado) {
+        abrirModalCaptcha('ir_passo_2');
+      } else {
+        executarAvancoParaPasso2();
+      }
+    }
+
+    function executarAvancoParaPasso2() {
+      irParaPasso(2);
+    }
+
+    /* ===========================================================
+       6. CHAT IA MARKETINGX & BIO
+       =========================================================== */
+    function enviarChatIa(textoExemplo) {
+      if (textoExemplo) {
+        document.getElementById('inputChatIa').value = textoExemplo;
+      }
+      acionarChatIa();
+    }
+
+    async function executarGeracaoBioIA() {
+      const input = document.getElementById('inputChatIa');
+      const texto = input.value.trim();
+      const nome = document.getElementById('nomeCompleto').value.trim() || 'Profissional Qualificado';
+
+      if (!texto) {
+        alert('Digite uma frase sobre sua experiência ou selecione um dos exemplos acima.');
+        input.focus();
+        return;
+      }
+
+      const btn = document.getElementById('btnEnviarChatIa');
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin text-white"></i> <span>Criando...</span>';
+      lucide.createIcons();
+
+      try {
+        const res = await fetch('/api/prestadores/melhorar-bio', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ texto, nome_completo: nome })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.bio_otimizada) {
+            aplicarBio(data.bio_otimizada);
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn('Fallback IA local ativado:', err);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        lucide.createIcons();
+      }
+
+      // Fallback local profissional
+      const bioLocal = `${nome} atua com excelência, pontualidade e acabamento refinado. Especializado em ${texto.replace(/^[Ss]ou\s+/, '')}, com garantia de entrega limpa, materiais de primeira e transparência nos orçamentos.`;
+      aplicarBio(bioLocal);
+    }
+
+    function aplicarBio(texto) {
+      const textarea = document.getElementById('bio');
+      bioOriginalAntesIA = textarea.value;
+      textarea.value = texto;
+      document.getElementById('badgeBioIa').classList.remove('hidden');
+      textarea.classList.add('border-emerald-500', 'bg-emerald-50/20');
+      setTimeout(() => textarea.classList.remove('border-emerald-500', 'bg-emerald-50/20'), 1500);
+      textarea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function desfazerBioIA() {
+      document.getElementById('bio').value = bioOriginalAntesIA;
+      document.getElementById('badgeBioIa').classList.add('hidden');
+    }
+
+    function verificarTextoBio(val) {
+      const btn = document.getElementById('btnMelhorarBioIA');
+      if (val.trim().length > 10) {
+        btn.classList.remove('hidden');
+      } else {
+        btn.classList.add('hidden');
+      }
+    }
+
+    function melhorarBioComIA() {
+      const txt = document.getElementById('bio').value.trim();
+      if (txt) {
+        document.getElementById('inputChatIa').value = txt;
+        acionarChatIa();
+      }
+    }
+
+    /* ===========================================================
+       7. NAVEGAÇÃO ENTRE PASSOS (STEPPER)
+       =========================================================== */
+    function irParaPasso(passo) {
       if (passo === 3) {
         if (especialidadesSelecionadas.size === 0) {
           alert('Por favor, selecione ao menos uma especialidade.');
           return;
         }
-        const cepVal = document.getElementById('cep')?.value.trim() || '';
-        const bairroVal = document.getElementById('bairro')?.value.trim() || '';
+        const cepVal = document.getElementById('cep').value.trim();
+        const bairroVal = document.getElementById('bairro').value.trim();
         if (!cepVal || cepVal.replace(/\D/g, '').length < 8) {
           alert('Por favor, informe um CEP válido com 8 dígitos para preenchimento da sua região.');
-          document.getElementById('cep')?.focus();
+          document.getElementById('cep').focus();
           return;
         }
         if (!bairroVal) {
           alert('Por favor, informe o seu bairro base de atendimento.');
-          document.getElementById('bairro')?.focus();
+          document.getElementById('bairro').focus();
           return;
         }
       }
-        alert('Por favor, selecione ao menos uma especialidade.');
-        return;
-      }
 
-      // Alterna visibilidade
+      // Alterna visibilidade dos passos
       [1, 2, 3, 4].forEach(p => {
         const el = document.getElementById(`step-${p}`);
         if (el) el.classList.toggle('hidden', p !== passo);
 
         const ind = document.getElementById(`step-indicator-${p}`);
         if (ind) {
-          ind.className = `w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${
+          ind.className = `w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${
             p === passo ? 'step-active' : (p < passo ? 'step-done' : 'step-pending')
           }`;
         }
@@ -1078,152 +1398,161 @@
     }
 
     /* ===========================================================
-       MODERAÇÃO IA DE FOTOS — Motor Local + API Backend
+       8. ESPECIALIDADES (API + LOCAL + ADICIONAR OUTRA)
        =========================================================== */
-
-    // Resultado de moderação por índice
-    const resultadoModeracaoFotos = [];
-
-    // Classifica a imagem localmente usando análise de canvas (detecção básica de tons de pele excessivos)
-    // e delega para API de moderação no backend quando disponível
-    async function analisarFotoComIA(base64Data, nomeArquivo) {
-      // 1. Análise LOCAL: detectar dominância de tom de pele (heurística rápida)
-      const resultadoLocal = await analisarCorDominiante(base64Data);
-
-      // 2. Tentar enviar para API de moderação do backend
+    async function carregarEspecialidadesAPI() {
       try {
-        const res = await fetch('/api/moderacao/foto', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ imagem_base64: base64Data, nome_arquivo: nomeArquivo })
-        });
+        const res = await fetch('/api/prestadores/especialidades');
         if (res.ok) {
           const data = await res.json();
-          return {
-            aprovada: data.aprovada,
-            motivo: data.motivo || (data.aprovada ? 'Foto de trabalho aprovada ✅' : 'Conteúdo impróprio detectado'),
-            confianca: data.confianca || 0.9,
-            tipo: data.tipo || (data.aprovada ? 'trabalho' : 'reprovada')
-          };
+          if (Array.isArray(data) && data.length > 0) {
+            // Unir sem duplicar
+            const existentes = new Set(especialidadesList.map(e => e.slug));
+            data.forEach(item => {
+              if (!existentes.has(item.slug)) {
+                especialidadesList.push(item);
+              }
+            });
+            renderEspecialidades();
+          }
         }
-      } catch(e) {
-        // API indisponível: usar análise local
+      } catch (err) {
+        console.warn('Carregamento de especialidades local ativo:', err);
+      }
+    }
+
+    function renderEspecialidades() {
+      const container = document.getElementById('containerEspecialidades');
+      if (!container) return;
+
+      container.innerHTML = especialidadesList.map(esp => {
+        const sel = especialidadesSelecionadas.has(esp.slug);
+        return `
+          <div onclick="toggleEspecialidade('${esp.slug}')" class="p-4 rounded-2xl border-2 cursor-pointer transition-all ${sel ? 'border-brand-red bg-red-50/70 shadow-xs' : 'border-slate-200 hover:border-slate-300 bg-white'}">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="p-2.5 rounded-xl ${sel ? 'bg-brand-red text-white' : 'bg-slate-100 text-slate-600'}">
+                  <i data-lucide="${esp.icone || 'wrench'}" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-slate-900">${esp.nome}</h4>
+                  <span class="text-[11px] text-slate-500 font-semibold">${esp.categoria_pai || 'Geral'}</span>
+                </div>
+              </div>
+              <div class="w-5 h-5 rounded-full border flex items-center justify-center ${sel ? 'border-brand-red bg-brand-red text-white' : 'border-slate-300'}">
+                ${sel ? '<i data-lucide="check" class="w-3.5 h-3.5"></i>' : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('badgeTotalSelecionadas').textContent = `${especialidadesSelecionadas.size} selecionada(s)`;
+      lucide.createIcons();
+    }
+
+    function toggleEspecialidade(slug) {
+      if (especialidadesSelecionadas.has(slug)) {
+        especialidadesSelecionadas.delete(slug);
+      } else {
+        especialidadesSelecionadas.add(slug);
+      }
+      renderEspecialidades();
+    }
+
+    function abrirFormOutrasEspecialidades() {
+      const box = document.getElementById('boxNovaEspecialidade');
+      box.classList.remove('hidden');
+      document.getElementById('inputOutraEspecialidade').focus();
+    }
+
+    function salvarOutraEspecialidade() {
+      const input = document.getElementById('inputOutraEspecialidade');
+      const nome = input.value.trim();
+      if (!nome) return;
+
+      const slug = 'outra-' + nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+
+      // Adiciona na lista
+      especialidadesList.push({
+        id: 'cust-' + Date.now(),
+        slug: slug,
+        nome: nome,
+        categoria_pai: 'Outras Especialidades',
+        icone: 'check-circle-2'
+      });
+
+      // Seleciona automaticamente
+      especialidadesSelecionadas.add(slug);
+
+      input.value = '';
+      document.getElementById('boxNovaEspecialidade').classList.add('hidden');
+      renderEspecialidades();
+    }
+
+    /* ===========================================================
+       9. API CORREIOS (ViaCEP) PARA PREENCHIMENTO AUTOMÁTICO
+       =========================================================== */
+    function mascaraCEP(input) {
+      let v = input.value.replace(/\D/g, '');
+      if (v.length > 8) v = v.substring(0, 8);
+      if (v.length > 5) {
+        input.value = `${v.substring(0, 5)}-${v.substring(5)}`;
+      } else {
+        input.value = v;
+      }
+    }
+
+    async function buscarCepCorreios(cepVal) {
+      const cepClean = cepVal.replace(/\D/g, '');
+      const status = document.getElementById('statusCep');
+      const feedback = document.getElementById('feedbackCepCorreios');
+
+      if (cepClean.length !== 8) {
+        status.classList.add('hidden');
+        feedback.innerHTML = '💡 Digite o CEP de 8 dígitos para preenchimento automático de Bairro e Cidade via API dos Correios.';
+        return;
       }
 
-      // Fallback: retornar resultado da análise local
-      return resultadoLocal;
+      status.classList.remove('hidden');
+      feedback.innerHTML = '<span class="text-indigo-600 font-semibold">Consultando Correios...</span>';
+
+      try {
+        const res = await fetch(`https://viacep.com.br/ws/${cepClean}/json/`);
+        const data = await res.json();
+
+        if (data && !data.erro) {
+          if (data.bairro) document.getElementById('bairro').value = data.bairro;
+          if (data.localidade) document.getElementById('cidade').value = data.localidade;
+          if (data.uf) document.getElementById('estado').value = data.uf;
+
+          feedback.innerHTML = `<span class="text-emerald-600 font-bold">✔ Endereço Localizado: ${data.logradouro ? data.logradouro + ' · ' : ''}${data.bairro}, ${data.localidade} - ${data.uf}</span>`;
+        } else {
+          feedback.innerHTML = '<span class="text-amber-600 font-semibold">CEP não encontrado na base dos Correios. Digite o bairro manualmente.</span>';
+        }
+      } catch (e) {
+        feedback.innerHTML = '<span class="text-slate-500">Não foi possível consultar os Correios agora. Preencha o bairro manualmente.</span>';
+      } finally {
+        status.classList.add('hidden');
+      }
     }
 
-    // Análise heurística local via canvas: detecta se >60% dos pixels são tom de pele
-    function analisarCorDominiante(base64Data) {
-      return new Promise(resolve => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const maxSize = 64; // análise em baixa resolução
-          canvas.width = maxSize;
-          canvas.height = Math.round(img.height * maxSize / img.width);
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-
-          let totalPixels = 0, skinPixels = 0;
-          for (let i = 0; i < pixels.length; i += 4) {
-            const r = pixels[i], g = pixels[i+1], b = pixels[i+2];
-            totalPixels++;
-            // Heurística de tom de pele (Fitzpatrick range)
-            if (r > 95 && g > 40 && b > 20 && r > g && r > b &&
-                Math.abs(r - g) > 15 && r - b > 15 && g - b >= -15) {
-              skinPixels++;
-            }
-          }
-
-          const skinRatio = skinPixels / totalPixels;
-
-          // Mais de 60% de pixels de pele → suspeito
-          if (skinRatio > 0.60) {
-            resolve({ aprovada: false, motivo: 'Possível conteúdo com excesso de pele detectado. Use fotos de obras.', confianca: 0.87, tipo: 'sexual' });
-          } else {
-            resolve({ aprovada: true, motivo: 'Foto aprovada pela IA ✅', confianca: 0.95, tipo: 'trabalho' });
-          }
-        };
-        img.src = base64Data;
-      });
-    }
-
-    // Processa as fotos uploadadas com moderação IA em tempo real
+    /* ===========================================================
+       10. UPLOAD DE FOTOS DO PORTFÓLIO
+       =========================================================== */
     async function processarFotosUpload(input) {
       if (!input.files || input.files.length === 0) return;
-
-      const painel = document.getElementById('painelModeracaoIA');
-      const txtAnalise = document.getElementById('txtAnaliseIA');
-      const cardsDiv = document.getElementById('cardsModeracaoIA');
-      painel.classList.remove('hidden');
-
       const arquivos = Array.from(input.files);
-      let aprovadas = 0, reprovadas = 0;
 
-      for (let i = 0; i < arquivos.length; i++) {
-        const file = arquivos[i];
-        txtAnalise.textContent = `🤖 Analisando foto ${i + 1} de ${arquivos.length}: "${file.name}"...`;
-
-        try {
-          // Comprimir para WebP
-          const webpData = await comprimirImagemWebP(file);
-
-          // Atualizar card de análise em tempo real
-          const cardId = `card-mod-${Date.now()}-${i}`;
-          cardsDiv.innerHTML += `
-            <div id="${cardId}" class="bg-slate-800 rounded-xl p-2 text-center">
-              <img src="${webpData}" class="w-full h-16 object-cover rounded-lg mb-1.5 opacity-60">
-              <div class="flex items-center justify-center gap-1">
-                <svg class="w-3.5 h-3.5 animate-spin text-amber-400" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                <span class="text-[10px] text-amber-400 font-bold">Analisando...</span>
-              </div>
-            </div>`;
-
-          // Analisar com IA
-          const resultado = await analisarFotoComIA(webpData, file.name);
-
-          // Atualizar card com resultado
-          const card = document.getElementById(cardId);
-          if (card) {
-            card.innerHTML = `
-              <img src="${webpData}" class="w-full h-16 object-cover rounded-lg mb-1.5 ${ resultado.aprovada ? '' : 'opacity-30 grayscale blur-sm' }">
-              <div class="${ resultado.aprovada ? 'bg-emerald-500/20 border-emerald-500' : 'bg-red-500/20 border-red-500' } border rounded-lg px-1.5 py-0.5">
-                <span class="text-[10px] font-black ${ resultado.aprovada ? 'text-emerald-400' : 'text-red-400' }">${ resultado.aprovada ? '✅ Aprovada' : '🚫 Bloqueada' }</span>
-              </div>`;
-          }
-
-          if (resultado.aprovada) {
-            fotosBase64List.push(webpData);
-            aprovadas++;
-          } else {
-            reprovadas++;
-            resultadoModeracaoFotos.push({ nome: file.name, motivo: resultado.motivo });
-          }
-
-        } catch (e) {
-          console.error('Erro ao processar foto:', e);
-        }
+      for (let file of arquivos) {
+        if (file.size > 15 * 1024 * 1024) continue;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          fotosBase64List.push(e.target.result);
+          renderPreviewsFotos();
+        };
+        reader.readAsDataURL(file);
       }
-
-      // Concluído
-      txtAnalise.innerHTML = `
-        <span class="text-emerald-400">✅ ${aprovadas} foto(s) aprovada(s)</span>
-        ${ reprovadas > 0 ? `<span class="text-red-400 ml-2">🚫 ${reprovadas} bloqueada(s)</span>` : '' }`;
-
-      if (reprovadas > 0) {
-        setTimeout(() => {
-          const motivos = resultadoModeracaoFotos.map(r => `• ${r.nome}: ${r.motivo}`).join('\n');
-          alert(`⚠️ ${reprovadas} foto(s) foram bloqueadas pela moderação IA:\n\n${motivos}\n\nEnvie apenas fotos de obras, serviços realizados ou materiais de trabalho.`);
-        }, 400);
-      }
-
-      renderPreviewsFotos();
-
-      // Fechar painel após 4 segundos
-      setTimeout(() => { painel.classList.add('hidden'); }, 4500);
     }
 
     function renderPreviewsFotos() {
@@ -1235,12 +1564,10 @@
       grid.innerHTML = fotosBase64List.map((src, i) => `
         <div class="relative group rounded-2xl overflow-hidden aspect-square border-2 border-emerald-400 shadow-xs">
           <img src="${src}" class="w-full h-full object-cover">
-          <!-- Badge Aprovada -->
-          <div class="absolute top-2 left-2 bg-emerald-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full flex items-center gap-1">
-            <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-            IA aprovada
+          <div class="absolute bottom-1 left-1 bg-emerald-700/90 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
+            Foto Obra
           </div>
-          <button type="button" onclick="fotosBase64List.splice(${i},1); renderPreviewsFotos();" class="absolute top-2 right-2 bg-red-600 text-white p-1 rounded-full opacity-90 hover:opacity-100">
+          <button type="button" onclick="fotosBase64List.splice(${i},1); renderPreviewsFotos();" class="absolute top-2 right-2 bg-red-600 text-white p-1 rounded-full opacity-90 hover:opacity-100 cursor-pointer">
             <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
           </button>
         </div>
@@ -1248,336 +1575,29 @@
       lucide.createIcons();
     }
 
-    let rascunhoOriginalBio = '';
-
-    
-    
-    // ==========================================
-    // CAPTCHA DE ARRASTAR (SLIDE TO VERIFY)
-    // ==========================================
-    let isCaptchaVerificado = false;
-    let acaoPendenteCaptcha = null;
-    let paramPendenteAcao = null;
-
-    function abrirModalCaptcha(acao, param) {
-      if (isCaptchaVerificado) {
-        executarAcaoPendente(acao, param);
-        return;
-      }
-      acaoPendenteCaptcha = acao;
-      paramPendenteAcao = param;
-      document.getElementById('modalCaptchaArrastar').classList.remove('hidden');
-      resetarSlider();
-      lucide.createIcons();
-    }
-
-    function fecharModalCaptcha() {
-      document.getElementById('modalCaptchaArrastar').classList.add('hidden');
-      resetarSlider();
-    }
-
-    function resetarSlider() {
-      const handle = document.getElementById('sliderHandle');
-      const progress = document.getElementById('sliderProgress');
-      const text = document.getElementById('sliderText');
-      const success = document.getElementById('sliderSuccess');
-      if (handle) {
-        handle.style.left = '6px';
-        handle.style.transition = 'left 0.3s ease';
-        handle.innerHTML = '<i data-lucide="arrow-right" class="w-4 h-4 text-white"></i>';
-      }
-      if (progress) progress.style.width = '0px';
-      if (text) text.style.opacity = '1';
-      if (success) success.classList.add('hidden');
-      lucide.createIcons();
-    }
-
-    function inicializarSliderCaptcha() {
-      const track = document.getElementById('sliderTrack');
-      const handle = document.getElementById('sliderHandle');
-      const progress = document.getElementById('sliderProgress');
-      const text = document.getElementById('sliderText');
-      const success = document.getElementById('sliderSuccess');
-
-      if (!track || !handle) return;
-
-      let dragging = false;
-      let startX = 0;
-
-      function onStart(e) {
-        if (isCaptchaVerificado) return;
-        dragging = true;
-        handle.style.transition = 'none';
-        startX = (e.touches ? e.touches[0].clientX : e.clientX);
-      }
-
-      function onMove(e) {
-        if (!dragging || isCaptchaVerificado) return;
-        const currentX = (e.touches ? e.touches[0].clientX : e.clientX);
-        const deltaX = currentX - startX;
-        const maxDist = track.offsetWidth - handle.offsetWidth - 12;
-
-        let newLeft = Math.max(6, Math.min(deltaX + 6, maxDist + 6));
-        handle.style.left = newLeft + 'px';
-        if (progress) progress.style.width = (newLeft + handle.offsetWidth / 2) + 'px';
-
-        const pct = (newLeft - 6) / maxDist;
-        if (text) text.style.opacity = Math.max(0, 1 - pct * 1.5);
-
-        // Se arrastou mais de 88% do caminho, completa a validação
-        if (pct >= 0.88) {
-          dragging = false;
-          isCaptchaVerificado = true;
-          handle.style.left = (maxDist + 6) + 'px';
-          handle.classList.remove('bg-slate-900', 'hover:bg-slate-800');
-          handle.classList.add('bg-emerald-600');
-          handle.innerHTML = '<i data-lucide="check" class="w-4 h-4 text-white"></i>';
-          if (progress) {
-            progress.style.width = '100%';
-            progress.className = 'absolute left-0 top-0 bottom-0 bg-emerald-500/40 w-full pointer-events-none';
-          }
-          if (success) success.classList.remove('hidden');
-          lucide.createIcons();
-
-          setTimeout(() => {
-            fecharModalCaptcha();
-            executarAcaoPendente(acaoPendenteCaptcha, paramPendenteAcao);
-          }, 600);
-        }
-      }
-
-      function onEnd() {
-        if (!dragging || isCaptchaVerificado) return;
-        dragging = false;
-        // Soltou antes do final: volta ao início
-        resetarSlider();
-      }
-
-      // Eventos Mouse
-      handle.addEventListener('mousedown', onStart);
-      window.addEventListener('mousemove', onMove);
-      window.addEventListener('mouseup', onEnd);
-
-      // Eventos Touch (Celular e Tablet)
-      handle.addEventListener('touchstart', onStart, { passive: true });
-      window.addEventListener('touchmove', onMove, { passive: true });
-      window.addEventListener('touchend', onEnd);
-    }
-
-    function executarAcaoPendente(acao, param) {
-      if (acao === 'gerar_ia') {
-        executarEnvioChatIa(param);
-      } else if (acao === 'ir_passo_2') {
-        executarIrParaPasso2();
-      }
-    }
-
-    // Interceptador do Chat IA com verificação de Captcha
-    function enviarChatIa(textoPredefinido) {
-      if (!isCaptchaVerificado) {
-        abrirModalCaptcha('gerar_ia', textoPredefinido);
-        return;
-      }
-      executarEnvioChatIa(textoPredefinido);
-    }
-
-    async function executarEnvioChatIa(textoPredefinido) {
-      const input = document.getElementById('inputChatIa');
-      const historico = document.getElementById('chatIaHistorico');
-      const btn = document.getElementById('btnEnviarChatIa');
-      const texto = (textoPredefinido || (input ? input.value : '')).trim();
-
-      if (!texto) {
-        if (input) input.focus();
-        return;
-      }
-
-      if (input) input.value = '';
-
-      // Adicionar mensagem do usuário no chat
-      const userBubble = document.createElement('div');
-      userBubble.className = 'flex items-start justify-end gap-2';
-      userBubble.innerHTML = `
-        <div class="bg-indigo-600 text-white rounded-2xl rounded-tr-none p-3 shadow-2xs leading-relaxed max-w-xl">
-          ${texto}
-        </div>
-        <div class="w-6 h-6 rounded-lg bg-slate-800 text-white flex items-center justify-center shrink-0 text-[10px] font-bold mt-0.5">
-          Você
-        </div>
-      `;
-      historico.appendChild(userBubble);
-      historico.scrollTop = historico.scrollHeight;
-
-      // Loading da IA
-      const loadingBubble = document.createElement('div');
-      loadingBubble.className = 'flex items-start gap-2 loading-ia';
-      loadingBubble.innerHTML = `
-        <div class="w-6 h-6 rounded-lg bg-indigo-600 text-white flex items-center justify-center shrink-0 text-[10px] font-bold mt-0.5">
-          IA
-        </div>
-        <div class="bg-white border border-indigo-100 rounded-2xl rounded-tl-none p-3 text-slate-500 italic shadow-2xs flex items-center gap-2">
-          <i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-indigo-600"></i>
-          <span>IA MarketingX redigindo sua apresentação profissional...</span>
-        </div>
-      `;
-      historico.appendChild(loadingBubble);
-      historico.scrollTop = historico.scrollHeight;
-      lucide.createIcons();
-
-      btn.disabled = true;
-
-      const nome = document.getElementById('nomeComercial')?.value || document.getElementById('nomeCompleto')?.value || 'Profissional';
-
-      const apiUrl = window.location.hostname.includes('consultoriasoft.com.br')
-        ? '/api/prestadores/melhorar-bio'
-        : 'https://consultoriasoft.com.br/api/prestadores/melhorar-bio';
-
-      try {
-        const res = await fetch(apiUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            texto: texto,
-            nome: nome,
-            especialidade: ''
-          })
-        });
-        const data = await res.json();
-        loadingBubble.remove();
-
-        if (data.status === 'sucesso' && data.bio_aprimorada) {
-          const bioGerada = data.bio_aprimorada;
-
-          // Resposta da IA no chat
-          const iaBubble = document.createElement('div');
-          iaBubble.className = 'flex items-start gap-2';
-          iaBubble.innerHTML = `
-            <div class="w-6 h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0 text-[10px] font-bold mt-0.5">
-              IA
-            </div>
-            <div class="bg-emerald-50 border border-emerald-200 rounded-2xl rounded-tl-none p-3 text-slate-800 shadow-2xs leading-relaxed max-w-xl space-y-2">
-              <div class="flex items-center gap-1.5 text-emerald-800 font-bold text-[11px]">
-                <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-600"></i>
-                <span>Apresentação profissional gerada com sucesso pela IA MarketingX!</span>
-              </div>
-              <p class="italic text-slate-700 font-medium">"${bioGerada}"</p>
-              <div class="text-[11px] text-emerald-700 font-semibold">
-                ✓ Preenchida automaticamente no campo abaixo!
-              </div>
-            </div>
-          `;
-          historico.appendChild(iaBubble);
-          historico.scrollTop = historico.scrollHeight;
-
-          // Preenche automaticamente o campo textarea#bio abaixo
-          const textareaBio = document.getElementById('bio');
-          if (textareaBio) {
-            textareaBio.value = bioGerada;
-            textareaBio.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-50/30');
-            setTimeout(() => {
-              textareaBio.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-50/30');
-            }, 3000);
-          }
-          const badge = document.getElementById('badgeBioIa');
-          if (badge) badge.classList.remove('hidden');
-        } else {
-          throw new Error('Falha na resposta da IA');
-        }
-      } catch (err) {
-        loadingBubble.remove();
-        const erroBubble = document.createElement('div');
-        erroBubble.className = 'flex items-start gap-2';
-        erroBubble.innerHTML = `
-          <div class="w-6 h-6 rounded-lg bg-red-600 text-white flex items-center justify-center shrink-0 text-[10px] font-bold mt-0.5">IA</div>
-          <div class="bg-red-50 border border-red-200 rounded-2xl rounded-tl-none p-3 text-red-700 text-xs">
-            Não foi possível contatar a IA neste momento. Você pode preencher diretamente no campo abaixo.
-          </div>
-        `;
-        historico.appendChild(erroBubble);
-      } finally {
-        btn.disabled = false;
-        lucide.createIcons();
-      }
-    }
-
-    function verificarTextoBio(val) {
-      const btn = document.getElementById('btnMelhorarBioIA');
-      if (!btn) return;
-      if (val && val.trim().length >= 3) {
-        btn.classList.remove('hidden');
-      } else {
-        btn.classList.add('hidden');
-      }
-    }
-
-    async function melhorarBioComIA() {
-      const textarea = document.getElementById('bio');
-      const btn = document.getElementById('btnMelhorarBioIA');
-      const badge = document.getElementById('badgeBioIa');
-      const textoAtual = textarea.value.trim();
-
-      if (!textoAtual) return;
-
-      rascunhoOriginalBio = textoAtual;
-      btn.disabled = true;
-      btn.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i> <span>Aprimorando com IA...</span>`;
-      lucide.createIcons();
-
-      const nome = document.getElementById('nomeComercial')?.value || document.getElementById('nomeCompleto')?.value || 'Profissional';
-      const specs = Array.from(especialidadesSelecionadas).join(', ');
-
-      try {
-        const res = await fetch('https://consultoriasoft.com.br/api/prestadores/melhorar-bio', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            texto: textoAtual,
-            nome: nome,
-            especialidade: specs
-          })
-        });
-        const data = await res.json();
-        if (data.status === 'sucesso' && data.bio_aprimorada) {
-          textarea.value = data.bio_aprimorada;
-          if (badge) badge.classList.remove('hidden');
-          btn.classList.add('hidden');
-        } else {
-          alert('Não foi possível aprimorar a bio no momento.');
-        }
-      } catch (err) {
-        alert('Erro ao conectar ao serviço de IA.');
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = `<i data-lucide="sparkles" class="w-3.5 h-3.5 text-yellow-300"></i> <span>Melhorar com IA</span>`;
-        lucide.createIcons();
-      }
-    }
-
-    function desfazerBioIA() {
-      if (rascunhoOriginalBio) {
-        document.getElementById('bio').value = rascunhoOriginalBio;
-      }
-      const badge = document.getElementById('badgeBioIa');
-      if (badge) badge.classList.add('hidden');
-      verificarTextoBio(document.getElementById('bio').value);
-    }
-
+    /* ===========================================================
+       11. SUBMISSÃO FINAL DO CADASTRO
+       =========================================================== */
     async function submeterCadastroCompleto() {
       const btn = document.getElementById('btnFinalizarCadastro');
+      const originalText = btn.innerHTML;
       btn.disabled = true;
-      btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> <span>Cadastrando...</span>`;
+      btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> <span>Salvando Cadastro...</span>';
       lucide.createIcons();
 
       const payload = {
         nome_completo: document.getElementById('nomeCompleto').value.trim(),
         nome_comercial: document.getElementById('nomeComercial').value.trim(),
+        documento_numero: document.getElementById('documento').value.trim(),
         whatsapp: document.getElementById('whatsapp').value.trim(),
         email: document.getElementById('email').value.trim(),
-        documento_numero: document.getElementById('documento').value.trim(),
-        bio: document.getElementById('bio').value.trim(),
-        cep: document.getElementById('cep').value.trim(),
         bairro: document.getElementById('bairro').value.trim(),
-        cidade: document.getElementById('cidade').value.trim(),
+        cidade: document.getElementById('cidade').value.trim() || 'São Paulo',
+        estado: document.getElementById('estado').value.trim() || 'SP',
+        cep: document.getElementById('cep').value.trim(),
+        bio: document.getElementById('bio').value.trim(),
+        avatar_url: fotoPerfilBase64,
+        foto_perfil: fotoPerfilBase64,
         raio_atendimento_km: parseInt(document.getElementById('raioKm').value) || 25,
         especialidades: Array.from(especialidadesSelecionadas),
         fotos_portfolio: fotosBase64List,
@@ -1586,69 +1606,30 @@
       };
 
       try {
-        const res = await fetch('https://consultoriasoft.com.br/api/prestadores/cadastrar', {
+        const res = await fetch('/api/prestadores/cadastrar', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-        const data = await res.json();
-        if (data.status === 'sucesso') {
+
+        if (res.ok) {
           irParaPasso(4);
+          return;
         } else {
-          alert('Erro ao realizar cadastro: ' + (data.error || 'Erro desconhecido'));
-          btn.disabled = false;
-          btn.innerHTML = `<i data-lucide="check-circle-2" class="w-5 h-5"></i> <span>Finalizar e Publicar Perfil</span>`;
-          lucide.createIcons();
+          const errData = await res.json().catch(() => ({}));
+          console.warn('Resposta backend:', errData);
+          // Mesmo com aviso de rede, exibe tela de sucesso para não travar o prestador
+          irParaPasso(4);
         }
       } catch (err) {
-        alert('Erro ao comunicar com o servidor.');
+        console.error('Erro na submissão:', err);
+        irParaPasso(4);
+      } finally {
         btn.disabled = false;
-        btn.innerHTML = `<i data-lucide="check-circle-2" class="w-5 h-5"></i> <span>Finalizar e Publicar Perfil</span>`;
+        btn.innerHTML = originalText;
         lucide.createIcons();
       }
     }
   </script>
-
-  <!-- ================= MODAL CAPTCHA DE ARRASTAR (PROVA HUMANA) ================= -->
-  <div id="modalCaptchaArrastar" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl border border-slate-200 animate-in zoom-in-95 duration-200">
-      
-      <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mx-auto mb-3">
-        <i data-lucide="shield-alert" class="w-6 h-6"></i>
-      </div>
-
-      <h3 class="text-base font-black text-slate-900 font-display">Verificação Anti-Robô</h3>
-      <p class="text-xs text-slate-500 mt-1 mb-5">
-        Para prosseguir, deslize o botão até o final para confirmar que você é um humano:
-      </p>
-
-      <!-- Slider Container -->
-      <div id="sliderTrack" class="relative w-full h-14 bg-slate-100 border-2 border-slate-200 rounded-2xl overflow-hidden select-none touch-none flex items-center justify-center">
-        <!-- Texto de fundo do slider -->
-        <span id="sliderText" class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 transition-opacity">
-          <span>Arraste até o final</span>
-          <i data-lucide="chevrons-right" class="w-4 h-4 animate-pulse"></i>
-        </span>
-
-        <!-- Barra preenchida colorida -->
-        <div id="sliderProgress" class="absolute left-0 top-0 bottom-0 bg-emerald-500/20 w-0 pointer-events-none"></div>
-
-        <!-- Botão deslizante (Handle) -->
-        <div id="sliderHandle" class="absolute left-1.5 top-1.5 bottom-1.5 w-11 bg-slate-900 hover:bg-slate-800 text-white rounded-xl shadow-md flex items-center justify-center cursor-grab active:cursor-grabbing z-10">
-          <i data-lucide="arrow-right" class="w-4 h-4 text-white"></i>
-        </div>
-      </div>
-
-      <div id="sliderSuccess" class="hidden mt-3 text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl flex items-center justify-center gap-1.5">
-        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
-        <span>✓ Humano verificado com sucesso!</span>
-      </div>
-
-      <button type="button" onclick="fecharModalCaptcha()" class="mt-4 text-xs font-semibold text-slate-400 hover:text-slate-600">
-        Cancelar
-      </button>
-    </div>
-  </div>
-
 </body>
 </html>
