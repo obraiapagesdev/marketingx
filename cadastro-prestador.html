@@ -168,32 +168,86 @@
             </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <!-- WhatsApp com Máscara -->
             <div>
               <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 WhatsApp Comercial (com DDD) *
               </label>
               <div class="relative">
                 <i data-lucide="phone" class="w-4 h-4 text-emerald-600 absolute left-3.5 top-3.5"></i>
-                <input type="tel" id="whatsapp" required placeholder="(11) 98765-4321" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none text-sm font-medium">
+                <input 
+                  type="tel" 
+                  id="whatsapp" 
+                  required 
+                  maxlength="15"
+                  oninput="mascaraTelefone(this)"
+                  placeholder="(11) 98765-4321" 
+                  class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none text-sm font-medium"
+                >
               </div>
+              <span class="text-[10px] text-slate-400 mt-1 block">Ex: (11) 98765-4321</span>
             </div>
 
+            <!-- E-mail de Contato Exclusivo Gmail com Botão & Badge -->
             <div>
-              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                E-mail de Contato *
-              </label>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                  E-mail de Contato *
+                </label>
+                <!-- Botão / Badge Gmail Oficial -->
+                <span class="inline-flex items-center gap-1 text-[10px] font-black bg-red-50 text-red-700 border border-red-200 px-2 py-0.5 rounded-md shadow-2xs">
+                  <svg class="w-3 h-3 text-red-600 inline shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>
+                  Só aceita Gmail
+                </span>
+              </div>
+              
               <div class="relative">
                 <i data-lucide="mail" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
-                <input type="email" id="email" required placeholder="seuemail@gmail.com" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none text-sm font-medium">
+                <input 
+                  type="email" 
+                  id="email" 
+                  required 
+                  oninput="validarEmailAoDigitar(this.value)"
+                  placeholder="seuemail@gmail.com" 
+                  class="w-full pl-10 pr-20 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none text-sm font-medium transition-colors"
+                >
+                <!-- Botão Rápido @gmail.com -->
+                <button 
+                  type="button" 
+                  id="btnCompletarGmail"
+                  onclick="completarGmail()" 
+                  class="absolute right-2 top-2 text-[10px] font-extrabold bg-slate-200 hover:bg-red-100 text-slate-700 hover:text-red-700 px-2 py-1 rounded-lg transition-colors cursor-pointer"
+                  title="Clique para completar com @gmail.com"
+                >
+                  @gmail.com
+                </button>
+              </div>
+
+              <!-- Feedback Dinâmico do Gmail -->
+              <div id="msgValidacaoEmail" class="text-[11px] text-slate-400 font-medium mt-1 flex items-center gap-1">
+                <span>Obrigatório e exclusivo para contas @gmail.com</span>
               </div>
             </div>
 
+            <!-- CPF ou CNPJ com Máscara Dinâmica -->
             <div>
               <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 CPF ou CNPJ (MEI) *
               </label>
-              <input type="text" id="documento" required placeholder="000.000.000-00" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none text-sm font-medium">
+              <div class="relative">
+                <i data-lucide="file-text" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
+                <input 
+                  type="text" 
+                  id="documento" 
+                  required 
+                  maxlength="18"
+                  oninput="mascaraDocumento(this)"
+                  placeholder="000.000.000-00" 
+                  class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none text-sm font-medium"
+                >
+              </div>
+              <span class="text-[10px] text-slate-400 mt-1 block">CPF (11 dígitos) ou CNPJ (14 dígitos)</span>
             </div>
           </div>
 
@@ -578,15 +632,131 @@
       renderEspecialidades();
     }
 
+    
+    // Máscara dinâmica de Telefone / WhatsApp: (XX) XXXXX-XXXX
+    function mascaraTelefone(input) {
+      let v = input.value.replace(/\D/g, '');
+      if (v.length > 11) v = v.substring(0, 11);
+
+      if (v.length > 10) {
+        v = v.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+      } else if (v.length > 6) {
+        v = v.replace(/^(\d{2})(\d{4})(\d{0,4})$/, '($1) $2-$3');
+      } else if (v.length > 2) {
+        v = v.replace(/^(\d{2})(\d{0,5})$/, '($1) $2');
+      } else if (v.length > 0) {
+        v = v.replace(/^(\d{0,2})$/, '($1');
+      }
+      input.value = v;
+    }
+
+    // Máscara dinâmica de CPF (11 dígitos) ou CNPJ (14 dígitos)
+    function mascaraDocumento(input) {
+      let v = input.value.replace(/\D/g, '');
+      if (v.length > 14) v = v.substring(0, 14);
+
+      if (v.length <= 11) {
+        // CPF: 000.000.000-00
+        v = v.replace(/(\d{3})(\d)/, '$1.$2');
+        v = v.replace(/(\d{3})(\d)/, '$1.$2');
+        v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+      } else {
+        // CNPJ: 00.000.000/0000-00
+        v = v.replace(/^(\d{2})(\d)/, '$1.$2');
+        v = v.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+        v = v.replace(/\.(\d{3})(\d)/, '.$1/$2');
+        v = v.replace(/(\d{4})(\d{1,2})$/, '$1-$2');
+      }
+      input.value = v;
+    }
+
+    // Botão de atalho para autocompletar @gmail.com
+    function completarGmail() {
+      const emailInput = document.getElementById('email');
+      if (!emailInput) return;
+      let val = emailInput.value.trim().toLowerCase();
+      if (val.includes('@')) {
+        val = val.split('@')[0];
+      }
+      if (!val) {
+        emailInput.value = '@gmail.com';
+        emailInput.focus();
+        emailInput.setSelectionRange(0, 0);
+      } else {
+        emailInput.value = val + '@gmail.com';
+      }
+      validarEmailAoDigitar(emailInput.value);
+    }
+
+    // Validação estrita ao digitar e feedback visual em tempo real
+    function validarEmailAoDigitar(val) {
+      const email = val.trim().toLowerCase();
+      const msg = document.getElementById('msgValidacaoEmail');
+      const input = document.getElementById('email');
+      if (!msg || !input) return;
+
+      if (!email) {
+        msg.className = "text-[11px] text-slate-400 font-medium mt-1";
+        msg.innerHTML = "Obrigatório e exclusivo para contas @gmail.com";
+        input.classList.remove('border-red-500', 'focus:ring-red-500', 'border-emerald-500', 'focus:ring-emerald-500');
+        input.classList.add('border-slate-300');
+        return;
+      }
+
+      if (email.endsWith('@gmail.com') || email.endsWith('@googlemail.com')) {
+        const userPart = email.split('@')[0];
+        if (userPart.length >= 4 && /^[a-zA-Z0-9._-]+$/.test(userPart)) {
+          msg.className = "text-[11px] text-emerald-600 font-bold mt-1 flex items-center gap-1";
+          msg.innerHTML = "<i data-lucide='check-circle-2' class='w-3.5 h-3.5 text-emerald-600'></i> <span>✓ Conta Gmail válida e compatível</span>";
+          input.classList.remove('border-red-500', 'focus:ring-red-500', 'border-slate-300', 'border-amber-400');
+          input.classList.add('border-emerald-500', 'focus:ring-emerald-500');
+        } else {
+          msg.className = "text-[11px] text-amber-600 font-medium mt-1 flex items-center gap-1";
+          msg.innerHTML = "O usuário do Gmail precisa ter pelo menos 4 caracteres.";
+          input.classList.remove('border-emerald-500', 'border-slate-300', 'border-red-500');
+          input.classList.add('border-amber-400');
+        }
+      } else {
+        msg.className = "text-[11px] text-red-600 font-bold mt-1 flex items-center gap-1";
+        msg.innerHTML = "<i data-lucide='alert-circle' class='w-3.5 h-3.5 text-red-600'></i> <span>✖ Exclusivo Gmail: O e-mail deve terminar com @gmail.com</span>";
+        input.classList.remove('border-emerald-500', 'border-slate-300', 'border-amber-400');
+        input.classList.add('border-red-500', 'focus:ring-red-500');
+      }
+      lucide.createIcons();
+    }
+
     function irParaPasso(passo) {
       if (passo === 2) {
         const nome = document.getElementById('nomeCompleto').value.trim();
         const zap = document.getElementById('whatsapp').value.trim();
         const doc = document.getElementById('documento').value.trim();
-        const email = document.getElementById('email').value.trim();
+        const email = document.getElementById('email').value.trim().toLowerCase();
 
         if (!nome || !zap || !doc || !email) {
           alert('Por favor, preencha todos os campos obrigatórios (*)');
+          return;
+        }
+
+        // Validação estrita do WhatsApp
+        const zapClean = zap.replace(/\D/g, '');
+        if (zapClean.length < 10) {
+          alert('Por favor, informe um WhatsApp válido com DDD (mínimo 10 dígitos).');
+          document.getElementById('whatsapp').focus();
+          return;
+        }
+
+        // Validação estrita do CPF (11) ou CNPJ (14)
+        const docClean = doc.replace(/\D/g, '');
+        if (docClean.length !== 11 && docClean.length !== 14) {
+          alert('Por favor, informe um CPF (11 dígitos) ou CNPJ (14 dígitos) válido.');
+          document.getElementById('documento').focus();
+          return;
+        }
+
+        // Validação estrita EXCLUSIVO GMAIL
+        if (!email.endsWith('@gmail.com') && !email.endsWith('@googlemail.com')) {
+          alert('Atenção: O cadastro é EXCLUSIVO para contas @gmail.com. Por favor, utilize seu e-mail do Google.');
+          document.getElementById('email').focus();
           return;
         }
       }
