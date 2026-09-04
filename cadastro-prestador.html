@@ -230,11 +230,16 @@
               </div>
             </div>
 
-            <!-- CPF ou CNPJ com Máscara Dinâmica -->
+                        <!-- CPF ou CNPJ com Máscara e Validação Oficial da Receita -->
             <div>
-              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                CPF ou CNPJ (MEI) *
-              </label>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                  CPF ou CNPJ (MEI) *
+                </label>
+                <span id="badgeDocStatus" class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-500">
+                  Obrigatório
+                </span>
+              </div>
               <div class="relative">
                 <i data-lucide="file-text" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
                 <input 
@@ -242,12 +247,14 @@
                   id="documento" 
                   required 
                   maxlength="18"
-                  oninput="mascaraDocumento(this)"
+                  oninput="mascaraDocumento(this); validarDocumentoAoDigitar(this.value);"
                   placeholder="000.000.000-00" 
-                  class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none text-sm font-medium"
+                  class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none text-sm font-medium transition-colors"
                 >
               </div>
-              <span class="text-[10px] text-slate-400 mt-1 block">CPF (11 dígitos) ou CNPJ (14 dígitos)</span>
+              <div id="msgValidacaoDoc" class="text-[11px] text-slate-400 font-medium mt-1">
+                Validação oficial de dígitos verificadores
+              </div>
             </div>
           </div>
 
@@ -402,19 +409,37 @@
               <i data-lucide="map-pin" class="w-4 h-4 text-brand-red"></i> Sua Região Base de Atendimento
             </h3>
 
-            <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
               <div>
-                <label class="block text-[11px] font-bold text-slate-600 mb-1">CEP Base *</label>
-                <input type="text" id="cep" placeholder="01001-000" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm">
+                <div class="flex items-center justify-between mb-1">
+                  <label class="block text-[11px] font-bold text-slate-600">CEP Base *</label>
+                  <span id="statusCep" class="text-[9px] font-bold text-indigo-600 hidden">Buscando...</span>
+                </div>
+                <div class="relative">
+                  <input 
+                    type="text" 
+                    id="cep" 
+                    required
+                    maxlength="9"
+                    oninput="mascaraCEP(this)"
+                    onblur="buscarCepCorreios(this.value)"
+                    placeholder="01001-000" 
+                    class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-medium focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none"
+                  >
+                </div>
               </div>
               <div class="sm:col-span-2">
                 <label class="block text-[11px] font-bold text-slate-600 mb-1">Bairro Base *</label>
-                <input type="text" id="bairro" required placeholder="Ex: Mooca / Pinheiros" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm">
+                <input type="text" id="bairro" required placeholder="Preenchido automaticamente pelo CEP" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-medium">
               </div>
               <div>
                 <label class="block text-[11px] font-bold text-slate-600 mb-1">Cidade *</label>
-                <input type="text" id="cidade" required value="São Paulo" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm">
+                <input type="text" id="cidade" required value="São Paulo" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-medium">
               </div>
+            </div>
+            <div id="msgFeedbackCep" class="text-[11px] text-emerald-600 font-bold hidden flex items-center gap-1.5 -mt-2">
+              <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+              <span id="txtFeedbackCep"></span>
             </div>
 
             <div>
@@ -579,8 +604,26 @@
     let fotosBase64List = [];
 
     // Inicialização
+    
+    function executarIrParaPasso2() {
+      // Alterna visibilidade para o Passo 2
+      [1, 2, 3, 4].forEach(p => {
+        const el = document.getElementById(`step-${p}`);
+        if (el) el.classList.toggle('hidden', p !== 2);
+
+        const ind = document.getElementById(`step-indicator-${p}`);
+        if (ind) {
+          ind.className = `w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${
+            p === 2 ? 'step-active' : (p < 2 ? 'step-done' : 'step-pending')
+          }`;
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     document.addEventListener('DOMContentLoaded', async () => {
       lucide.createIcons();
+      inicializarSliderCaptcha();
       await carregarEspecialidadesAPI();
     });
 
@@ -634,6 +677,207 @@
 
     
     // Máscara dinâmica de Telefone / WhatsApp: (XX) XXXXX-XXXX
+    
+    // Algoritmo Oficial da Receita Federal para Validação de CPF (Módulo 11)
+    function validarCPF(cpf) {
+      cpf = (cpf || '').replace(/\D/g, '');
+      if (cpf.length !== 11) return false;
+      if (/^(\d)\1{10}$/.test(cpf)) return false;
+
+      let soma = 0;
+      for (let i = 1; i <= 9; i++) soma += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+      let resto = (soma * 10) % 11;
+      if (resto === 10 || resto === 11) resto = 0;
+      if (resto !== parseInt(cpf.substring(9, 10))) return false;
+
+      soma = 0;
+      for (let i = 1; i <= 10; i++) soma += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+      resto = (soma * 10) % 11;
+      if (resto === 10 || resto === 11) resto = 0;
+      if (resto !== parseInt(cpf.substring(10, 11))) return false;
+
+      return true;
+    }
+
+    // Algoritmo Oficial para Validação de CNPJ (Módulo 11)
+    function validarCNPJ(cnpj) {
+      cnpj = (cnpj || '').replace(/\D/g, '');
+      if (cnpj.length !== 14) return false;
+      if (/^(\d)\1{13}$/.test(cnpj)) return false;
+
+      let tamanho = cnpj.length - 2;
+      let numeros = cnpj.substring(0, tamanho);
+      let digitos = cnpj.substring(tamanho);
+      let soma = 0;
+      let pos = tamanho - 7;
+      for (let i = tamanho; i >= 1; i--) {
+        soma += parseInt(numeros.charAt(tamanho - i)) * pos--;
+        if (pos < 2) pos = 9;
+      }
+      let resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+      if (resultado !== parseInt(digitos.charAt(0))) return false;
+
+      tamanho = tamanho + 1;
+      numeros = cnpj.substring(0, tamanho);
+      soma = 0;
+      pos = tamanho - 7;
+      for (let i = tamanho; i >= 1; i--) {
+        soma += parseInt(numeros.charAt(tamanho - i)) * pos--;
+        if (pos < 2) pos = 9;
+      }
+      resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+      if (resultado !== parseInt(digitos.charAt(1))) return false;
+
+      return true;
+    }
+
+    // Validação ao vivo do CPF ou CNPJ com crítica e feedback visual
+    function validarDocumentoAoDigitar(val) {
+      const clean = (val || '').replace(/\D/g, '');
+      const badge = document.getElementById('badgeDocStatus');
+      const msg = document.getElementById('msgValidacaoDoc');
+      const input = document.getElementById('documento');
+      if (!badge || !msg || !input) return;
+
+      if (!clean) {
+        badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-500";
+        badge.innerText = "Obrigatório";
+        msg.className = "text-[11px] text-slate-400 font-medium mt-1";
+        msg.innerText = "Validação oficial de dígitos verificadores";
+        input.classList.remove('border-red-500', 'focus:ring-red-500', 'border-emerald-500', 'focus:ring-emerald-500');
+        input.classList.add('border-slate-300');
+        return;
+      }
+
+      if (clean.length <= 11) {
+        // Modo CPF
+        if (clean.length < 11) {
+          badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-600";
+          badge.innerText = `CPF: ${clean.length}/11`;
+          msg.className = "text-[11px] text-slate-500 font-medium mt-1";
+          msg.innerText = "Digite os 11 números do seu CPF.";
+          input.classList.remove('border-red-500', 'border-emerald-500');
+          input.classList.add('border-slate-300');
+        } else {
+          // Exatos 11 dígitos: faz a crítica
+          if (validarCPF(clean)) {
+            badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300";
+            badge.innerText = "✓ CPF Válido";
+            msg.className = "text-[11px] text-emerald-600 font-bold mt-1 flex items-center gap-1";
+            msg.innerHTML = "<i data-lucide='check-circle-2' class='w-3.5 h-3.5 text-emerald-600'></i> <span>✓ CPF verificado com sucesso</span>";
+            input.classList.remove('border-red-500', 'border-slate-300');
+            input.classList.add('border-emerald-500', 'focus:ring-emerald-500');
+          } else {
+            badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-red-100 text-red-800 border border-red-300";
+            badge.innerText = "✖ CPF Inválido";
+            msg.className = "text-[11px] text-red-600 font-bold mt-1 flex items-center gap-1";
+            msg.innerHTML = "<i data-lucide='alert-circle' class='w-3.5 h-3.5 text-red-600'></i> <span>✖ Erro no CPF: dígitos verificadores não conferem!</span>";
+            input.classList.remove('border-emerald-500', 'border-slate-300');
+            input.classList.add('border-red-500', 'focus:ring-red-500');
+          }
+        }
+      } else {
+        // Modo CNPJ
+        if (clean.length < 14) {
+          badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-600";
+          badge.innerText = `CNPJ: ${clean.length}/14`;
+          msg.className = "text-[11px] text-slate-500 font-medium mt-1";
+          msg.innerText = "Digite os 14 números do seu CNPJ.";
+          input.classList.remove('border-red-500', 'border-emerald-500');
+          input.classList.add('border-slate-300');
+        } else {
+          // Exatos 14 dígitos: faz a crítica
+          if (validarCNPJ(clean)) {
+            badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300";
+            badge.innerText = "✓ CNPJ Válido";
+            msg.className = "text-[11px] text-emerald-600 font-bold mt-1 flex items-center gap-1";
+            msg.innerHTML = "<i data-lucide='check-circle-2' class='w-3.5 h-3.5 text-emerald-600'></i> <span>✓ CNPJ verificado com sucesso</span>";
+            input.classList.remove('border-red-500', 'border-slate-300');
+            input.classList.add('border-emerald-500', 'focus:ring-emerald-500');
+          } else {
+            badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-red-100 text-red-800 border border-red-300";
+            badge.innerText = "✖ CNPJ Inválido";
+            msg.className = "text-[11px] text-red-600 font-bold mt-1 flex items-center gap-1";
+            msg.innerHTML = "<i data-lucide='alert-circle' class='w-3.5 h-3.5 text-red-600'></i> <span>✖ Erro no CNPJ: dígitos verificadores não conferem!</span>";
+            input.classList.remove('border-emerald-500', 'border-slate-300');
+            input.classList.add('border-red-500', 'focus:ring-red-500');
+          }
+        }
+      }
+      lucide.createIcons();
+    }
+
+    // Máscara dinâmica de CEP: 00000-000 e auto-busca ao completar 8 dígitos
+    function mascaraCEP(input) {
+      let v = input.value.replace(/\D/g, '');
+      if (v.length > 8) v = v.substring(0, 8);
+      if (v.length > 5) {
+        v = v.replace(/^(\d{5})(\d{0,3})$/, '$1-$2');
+      }
+      input.value = v;
+
+      const clean = v.replace(/\D/g, '');
+      if (clean.length === 8) {
+        buscarCepCorreios(clean);
+      }
+    }
+
+    // Busca automática na API dos Correios / ViaCEP
+    let buscandoCep = false;
+    async function buscarCepCorreios(cepRaw) {
+      const cep = (cepRaw || '').replace(/\D/g, '');
+      if (cep.length !== 8 || buscandoCep) return;
+
+      buscandoCep = true;
+      const statusEl = document.getElementById('statusCep');
+      const feedbackBox = document.getElementById('msgFeedbackCep');
+      const feedbackTxt = document.getElementById('txtFeedbackCep');
+      const bairroInput = document.getElementById('bairro');
+      const cidadeInput = document.getElementById('cidade');
+
+      if (statusEl) {
+        statusEl.innerText = "Buscando nos Correios...";
+        statusEl.classList.remove('hidden');
+      }
+
+      try {
+        const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const data = await res.json();
+
+        if (data.erro) {
+          if (statusEl) {
+            statusEl.innerText = "CEP não encontrado";
+            statusEl.className = "text-[9px] font-bold text-red-600";
+          }
+          if (feedbackBox) feedbackBox.classList.add('hidden');
+          return;
+        }
+
+        if (bairroInput && data.bairro) {
+          bairroInput.value = data.bairro;
+          bairroInput.classList.add('bg-emerald-50', 'border-emerald-400');
+          setTimeout(() => bairroInput.classList.remove('bg-emerald-50', 'border-emerald-400'), 2500);
+        }
+        if (cidadeInput && data.localidade) {
+          cidadeInput.value = data.localidade;
+        }
+
+        if (statusEl) {
+          statusEl.innerText = "✓ Localizado";
+          statusEl.className = "text-[9px] font-bold text-emerald-600";
+        }
+        if (feedbackBox && feedbackTxt) {
+          feedbackTxt.innerText = `${data.bairro || 'Região central'} - ${data.localidade}/${data.uf}`;
+          feedbackBox.classList.remove('hidden');
+          lucide.createIcons();
+        }
+      } catch (err) {
+        if (statusEl) statusEl.classList.add('hidden');
+      } finally {
+        buscandoCep = false;
+      }
+    }
+
     function mascaraTelefone(input) {
       let v = input.value.replace(/\D/g, '');
       if (v.length > 11) v = v.substring(0, 11);
@@ -727,6 +971,7 @@
 
     function irParaPasso(passo) {
       if (passo === 2) {
+        // Validação básica dos campos do Passo 1
         const nome = document.getElementById('nomeCompleto').value.trim();
         const zap = document.getElementById('whatsapp').value.trim();
         const doc = document.getElementById('documento').value.trim();
@@ -737,18 +982,51 @@
           return;
         }
 
-        // Validação estrita do WhatsApp
         const zapClean = zap.replace(/\D/g, '');
         if (zapClean.length < 10) {
-          alert('Por favor, informe um WhatsApp válido com DDD (mínimo 10 dígitos).');
+          alert('Por favor, informe um WhatsApp válido com DDD.');
           document.getElementById('whatsapp').focus();
           return;
         }
 
-        // Validação estrita do CPF (11) ou CNPJ (14)
         const docClean = doc.replace(/\D/g, '');
-        if (docClean.length !== 11 && docClean.length !== 14) {
-          alert('Por favor, informe um CPF (11 dígitos) ou CNPJ (14 dígitos) válido.');
+        if (docClean.length === 11) {
+          if (!validarCPF(docClean)) {
+            alert('Atenção: O CPF digitado é INVÁLIDO! Os dígitos verificadores não conferem com a Receita Federal. Corrija seu CPF para continuar.');
+            document.getElementById('documento').focus();
+            return;
+          }
+        } else if (docClean.length === 14) {
+          if (!validarCNPJ(docClean)) {
+            alert('Atenção: O CNPJ digitado é INVÁLIDO! Corrija os números do CNPJ para continuar.');
+            document.getElementById('documento').focus();
+            return;
+          }
+        } else {
+          alert('Por favor, informe um CPF (11 dígitos) ou CNPJ (14 dígitos) completo.');
+          document.getElementById('documento').focus();
+          return;
+        }
+
+        if (!email.endsWith('@gmail.com') && !email.endsWith('@googlemail.com')) {
+          alert('Atenção: O cadastro é EXCLUSIVO para contas @gmail.com. Por favor, utilize seu e-mail do Google.');
+          document.getElementById('email').focus();
+          return;
+        }
+
+        // Se ainda não provou que é humano no Captcha, exige validação
+        if (!isCaptchaVerificado) {
+          abrirModalCaptcha('ir_passo_2');
+          return;
+        }
+      } else if (docClean.length === 14) {
+          if (!validarCNPJ(docClean)) {
+            alert('Atenção: O CNPJ digitado é INVÁLIDO! Os dígitos verificadores não conferem. Por favor, corrija seu CNPJ para continuar.');
+            document.getElementById('documento').focus();
+            return;
+          }
+        } else {
+          alert('Por favor, informe um CPF (11 dígitos) ou CNPJ (14 dígitos) completo.');
           document.getElementById('documento').focus();
           return;
         }
@@ -761,7 +1039,24 @@
         }
       }
 
-      if (passo === 3 && especialidadesSelecionadas.size === 0) {
+      if (passo === 3) {
+        if (especialidadesSelecionadas.size === 0) {
+          alert('Por favor, selecione ao menos uma especialidade.');
+          return;
+        }
+        const cepVal = document.getElementById('cep')?.value.trim() || '';
+        const bairroVal = document.getElementById('bairro')?.value.trim() || '';
+        if (!cepVal || cepVal.replace(/\D/g, '').length < 8) {
+          alert('Por favor, informe um CEP válido com 8 dígitos para preenchimento da sua região.');
+          document.getElementById('cep')?.focus();
+          return;
+        }
+        if (!bairroVal) {
+          alert('Por favor, informe o seu bairro base de atendimento.');
+          document.getElementById('bairro')?.focus();
+          return;
+        }
+      }
         alert('Por favor, selecione ao menos uma especialidade.');
         return;
       }
@@ -956,7 +1251,137 @@
     let rascunhoOriginalBio = '';
 
     
-    async function enviarChatIa(textoPredefinido) {
+    
+    // ==========================================
+    // CAPTCHA DE ARRASTAR (SLIDE TO VERIFY)
+    // ==========================================
+    let isCaptchaVerificado = false;
+    let acaoPendenteCaptcha = null;
+    let paramPendenteAcao = null;
+
+    function abrirModalCaptcha(acao, param) {
+      if (isCaptchaVerificado) {
+        executarAcaoPendente(acao, param);
+        return;
+      }
+      acaoPendenteCaptcha = acao;
+      paramPendenteAcao = param;
+      document.getElementById('modalCaptchaArrastar').classList.remove('hidden');
+      resetarSlider();
+      lucide.createIcons();
+    }
+
+    function fecharModalCaptcha() {
+      document.getElementById('modalCaptchaArrastar').classList.add('hidden');
+      resetarSlider();
+    }
+
+    function resetarSlider() {
+      const handle = document.getElementById('sliderHandle');
+      const progress = document.getElementById('sliderProgress');
+      const text = document.getElementById('sliderText');
+      const success = document.getElementById('sliderSuccess');
+      if (handle) {
+        handle.style.left = '6px';
+        handle.style.transition = 'left 0.3s ease';
+        handle.innerHTML = '<i data-lucide="arrow-right" class="w-4 h-4 text-white"></i>';
+      }
+      if (progress) progress.style.width = '0px';
+      if (text) text.style.opacity = '1';
+      if (success) success.classList.add('hidden');
+      lucide.createIcons();
+    }
+
+    function inicializarSliderCaptcha() {
+      const track = document.getElementById('sliderTrack');
+      const handle = document.getElementById('sliderHandle');
+      const progress = document.getElementById('sliderProgress');
+      const text = document.getElementById('sliderText');
+      const success = document.getElementById('sliderSuccess');
+
+      if (!track || !handle) return;
+
+      let dragging = false;
+      let startX = 0;
+
+      function onStart(e) {
+        if (isCaptchaVerificado) return;
+        dragging = true;
+        handle.style.transition = 'none';
+        startX = (e.touches ? e.touches[0].clientX : e.clientX);
+      }
+
+      function onMove(e) {
+        if (!dragging || isCaptchaVerificado) return;
+        const currentX = (e.touches ? e.touches[0].clientX : e.clientX);
+        const deltaX = currentX - startX;
+        const maxDist = track.offsetWidth - handle.offsetWidth - 12;
+
+        let newLeft = Math.max(6, Math.min(deltaX + 6, maxDist + 6));
+        handle.style.left = newLeft + 'px';
+        if (progress) progress.style.width = (newLeft + handle.offsetWidth / 2) + 'px';
+
+        const pct = (newLeft - 6) / maxDist;
+        if (text) text.style.opacity = Math.max(0, 1 - pct * 1.5);
+
+        // Se arrastou mais de 88% do caminho, completa a validação
+        if (pct >= 0.88) {
+          dragging = false;
+          isCaptchaVerificado = true;
+          handle.style.left = (maxDist + 6) + 'px';
+          handle.classList.remove('bg-slate-900', 'hover:bg-slate-800');
+          handle.classList.add('bg-emerald-600');
+          handle.innerHTML = '<i data-lucide="check" class="w-4 h-4 text-white"></i>';
+          if (progress) {
+            progress.style.width = '100%';
+            progress.className = 'absolute left-0 top-0 bottom-0 bg-emerald-500/40 w-full pointer-events-none';
+          }
+          if (success) success.classList.remove('hidden');
+          lucide.createIcons();
+
+          setTimeout(() => {
+            fecharModalCaptcha();
+            executarAcaoPendente(acaoPendenteCaptcha, paramPendenteAcao);
+          }, 600);
+        }
+      }
+
+      function onEnd() {
+        if (!dragging || isCaptchaVerificado) return;
+        dragging = false;
+        // Soltou antes do final: volta ao início
+        resetarSlider();
+      }
+
+      // Eventos Mouse
+      handle.addEventListener('mousedown', onStart);
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', onEnd);
+
+      // Eventos Touch (Celular e Tablet)
+      handle.addEventListener('touchstart', onStart, { passive: true });
+      window.addEventListener('touchmove', onMove, { passive: true });
+      window.addEventListener('touchend', onEnd);
+    }
+
+    function executarAcaoPendente(acao, param) {
+      if (acao === 'gerar_ia') {
+        executarEnvioChatIa(param);
+      } else if (acao === 'ir_passo_2') {
+        executarIrParaPasso2();
+      }
+    }
+
+    // Interceptador do Chat IA com verificação de Captcha
+    function enviarChatIa(textoPredefinido) {
+      if (!isCaptchaVerificado) {
+        abrirModalCaptcha('gerar_ia', textoPredefinido);
+        return;
+      }
+      executarEnvioChatIa(textoPredefinido);
+    }
+
+    async function executarEnvioChatIa(textoPredefinido) {
       const input = document.getElementById('inputChatIa');
       const historico = document.getElementById('chatIaHistorico');
       const btn = document.getElementById('btnEnviarChatIa');
@@ -1183,5 +1608,47 @@
       }
     }
   </script>
+
+  <!-- ================= MODAL CAPTCHA DE ARRASTAR (PROVA HUMANA) ================= -->
+  <div id="modalCaptchaArrastar" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl border border-slate-200 animate-in zoom-in-95 duration-200">
+      
+      <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mx-auto mb-3">
+        <i data-lucide="shield-alert" class="w-6 h-6"></i>
+      </div>
+
+      <h3 class="text-base font-black text-slate-900 font-display">Verificação Anti-Robô</h3>
+      <p class="text-xs text-slate-500 mt-1 mb-5">
+        Para prosseguir, deslize o botão até o final para confirmar que você é um humano:
+      </p>
+
+      <!-- Slider Container -->
+      <div id="sliderTrack" class="relative w-full h-14 bg-slate-100 border-2 border-slate-200 rounded-2xl overflow-hidden select-none touch-none flex items-center justify-center">
+        <!-- Texto de fundo do slider -->
+        <span id="sliderText" class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 transition-opacity">
+          <span>Arraste até o final</span>
+          <i data-lucide="chevrons-right" class="w-4 h-4 animate-pulse"></i>
+        </span>
+
+        <!-- Barra preenchida colorida -->
+        <div id="sliderProgress" class="absolute left-0 top-0 bottom-0 bg-emerald-500/20 w-0 pointer-events-none"></div>
+
+        <!-- Botão deslizante (Handle) -->
+        <div id="sliderHandle" class="absolute left-1.5 top-1.5 bottom-1.5 w-11 bg-slate-900 hover:bg-slate-800 text-white rounded-xl shadow-md flex items-center justify-center cursor-grab active:cursor-grabbing z-10">
+          <i data-lucide="arrow-right" class="w-4 h-4 text-white"></i>
+        </div>
+      </div>
+
+      <div id="sliderSuccess" class="hidden mt-3 text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl flex items-center justify-center gap-1.5">
+        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+        <span>✓ Humano verificado com sucesso!</span>
+      </div>
+
+      <button type="button" onclick="fecharModalCaptcha()" class="mt-4 text-xs font-semibold text-slate-400 hover:text-slate-600">
+        Cancelar
+      </button>
+    </div>
+  </div>
+
 </body>
 </html>
