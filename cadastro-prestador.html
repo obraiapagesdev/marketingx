@@ -47,15 +47,6 @@
     .step-done { background: #10B981; color: white; border-color: #10B981; }
     .step-pending { background: #F3F4F6; color: #9CA3AF; border-color: #E5E7EB; }
   </style>
-
-  <script>
-    // Se o proxy do Cloudflare Pages (_redirects) estiver ativo, usa rota relativa.
-    // Como fallback de seguranca caso abra localmente ou sem proxy, aponta para a VPS.
-    const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-      ? 'http://localhost:8500'
-      : '';
-  </script>
-
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col justify-between">
 
@@ -462,7 +453,7 @@
 
     async function carregarEspecialidadesAPI() {
       try {
-        const res = await fetch('/api/prestadores/especialidades');
+        const res = await fetch('https://consultoriasoft.com.br/api/prestadores/especialidades');
         especialidadesList = await res.json();
         renderEspecialidades();
       } catch (err) {
@@ -742,7 +733,7 @@
       const specs = Array.from(especialidadesSelecionadas).join(', ');
 
       try {
-        const res = await fetch('/api/prestadores/melhorar-bio', {
+        const res = await fetch('https://consultoriasoft.com.br/api/prestadores/melhorar-bio', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -801,7 +792,7 @@
       };
 
       try {
-        const res = await fetch('/api/prestadores/cadastrar', {
+        const res = await fetch('https://consultoriasoft.com.br/api/prestadores/cadastrar', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)

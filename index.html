@@ -41,15 +41,6 @@
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
-
-  <script>
-    // Se o proxy do Cloudflare Pages (_redirects) estiver ativo, usa rota relativa.
-    // Como fallback de seguranca caso abra localmente ou sem proxy, aponta para a VPS.
-    const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-      ? 'http://localhost:8500'
-      : '';
-  </script>
-
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col justify-between">
 
@@ -610,7 +601,7 @@
 
     async function carregarEspecialidadesMenu() {
       try {
-        const res = await fetch('/api/prestadores/especialidades');
+        const res = await fetch('https://consultoriasoft.com.br/api/prestadores/especialidades');
         const specs = await res.json();
         const container = document.getElementById('chipsEspecialidades');
         
@@ -656,7 +647,7 @@
       if (cidade) params.append('cidade', cidade);
 
       try {
-        const res = await fetch(`/api/prestadores?${params.toString()}`);
+        const res = await fetch(`https://consultoriasoft.com.br/api/prestadores?${params.toString()}`);
         const data = await res.json();
         prestadoresList = data.prestadores || [];
 
@@ -799,7 +790,7 @@
     async function abrirDossiePrestador(id) {
       if (!id) return;
       try {
-        const res = await fetch(`/api/prestadores/detalhes?id=${id}`);
+        const res = await fetch(`https://consultoriasoft.com.br/api/prestadores/detalhes?id=${id}`);
         if (!res.ok) throw new Error('Falha ao carregar detalhes');
         const p = await res.json();
         prestadorDossieAtivo = p;
@@ -1052,7 +1043,7 @@
       };
 
       try {
-        await fetch('/api/clientes/lead', {
+        await fetch('https://consultoriasoft.com.br/api/clientes/lead', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(leadData)
@@ -1190,7 +1181,7 @@
       };
 
       try {
-        const res = await fetch('/api/prestadores/avaliar', {
+        const res = await fetch('https://consultoriasoft.com.br/api/prestadores/avaliar', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -1216,7 +1207,7 @@
 
     async function registrarMetrica(pid) {
       try {
-        fetch('/api/prestadores/metrica', {
+        fetch('https://consultoriasoft.com.br/api/prestadores/metrica', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ prestador_id: pid, acao: 'clique_whatsapp', origem: 'vitrine_web' })
@@ -1308,7 +1299,7 @@
       };
 
       try {
-        const res = await fetch('/api/prestadores/avaliar', {
+        const res = await fetch('https://consultoriasoft.com.br/api/prestadores/avaliar', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -1331,7 +1322,7 @@
 
     async function registrarMetrica(pid) {
       try {
-        fetch('/api/prestadores/metrica', {
+        fetch('https://consultoriasoft.com.br/api/prestadores/metrica', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ prestador_id: pid, acao: 'clique_whatsapp', origem: 'vitrine_web' })
