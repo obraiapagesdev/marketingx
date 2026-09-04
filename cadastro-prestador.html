@@ -196,6 +196,84 @@
             </div>
           </div>
 
+          <!-- ================= CHAT IA MARKETINGX ================= -->
+          <div class="rounded-2xl border border-indigo-200 bg-gradient-to-b from-indigo-50/70 via-white to-slate-50 p-4 shadow-sm space-y-3">
+            <div class="flex items-center justify-between border-b border-indigo-100 pb-2.5">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/20 font-bold text-sm">
+                  <i data-lucide="bot" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-xs font-black text-slate-900 tracking-tight">Chat IA MarketingX</span>
+                    <span class="text-[10px] bg-indigo-100 text-indigo-700 font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">Assistente Ativo</span>
+                  </div>
+                  <p class="text-[11px] text-slate-500">Crie sua apresentação profissional automaticamente conversando com a IA</p>
+                </div>
+              </div>
+              <span class="hidden sm:inline-flex text-[11px] text-indigo-600 font-bold items-center gap-1">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> IA MarketingX
+              </span>
+            </div>
+
+            <!-- Caixa de Mensagens do Chat -->
+            <div id="chatIaHistorico" class="space-y-2.5 max-h-56 overflow-y-auto pr-1 text-xs">
+              <!-- Mensagem inicial da IA -->
+              <div class="flex items-start gap-2">
+                <div class="w-6 h-6 rounded-lg bg-indigo-600 text-white flex items-center justify-center shrink-0 text-[10px] font-bold mt-0.5">
+                  IA
+                </div>
+                <div class="bg-white border border-indigo-100 rounded-2xl rounded-tl-none p-3 text-slate-700 shadow-2xs leading-relaxed max-w-xl">
+                  👋 <b>Olá! Sou o assistente da MarketingX.</b><br>
+                  Me conte em poucas palavras o que você faz (quantos anos de experiência, se tem equipe, diferenciais etc.), ou clique em um dos botões rápidos abaixo. Eu escrevo sua apresentação profissional na hora!
+                </div>
+              </div>
+            </div>
+
+            <!-- Sugestões Rápidas (Chips) -->
+            <div class="flex flex-wrap items-center gap-1.5 pt-1">
+              <span class="text-[10px] uppercase font-bold text-slate-400 mr-1">Sugestões Rápidas:</span>
+              <button type="button" onclick="enviarChatIa('Sou azulejista há mais de 10 anos, especialista em porcelanatos de grandes formatos, meia esquadria 45 graus e nichos.')" class="chip-chat text-[11px] font-semibold bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 px-2.5 py-1 rounded-lg transition-all shadow-2xs">
+                🧱 Azulejista & Porcelanatos
+              </button>
+              <button type="button" onclick="enviarChatIa('Sou pintor profissional especializado em pintura mecanizada airless, efeitos decorativos como cimento queimado e fino acabamento.')" class="chip-chat text-[11px] font-semibold bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 px-2.5 py-1 rounded-lg transition-all shadow-2xs">
+                🎨 Pintor Airless & Efeitos
+              </button>
+              <button type="button" onclick="enviarChatIa('Sou eletricista residencial e predial com curso técnico e NR10, especializado em quadros de distribuição, automação e iluminação LED.')" class="chip-chat text-[11px] font-semibold bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 px-2.5 py-1 rounded-lg transition-all shadow-2xs">
+                ⚡ Eletricista Residencial
+              </button>
+              <button type="button" onclick="enviarChatIa('Sou encanador profissional, especialista em tubulações Tigre, água quente, caixas acopladas, detecção de vazamentos e novas instalações.')" class="chip-chat text-[11px] font-semibold bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 px-2.5 py-1 rounded-lg transition-all shadow-2xs">
+                💧 Encanador & Hidráulica
+              </button>
+              <button type="button" onclick="enviarChatIa('Mestre de obras e pedreiro geral, especializado em reformas completas do chão ao teto com pontualidade e equipe própria.')" class="chip-chat text-[11px] font-semibold bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-300 px-2.5 py-1 rounded-lg transition-all shadow-2xs">
+                🔨 Mestre de Obras & Reformas
+              </button>
+            </div>
+
+            <!-- Campo de Entrada do Chat -->
+            <div class="flex items-center gap-2 pt-1">
+              <div class="relative flex-1">
+                <input 
+                  type="text" 
+                  id="inputChatIa" 
+                  placeholder="Ex: Faço pintura há 8 anos, entrego a obra limpa e tenho ótimas referências..." 
+                  onkeydown="if(event.key === 'Enter'){ event.preventDefault(); enviarChatIa(); }"
+                  class="w-full pl-3.5 pr-10 py-2.5 bg-white border border-indigo-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-xs font-medium shadow-2xs"
+                >
+              </div>
+              <button 
+                type="button" 
+                id="btnEnviarChatIa"
+                onclick="enviarChatIa()" 
+                class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md shadow-indigo-500/20 flex items-center gap-1.5 transition-all shrink-0 active:scale-95 cursor-pointer"
+              >
+                <i data-lucide="sparkles" class="w-4 h-4 text-yellow-300"></i>
+                <span>Gerar com IA</span>
+              </button>
+            </div>
+          </div>
+          <!-- ================= FIM CHAT IA ================= -->
+
           <div class="space-y-1.5">
             <div class="flex items-center justify-between gap-2">
               <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
@@ -705,6 +783,126 @@
     }
 
     let rascunhoOriginalBio = '';
+
+    
+    async function enviarChatIa(textoPredefinido) {
+      const input = document.getElementById('inputChatIa');
+      const historico = document.getElementById('chatIaHistorico');
+      const btn = document.getElementById('btnEnviarChatIa');
+      const texto = (textoPredefinido || (input ? input.value : '')).trim();
+
+      if (!texto) {
+        if (input) input.focus();
+        return;
+      }
+
+      if (input) input.value = '';
+
+      // Adicionar mensagem do usuário no chat
+      const userBubble = document.createElement('div');
+      userBubble.className = 'flex items-start justify-end gap-2';
+      userBubble.innerHTML = `
+        <div class="bg-indigo-600 text-white rounded-2xl rounded-tr-none p-3 shadow-2xs leading-relaxed max-w-xl">
+          ${texto}
+        </div>
+        <div class="w-6 h-6 rounded-lg bg-slate-800 text-white flex items-center justify-center shrink-0 text-[10px] font-bold mt-0.5">
+          Você
+        </div>
+      `;
+      historico.appendChild(userBubble);
+      historico.scrollTop = historico.scrollHeight;
+
+      // Loading da IA
+      const loadingBubble = document.createElement('div');
+      loadingBubble.className = 'flex items-start gap-2 loading-ia';
+      loadingBubble.innerHTML = `
+        <div class="w-6 h-6 rounded-lg bg-indigo-600 text-white flex items-center justify-center shrink-0 text-[10px] font-bold mt-0.5">
+          IA
+        </div>
+        <div class="bg-white border border-indigo-100 rounded-2xl rounded-tl-none p-3 text-slate-500 italic shadow-2xs flex items-center gap-2">
+          <i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-indigo-600"></i>
+          <span>IA MarketingX redigindo sua apresentação profissional...</span>
+        </div>
+      `;
+      historico.appendChild(loadingBubble);
+      historico.scrollTop = historico.scrollHeight;
+      lucide.createIcons();
+
+      btn.disabled = true;
+
+      const nome = document.getElementById('nomeComercial')?.value || document.getElementById('nomeCompleto')?.value || 'Profissional';
+
+      const apiUrl = window.location.hostname.includes('consultoriasoft.com.br')
+        ? '/api/prestadores/melhorar-bio'
+        : 'https://consultoriasoft.com.br/api/prestadores/melhorar-bio';
+
+      try {
+        const res = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            texto: texto,
+            nome: nome,
+            especialidade: ''
+          })
+        });
+        const data = await res.json();
+        loadingBubble.remove();
+
+        if (data.status === 'sucesso' && data.bio_aprimorada) {
+          const bioGerada = data.bio_aprimorada;
+
+          // Resposta da IA no chat
+          const iaBubble = document.createElement('div');
+          iaBubble.className = 'flex items-start gap-2';
+          iaBubble.innerHTML = `
+            <div class="w-6 h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0 text-[10px] font-bold mt-0.5">
+              IA
+            </div>
+            <div class="bg-emerald-50 border border-emerald-200 rounded-2xl rounded-tl-none p-3 text-slate-800 shadow-2xs leading-relaxed max-w-xl space-y-2">
+              <div class="flex items-center gap-1.5 text-emerald-800 font-bold text-[11px]">
+                <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-600"></i>
+                <span>Apresentação profissional gerada com sucesso pela IA MarketingX!</span>
+              </div>
+              <p class="italic text-slate-700 font-medium">"${bioGerada}"</p>
+              <div class="text-[11px] text-emerald-700 font-semibold">
+                ✓ Preenchida automaticamente no campo abaixo!
+              </div>
+            </div>
+          `;
+          historico.appendChild(iaBubble);
+          historico.scrollTop = historico.scrollHeight;
+
+          // Preenche automaticamente o campo textarea#bio abaixo
+          const textareaBio = document.getElementById('bio');
+          if (textareaBio) {
+            textareaBio.value = bioGerada;
+            textareaBio.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-50/30');
+            setTimeout(() => {
+              textareaBio.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-50/30');
+            }, 3000);
+          }
+          const badge = document.getElementById('badgeBioIa');
+          if (badge) badge.classList.remove('hidden');
+        } else {
+          throw new Error('Falha na resposta da IA');
+        }
+      } catch (err) {
+        loadingBubble.remove();
+        const erroBubble = document.createElement('div');
+        erroBubble.className = 'flex items-start gap-2';
+        erroBubble.innerHTML = `
+          <div class="w-6 h-6 rounded-lg bg-red-600 text-white flex items-center justify-center shrink-0 text-[10px] font-bold mt-0.5">IA</div>
+          <div class="bg-red-50 border border-red-200 rounded-2xl rounded-tl-none p-3 text-red-700 text-xs">
+            Não foi possível contatar a IA neste momento. Você pode preencher diretamente no campo abaixo.
+          </div>
+        `;
+        historico.appendChild(erroBubble);
+      } finally {
+        btn.disabled = false;
+        lucide.createIcons();
+      }
+    }
 
     function verificarTextoBio(val) {
       const btn = document.getElementById('btnMelhorarBioIA');
