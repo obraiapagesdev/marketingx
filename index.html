@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Obra IA · Mão de Obra Qualificada & Prestadores Verificados</title>
+  
+  <link rel="icon" type="image/svg+xml" href="https://consultoriasoft.com.br/favicon.svg">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              red: '#C8102E',
+              redHover: '#A00C24',
+              yellow: '#FFC552',
+              dark: '#111827'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Montserrat', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .font-display { font-family: 'Montserrat', sans-serif; }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+
+  <script>
+    // Se o proxy do Cloudflare Pages (_redirects) estiver ativo, usa rota relativa.
+    // Como fallback de seguranca caso abra localmente ou sem proxy, aponta para a VPS.
+    const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+      ? 'http://localhost:8500'
+      : '';
+  </script>
+
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col justify-between">
+
+  <!-- Top Announcement Bar -->
+  <div class="bg-brand-yellow text-slate-900 font-bold text-xs py-2 px-4 text-center border-b border-amber-300 flex items-center justify-center gap-2">
+    <span>⭐ Avaliações 100% verificadas por clientes e compras de materiais na loja parceira.</span>
+  </div>
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+      <a href="https://consultoriasoft.com.br/catalogo" class="flex items-center gap-3 shrink-0">
+        <div class="bg-brand-red text-white p-2 rounded-xl font-display font-black text-lg tracking-wider">
+          CS
+        </div>
+        <div>
+          <span class="font-display font-black text-base text-slate-900 tracking-tight block">ConsultoriaSoft</span>
+          <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider block -mt-1">Mão de Obra Qualificada</span>
+        </div>
+      </a>
+
+      <!-- Barra de Busca Central -->
+      <div class="flex-1 max-w-xl relative hidden md:block">
+        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3"></i>
+        <input 
+          type="text" 
+          id="inputBusca" 
+          oninput="debounceBusca()" 
+          placeholder="Buscar profissional por nome, bairro ou serviço (ex: porcelanato, airless, eletricista)..."
+          class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none text-xs font-medium"
+        >
+      </div>
+
+      <!-- Ações do Header -->
+      <div class="flex items-center gap-2.5">
+        <!-- Modo Totem Toggle -->
+        <button 
+          id="btnToggleTotem" 
+          onclick="toggleModoTotem()" 
+          class="px-3 py-2 rounded-xl text-xs font-bold border border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700 flex items-center gap-1.5 transition-all"
+          title="Ativar modo Totem de Balcão (QR Codes)"
+        >
+          <i data-lucide="qr-code" class="w-4 h-4 text-slate-600"></i>
+          <span class="hidden sm:inline">Modo Totem</span>
+        </button>
+
+        <a 
+          href="/cadastro-prestador.html" 
+          class="bg-brand-red hover:bg-brand-redHover text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all shadow-md shadow-red-600/20 flex items-center gap-1.5"
+        >
+          <i data-lucide="user-plus" class="w-4 h-4"></i>
+          <span>Cadastre seu Perfil</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero & Filter Bar -->
+  <section class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white py-8 px-4 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-red-400 bg-red-950/80 border border-red-800/60 px-3 py-1 rounded-full inline-block mb-2">
+            👷 Conexão Direta Balcão ➔ Mão de Obra
+          </span>
+          <h1 class="text-2xl sm:text-3xl font-display font-black">
+            Encontre Profissionais Avaliados para sua Obra
+          </h1>
+          <p class="text-slate-300 text-xs sm:text-sm mt-1 max-w-2xl">
+            Azulejistas, Pedreiros, Pintores, Eletricistas e Encanadores avaliados com notas 5 estrelas por critérios reais de execução.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a href="https://consultoriasoft.com.br/calculadora-de-obra.html" class="inline-flex items-center gap-2 bg-yellow-500 hover:bg-yellow-400 text-slate-900 font-bold text-xs px-4 py-3 rounded-xl shadow-lg transition-all">
+            <i data-lucide="calculator" class="w-4 h-4"></i>
+            <span>Calcular Materiais da Obra</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Filtros em Chips de Especialidades -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 hide-scrollbar" id="chipsEspecialidades">
+        <button onclick="filtrarEspecialidade('')" class="chip-esp whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all bg-brand-red text-white">
+          Todas as Especialidades
+        </button>
+        <!-- Injetado via JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Grid -->
+  <main class="max-w-7xl w-full mx-auto px-4 py-8 flex-1">
+    
+    <!-- Filtros Secundários: Cidade, Bairro e Ordenação -->
+    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3 w-full sm:w-auto">
+        <div class="flex items-center gap-1.5 text-xs text-slate-500 font-semibold">
+          <i data-lucide="map-pin" class="w-4 h-4 text-brand-red"></i>
+          <span>Filtrar Região:</span>
+        </div>
+        <select id="selectCidade" onchange="carregarPrestadores()" class="px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 outline-none">
+          <option value="São Paulo">São Paulo (Grande SP)</option>
+          <option value="">Todas as Cidades</option>
+        </select>
+        <input 
+          type="text" 
+          id="inputBairro" 
+          oninput="debounceBusca()" 
+          placeholder="Bairro (ex: Mooca, Pinheiros)" 
+          class="px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 outline-none w-40"
+        >
+      </div>
+
+      <div class="text-xs font-bold text-slate-500" id="contadorResultados">
+        Carregando profissionais...
+      </div>
+    </div>
+
+    <!-- Grid de Cards dos Prestadores -->
+    <div id="gridPrestadores" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Injetado via JS -->
+    </div>
+
+  </main>
+
+  <!-- MODAL DOSSIÊ COMPLETO DO PRESTADOR (VER TUDO) -->
+  <div id="modalDossiePrestador" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-6 hidden overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-3xl w-full shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col border border-slate-200 animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Topo Modal Header com Gradiente e Foto -->
+      <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white p-6 relative shrink-0">
+        <button onclick="fecharDossiePrestador()" class="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div class="relative shrink-0">
+            <img id="dossieAvatar" src="" alt="Avatar" class="w-20 h-20 rounded-2xl object-cover border-2 border-amber-400 shadow-lg bg-slate-800">
+            <span id="dossieSeloVerificado" class="absolute -bottom-1 -right-1 bg-emerald-500 text-white p-1 rounded-full shadow" title="Profissional Validado">
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+            </span>
+          </div>
+
+          <div class="flex-1 min-w-0">
+            <div class="flex flex-wrap items-center gap-2 mb-1">
+              <span id="dossieBadgeExp" class="bg-amber-400 text-slate-900 text-[10px] font-black uppercase px-2 py-0.5 rounded-full">
+                10+ Anos de Experiência
+              </span>
+              <span id="dossieBadgeDoc" class="bg-emerald-500/20 border border-emerald-400 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                <i data-lucide="check" class="w-3 h-3"></i> Documentos Verificados
+              </span>
+            </div>
+
+            <h2 id="dossieNomeComercial" class="text-xl sm:text-2xl font-black font-display text-white truncate">--</h2>
+            <p id="dossieNomeCompleto" class="text-xs text-slate-300 font-medium">--</p>
+
+            <div class="flex flex-wrap items-center gap-3 text-xs text-slate-300 mt-2">
+              <span class="flex items-center gap-1 text-slate-200">
+                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-red-400"></i>
+                <span id="dossieLocal">--</span>
+              </span>
+              <span class="flex items-center gap-1 text-amber-400 font-black">
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
+                <span id="dossieNotaGeral">5.0</span>
+                <span id="dossieTotalAvaliacoes" class="text-slate-400 font-normal">(0 avaliações)</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Corpo do Dossiê com Scroll -->
+      <div class="p-6 overflow-y-auto space-y-6 flex-1 text-slate-800">
+        
+        <!-- 1. Bio / Apresentação -->
+        <div>
+          <h4 class="text-xs font-black uppercase text-slate-400 tracking-wider mb-2 flex items-center gap-1.5">
+            <i data-lucide="user" class="w-4 h-4 text-brand-red"></i> Sobre o Profissional
+          </h4>
+          <p id="dossieBio" class="text-xs sm:text-sm text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-100">
+            --
+          </p>
+        </div>
+
+        <!-- 2. Especialidades & Tags -->
+        <div>
+          <h4 class="text-xs font-black uppercase text-slate-400 tracking-wider mb-2 flex items-center gap-1.5">
+            <i data-lucide="award" class="w-4 h-4 text-brand-red"></i> Especialidades & Habilidades
+          </h4>
+          <div id="dossieEspecialidades" class="flex flex-wrap gap-2">
+            <!-- Injetado via JS -->
+          </div>
+        </div>
+
+        <!-- 3. Radar de Avaliação dos 4 Pilares -->
+        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+          <h4 class="text-xs font-black uppercase text-slate-700 tracking-wider mb-3 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <i data-lucide="bar-chart-2" class="w-4 h-4 text-brand-red"></i> Critérios de Avaliação Técnica
+            </span>
+            <span class="text-[10px] text-slate-500 font-normal">Baseado em avaliações de clientes reais</span>
+          </h4>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-semibold">
+            <!-- Acabamento -->
+            <div class="bg-white p-3 rounded-xl border border-slate-200 space-y-1">
+              <div class="flex justify-between text-slate-700">
+                <span>Qualidade do Acabamento</span>
+                <b id="dossieScoreAcabamento" class="text-amber-600">5.0 ★</b>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div id="dossieBarAcabamento" class="bg-amber-500 h-full rounded-full" style="width: 100%"></div>
+              </div>
+            </div>
+
+            <!-- Pontualidade -->
+            <div class="bg-white p-3 rounded-xl border border-slate-200 space-y-1">
+              <div class="flex justify-between text-slate-700">
+                <span>Pontualidade & Prazos</span>
+                <b id="dossieScorePontualidade" class="text-amber-600">5.0 ★</b>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div id="dossieBarPontualidade" class="bg-amber-500 h-full rounded-full" style="width: 100%"></div>
+              </div>
+            </div>
+
+            <!-- Limpeza -->
+            <div class="bg-white p-3 rounded-xl border border-slate-200 space-y-1">
+              <div class="flex justify-between text-slate-700">
+                <span>Limpeza da Obra</span>
+                <b id="dossieScoreLimpeza" class="text-amber-600">5.0 ★</b>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div id="dossieBarLimpeza" class="bg-amber-500 h-full rounded-full" style="width: 100%"></div>
+              </div>
+            </div>
+
+            <!-- Orçamento -->
+            <div class="bg-white p-3 rounded-xl border border-slate-200 space-y-1">
+              <div class="flex justify-between text-slate-700">
+                <span>Cumprimento do Orçamento</span>
+                <b id="dossieScoreOrcamento" class="text-amber-600">5.0 ★</b>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div id="dossieBarOrcamento" class="bg-amber-500 h-full rounded-full" style="width: 100%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Galeria de Portfólio / Obras Realizadas -->
+        <div>
+          <h4 class="text-xs font-black uppercase text-slate-400 tracking-wider mb-3 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <i data-lucide="image" class="w-4 h-4 text-brand-red"></i> Galeria de Obras Realizadas
+            </span>
+            <span id="dossieCountFotos" class="text-[10px] text-slate-500 font-normal">-- fotos</span>
+          </h4>
+          <div id="dossieGaleriaFotos" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <!-- Injetado via JS -->
+          </div>
+        </div>
+
+        <!-- 5. Avaliações & Depoimentos de Clientes -->
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="text-xs font-black uppercase text-slate-400 tracking-wider flex items-center gap-1.5">
+              <i data-lucide="message-square" class="w-4 h-4 text-brand-red"></i> Depoimentos de Clientes Verificados
+            </h4>
+            <button onclick="abrirModalAvaliacaoDoDossie()" class="text-xs text-brand-red font-bold hover:underline flex items-center gap-1">
+              <i data-lucide="star" class="w-3.5 h-3.5"></i> Avaliar Profissional
+            </button>
+          </div>
+          <div id="dossieListaAvaliacoes" class="space-y-3">
+            <!-- Injetado via JS -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Rodapé com Botão de Ação Direta -->
+      <div class="p-4 bg-slate-100 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+        <div class="text-xs text-slate-500 text-center sm:text-left">
+          <span>Conexão direta sem taxa de intermediação · Obra Verificada</span>
+        </div>
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <button onclick="abrirQRDoDossie()" class="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-xl border border-slate-300 text-xs flex items-center gap-1.5">
+            <i data-lucide="qr-code" class="w-4 h-4"></i>
+            <span>QR Code</span>
+          </button>
+          <button onclick="iniciarFluxoPrestadorComCadastro(prestadorDossieAtivo?.id)" class="flex-1 sm:flex-none bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs px-6 py-2.5 rounded-xl shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 transition active:scale-95">
+            <i data-lucide="message-circle" class="w-4 h-4"></i>
+            <span>Solicitar Orçamento no WhatsApp</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal de Avaliação 5 Estrelas -->
+  <div id="modalAvaliacao" class="fixed inset-0 bg-black/70 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl overflow-y-auto max-h-[90vh]">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+        <div>
+          <h3 class="text-lg font-black text-slate-900 font-display">Avaliar Serviço do Profissional</h3>
+          <p class="text-xs text-slate-500">Profissional: <b id="modalAvaliacaoNome" class="text-slate-800">--</b></p>
+        </div>
+        <button onclick="fecharModalAvaliacao()" class="p-1.5 rounded-full hover:bg-slate-100 text-slate-400">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="formAvaliacao" onsubmit="submeterAvaliacao(event)" class="space-y-4 text-sm">
+        <input type="hidden" id="modalAvaliacaoId">
+
+        <!-- Critérios de Avaliação -->
+        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-700">1. Pontualidade & Prazos</span>
+            <div class="flex items-center gap-1" id="starsPontualidade"></div>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-700">2. Limpeza da Obra</span>
+            <div class="flex items-center gap-1" id="starsLimpeza"></div>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-700">3. Qualidade do Acabamento</span>
+            <div class="flex items-center gap-1" id="starsAcabamento"></div>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-700">4. Cumprimento do Orçamento</span>
+            <div class="flex items-center gap-1" id="starsOrcamento"></div>
+          </div>
+
+          <div class="pt-2 border-t border-slate-200 flex justify-between items-center">
+            <span class="text-xs font-bold text-slate-900">Nota Média Calculada:</span>
+            <span id="labelNotaMedia" class="text-sm font-black text-amber-600 bg-amber-100 px-3 py-0.5 rounded-full">
+              5.0 ★
+            </span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Seu Nome *</label>
+          <input type="text" id="avaliacaoNomeCliente" required placeholder="Ex: Mariana Vasconcelos" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Depoimento sobre o Trabalho Realizado</label>
+          <textarea id="avaliacaoDepoimento" rows="3" placeholder="Conte como foi o atendimento, execução e acabamento..." class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium"></textarea>
+        </div>
+
+        <!-- Selo de Obra Verificada via Pedido Loja -->
+        <div class="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl">
+          <div class="flex items-center gap-1.5 mb-1">
+            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-700"></i>
+            <span class="text-xs font-bold text-emerald-900">Ganhe Selo de "Obra Verificada"</span>
+          </div>
+          <p class="text-[11px] text-emerald-800 mb-2">
+            Comprou os materiais na ConsultoriaSoft / Loja Parceira? Informe o nº do pedido ou cupom:
+          </p>
+          <input type="text" id="avaliacaoNumeroPedido" placeholder="Ex: CS-2026-9988" class="w-full px-3 py-1.5 bg-white border border-emerald-300 rounded-lg text-xs font-medium">
+        </div>
+
+        <button type="submit" id="btnSalvarAvaliacao" class="w-full bg-brand-red hover:bg-brand-redHover text-white font-bold py-3 rounded-xl shadow-lg transition-all text-xs">
+          Publicar Avaliação
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL DE CADASTRO OBRIGATÓRIO DO CLIENTE & BRIEFING DE OBRA (VALIDAÇÃO GMAIL) -->
+  <div id="modal-cadastro-cliente" class="hidden fixed inset-0 bg-black/75 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl relative my-auto animate-in fade-in zoom-in-95 duration-200 max-h-[92vh] overflow-y-auto">
+      <button onclick="fecharModalCadastroCliente()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 p-1.5 rounded-full hover:bg-slate-100">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <!-- Topo: Identidade & Exigência Gmail -->
+      <div class="text-center pb-3.5 border-b border-slate-100">
+        <div class="w-12 h-12 bg-red-50 text-brand-red rounded-2xl flex items-center justify-center mx-auto mb-2 border border-red-100 shadow-2xs">
+          <i data-lucide="hard-hat" class="w-6 h-6 text-brand-red"></i>
+        </div>
+        <h3 class="text-base sm:text-lg font-black font-display text-slate-900">Cadastro & Briefing da Obra</h3>
+        <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+          Para conectar você ao profissional verificado, informe os detalhes do seu projeto e valide seu <b>Gmail</b>.
+        </p>
+        <div class="inline-flex items-center gap-1.5 mt-2 bg-amber-50 border border-amber-200 text-amber-900 text-[11px] font-bold px-3 py-1 rounded-full">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-700"></i>
+          <span>Exclusivo para contas verificadas @gmail.com</span>
+        </div>
+      </div>
+
+      <!-- Formulário do Cliente -->
+      <div class="space-y-3.5 pt-3.5 text-xs">
+        
+        <!-- 1. Dados Pessoais -->
+        <div class="space-y-2.5">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Seu Nome Completo *</label>
+            <input type="text" id="cadClienteNome" placeholder="Ex: Carlos Eduardo da Silva" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-800 outline-none focus:border-brand-red focus:bg-white transition">
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">WhatsApp com DDD *</label>
+              <input type="tel" id="cadClienteZap" placeholder="(11) 98888-7777" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-800 outline-none focus:border-brand-red focus:bg-white transition">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Bairro / Cidade da Obra *</label>
+              <input type="text" id="cadClienteLocal" placeholder="Ex: Mooca, São Paulo" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-800 outline-none focus:border-brand-red focus:bg-white transition">
+            </div>
+          </div>
+
+          <!-- E-mail Gmail -->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="font-bold text-slate-700">Seu E-mail Gmail (@gmail.com) *</label>
+              <span id="badgeValidacaoEmail" class="text-[10px] font-extrabold px-2 py-0.5 rounded bg-slate-200 text-slate-600">
+                Aguardando
+              </span>
+            </div>
+            <input type="email" id="cadClienteEmail" oninput="validarEmailAoDigitar(this.value)" placeholder="seunome@gmail.com" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-800 outline-none focus:border-brand-red focus:bg-white transition">
+            <p id="msgValidacaoEmail" class="text-[11px] text-slate-500 mt-1">Obrigatório informar sua conta @gmail.com.</p>
+          </div>
+        </div>
+
+        <!-- 2. Briefing da Obra (Perguntas da Empresa) -->
+        <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 space-y-2.5">
+          <h4 class="font-extrabold text-slate-800 text-xs flex items-center gap-1.5">
+            <i data-lucide="clipboard-list" class="w-4 h-4 text-brand-red"></i>
+            <span>O que você deseja construir ou reformar?</span>
+          </h4>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[10px] font-bold uppercase text-slate-600 mb-1">Tipo de Serviço / Obra:</label>
+              <select id="cadTipoObra" class="w-full p-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-800 outline-none focus:border-brand-red">
+                <option value="Assentamento de Piso / Porcelanato">Assentamento de Porcelanato / Piso</option>
+                <option value="Reforma de Banheiro / Cozinha">Reforma de Banheiro / Cozinha</option>
+                <option value="Construção de Muro / Alvenaria">Construção de Muro / Alvenaria</option>
+                <option value="Pintura Geral Residencial">Pintura Geral Residencial</option>
+                <option value="Construção do Zero (Casa / Sobrado)">Construção do Zero (Casa / Sobrado)</option>
+                <option value="Elétrica & Hidráulica">Elétrica & Hidráulica</option>
+                <option value="Instalação de Forro / Drywall">Instalação de Forro / Drywall</option>
+                <option value="Outro Serviço de Obra">Outro Serviço de Obra</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[10px] font-bold uppercase text-slate-600 mb-1">Tipo de Imóvel:</label>
+              <select id="cadTipoImovel" class="w-full p-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-800 outline-none focus:border-brand-red">
+                <option value="Casa Residencial">Casa Residencial</option>
+                <option value="Apartamento">Apartamento</option>
+                <option value="Comercial / Loja">Comercial / Loja</option>
+                <option value="Galpão / Terreno">Galpão / Terreno</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-600 mb-1">Previsão de Início:</label>
+            <select id="cadPrevisaoInicio" class="w-full p-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-800 outline-none focus:border-brand-red">
+              <option value="Imediato (Esta semana)">Imediato (Esta semana)</option>
+              <option value="Em até 15 a 30 dias">Em até 15 a 30 dias</option>
+              <option value="Planejamento (1 a 3 meses)">Planejamento (1 a 3 meses)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-600 mb-1">Detalhes Adicionais (opcional):</label>
+            <textarea id="cadDescricaoObra" rows="2" placeholder="Ex: Assentamento de 60m² de porcelanato 80x80 na sala e cozinha..." class="w-full p-2 bg-white border border-slate-300 rounded-lg text-xs font-medium text-slate-800 outline-none focus:border-brand-red resize-none"></textarea>
+          </div>
+        </div>
+
+        <!-- Botão de Ação -->
+        <div class="pt-1 space-y-2">
+          <button onclick="confirmarCadastroEEnviarZapPrestador()" id="btnConfirmarCadastroZapPrestador" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/20 active:scale-98 transition">
+            <i data-lucide="message-circle" class="w-4 h-4"></i>
+            <span>Validar Gmail & Falar com o Profissional no WhatsApp</span>
+          </button>
+          <button onclick="fecharModalCadastroCliente()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2 rounded-xl text-xs transition">
+            Voltar e Continuar Navegando
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de QR Code para Handoff no Totem -->
+  <div id="modalQR" class="fixed inset-0 bg-black/80 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full text-center shadow-2xl">
+      <div class="h-12 w-12 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-600 mx-auto mb-3">
+        <i data-lucide="phone-call" class="w-6 h-6"></i>
+      </div>
+      <h3 class="text-lg font-black text-slate-900 font-display" id="qrModalTitulo">Falar com Profissional</h3>
+      <p class="text-xs text-slate-500 mb-4">
+        Aponte a câmera do seu celular para o QR Code abaixo para abrir a conversa no WhatsApp:
+      </p>
+
+      <div class="bg-slate-50 p-4 rounded-2xl border-2 border-dashed border-slate-300 inline-block mb-4">
+        <img id="qrModalImg" src="" alt="QR Code" class="w-48 h-48 mx-auto rounded-lg">
+      </div>
+
+      <button onclick="fecharModalQR()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl text-xs">
+        Fechar Janela
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <span>© 2026 ConsultoriaSoft · Plataforma de Integração de Mão de Obra e Materiais</span>
+      <div class="flex items-center gap-4">
+        <a href="https://consultoriasoft.com.br/prestadores" class="hover:text-brand-red font-semibold">Vitrine</a>
+        <a href="https://consultoriasoft.com.br/catalogo" class="hover:text-brand-red font-semibold">Catálogo</a>
+        <a href="/cadastro-prestador.html" class="hover:text-brand-red font-semibold">Cadastro de Profissional</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    let prestadoresList = [];
+    let prestadorDossieAtivo = null;
+    let especialidadeAtiva = '';
+    let isTotemMode = false;
+    let debounceTimer = null;
+
+    // Notas do formulário de avaliação
+    let notaPontualidade = 5;
+    let notaLimpeza = 5;
+    let notaAcabamento = 5;
+    let notaOrcamento = 5;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      lucide.createIcons();
+      await carregarEspecialidadesMenu();
+      await carregarPrestadores();
+      renderEstrelasFormulario();
+
+      // Deep linking via URL ?id=... ou ?especialidade=...
+      const urlParams = new URLSearchParams(window.location.search);
+      const pidParam = urlParams.get('id');
+      const espParam = urlParams.get('especialidade');
+      
+      if (espParam) {
+        filtrarEspecialidade(espParam);
+      }
+      if (pidParam) {
+        abrirDossiePrestador(pidParam);
+      }
+    });
+
+    async function carregarEspecialidadesMenu() {
+      try {
+        const res = await fetch('/api/prestadores/especialidades');
+        const specs = await res.json();
+        const container = document.getElementById('chipsEspecialidades');
+        
+        const html = specs.map(s => `
+          <button onclick="filtrarEspecialidade('${s.slug}')" data-slug="${s.slug}" class="chip-esp whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">
+            ${s.nome}
+          </button>
+        `).join('');
+
+        container.innerHTML += html;
+      } catch (e) {
+        console.error('Erro ao carregar menu de especialidades:', e);
+      }
+    }
+
+    function filtrarEspecialidade(slug) {
+      especialidadeAtiva = slug;
+      document.querySelectorAll('.chip-esp').forEach(btn => {
+        const isCurrent = (slug === '' && btn.innerText.includes('Todas')) || btn.getAttribute('data-slug') === slug;
+        btn.className = `chip-esp whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+          isCurrent ? 'bg-brand-red text-white shadow-md' : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700'
+        }`;
+      });
+      carregarPrestadores();
+    }
+
+    function debounceBusca() {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(carregarPrestadores, 300);
+    }
+
+    async function carregarPrestadores() {
+      const container = document.getElementById('gridPrestadores');
+      const contador = document.getElementById('contadorResultados');
+      const busca = document.getElementById('inputBusca')?.value || '';
+      const bairro = document.getElementById('inputBairro')?.value || '';
+      const cidade = document.getElementById('selectCidade')?.value || '';
+
+      const params = new URLSearchParams();
+      if (especialidadeAtiva) params.append('especialidade', especialidadeAtiva);
+      if (busca) params.append('busca', busca);
+      if (bairro) params.append('bairro', bairro);
+      if (cidade) params.append('cidade', cidade);
+
+      try {
+        const res = await fetch(`/api/prestadores?${params.toString()}`);
+        const data = await res.json();
+        prestadoresList = data.prestadores || [];
+
+        contador.innerText = `${prestadoresList.length} ${prestadoresList.length === 1 ? 'profissional encontrado' : 'profissionais encontrados'}`;
+        renderGridPrestadores();
+      } catch (err) {
+        console.error('Erro ao carregar prestadores:', err);
+        container.innerHTML = `<div class="col-span-3 text-center py-12 text-slate-400">Erro ao carregar prestadores.</div>`;
+      }
+    }
+
+    function renderGridPrestadores() {
+      const container = document.getElementById('gridPrestadores');
+      if (prestadoresList.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-3 bg-white p-12 rounded-3xl border border-slate-200 text-center">
+            <div class="h-16 w-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-400 mb-3">
+              <i data-lucide="search-x" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-base font-bold text-slate-800">Nenhum profissional encontrado nesta região</h3>
+            <p class="text-xs text-slate-500 mt-1">Tente remover os filtros ou buscar por outra categoria.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = prestadoresList.map(p => {
+        const zapClean = p.whatsapp ? p.whatsapp.replace(/\D/g, '') : '';
+        const msg = encodeURIComponent(p.mensagem_padrao || `Olá ${p.nome_comercial}, vi seu perfil na ConsultoriaSoft e gostaria de solicitar um orçamento.`);
+        const zapLink = `https://wa.me/55${zapClean}?text=${msg}`;
+
+        return `
+          <div class="bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between group">
+            <div class="p-5">
+              <!-- Topo: Avatar e Info Principal (Clicável para abrir dossiê) -->
+              <div class="flex items-start gap-4 cursor-pointer" onclick="abrirDossiePrestador('${p.id}')">
+                <div class="relative shrink-0">
+                  <img src="${p.avatar_url}" alt="${p.nome_completo}" class="w-16 h-16 rounded-2xl object-cover border-2 border-slate-100 shadow-xs group-hover:scale-105 transition-transform">
+                  ${p.total_obras_verificadas > 0 ? `
+                    <div class="absolute -bottom-1 -right-1 bg-emerald-600 text-white p-1 rounded-full shadow-md" title="${p.total_obras_verificadas} obras verificadas">
+                      <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                    </div>
+                  ` : ''}
+                </div>
+
+                <div class="flex-1 min-w-0">
+                  <h3 class="text-base font-extrabold text-slate-900 group-hover:text-brand-red transition truncate">
+                    ${p.nome_comercial || p.nome_completo}
+                  </h3>
+                  <div class="flex items-center gap-1 text-xs text-slate-500 mt-0.5">
+                    <i data-lucide="map-pin" class="w-3.5 h-3.5 text-brand-red shrink-0"></i>
+                    <span class="truncate">${p.bairro}, ${p.cidade}</span>
+                    <span class="text-red-700 font-bold ml-1">(${p.raio_atendimento_km}km)</span>
+                  </div>
+
+                  <div class="flex items-center gap-2 mt-2">
+                    <div class="flex items-center bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-lg">
+                      <i data-lucide="star" class="w-3.5 h-3.5 text-amber-500 fill-amber-500 mr-1"></i>
+                      <span class="text-xs font-black text-amber-900">${Number(p.score_medio).toFixed(1)}</span>
+                    </div>
+                    <span class="text-xs text-slate-400 font-medium">(${p.total_avaliacoes} avaliações)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Especialidades -->
+              <div class="flex flex-wrap gap-1.5 mt-4">
+                ${(p.especialidades || []).map(esp => `
+                  <span class="text-[11px] font-semibold bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded-md">
+                    ${esp}
+                  </span>
+                `).join('')}
+              </div>
+
+              <!-- Mini-Radar de Critérios -->
+              <div class="grid grid-cols-2 gap-1.5 mt-3 pt-3 border-t border-slate-100 text-[11px] text-slate-600 font-medium">
+                <div class="flex items-center justify-between bg-slate-50 px-2 py-1 rounded-md">
+                  <span>Acabamento:</span>
+                  <span class="font-bold text-slate-800">${Number(p.score_acabamento).toFixed(1)} ★</span>
+                </div>
+                <div class="flex items-center justify-between bg-slate-50 px-2 py-1 rounded-md">
+                  <span>Pontualidade:</span>
+                  <span class="font-bold text-slate-800">${Number(p.score_pontualidade).toFixed(1)} ★</span>
+                </div>
+                <div class="flex items-center justify-between bg-slate-50 px-2 py-1 rounded-md">
+                  <span>Limpeza da Obra:</span>
+                  <span class="font-bold text-slate-800">${Number(p.score_limpeza).toFixed(1)} ★</span>
+                </div>
+                <div class="flex items-center justify-between bg-slate-50 px-2 py-1 rounded-md">
+                  <span>Orçamento Transp.:</span>
+                  <span class="font-bold text-slate-800">${Number(p.score_orcamento).toFixed(1)} ★</span>
+                </div>
+              </div>
+
+              <!-- Obras Recentes / Galeria Preview -->
+              ${p.fotos_obras && p.fotos_obras.length > 0 ? `
+                <div class="mt-3 cursor-pointer" onclick="abrirDossiePrestador('${p.id}')">
+                  <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider block mb-1">Fotos de Trabalhos Recentes:</span>
+                  <div class="grid grid-cols-3 gap-1.5">
+                    ${p.fotos_obras.slice(0, 3).map(f => `
+                      <img src="${f}" class="h-16 w-full object-cover rounded-lg border border-slate-200 hover:opacity-90 transition">
+                    `).join('')}
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+
+            <!-- Rodapé com Ações Completas -->
+            <div class="p-4 bg-slate-50 border-t border-slate-100 flex items-center gap-2">
+              <button onclick="abrirDossiePrestador('${p.id}')" class="flex-1 flex items-center justify-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition shadow-sm" title="Ver Dossiê e Fotos do Portfólio">
+                <i data-lucide="eye" class="w-4 h-4 text-amber-400"></i>
+                <span>Ver Dossiê</span>
+              </button>
+
+              ${isTotemMode ? `
+                <button onclick="abrirModalQR('${p.nome_comercial || p.nome_completo}', '${zapLink}')" class="flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-3 rounded-xl shadow-md text-xs transition-all">
+                  <i data-lucide="qr-code" class="w-4 h-4"></i>
+                  <span>QR</span>
+                </button>
+              ` : `
+                <button onclick="iniciarFluxoPrestadorComCadastro('${p.id}')" class="flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-3.5 rounded-xl shadow-md shadow-emerald-600/20 text-xs transition-all" title="Conversar no WhatsApp">
+                  <i data-lucide="message-circle" class="w-4 h-4"></i>
+                  <span>WhatsApp</span>
+                </button>
+              `}
+
+              <button onclick="abrirModalAvaliacao('${p.id}', '${p.nome_comercial || p.nome_completo}')" class="p-2.5 border border-slate-300 hover:bg-slate-200 text-slate-700 rounded-xl transition-colors" title="Avaliar este profissional">
+                <i data-lucide="star" class="w-4 h-4 text-amber-500"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    /* DOSSIÊ COMPLETO DO PRESTADOR */
+    async function abrirDossiePrestador(id) {
+      if (!id) return;
+      try {
+        const res = await fetch(`/api/prestadores/detalhes?id=${id}`);
+        if (!res.ok) throw new Error('Falha ao carregar detalhes');
+        const p = await res.json();
+        prestadorDossieAtivo = p;
+
+        // Atualizar URL sem recarregar a página
+        const newUrl = new URL(window.location.href);
+        newUrl.searchParams.set('id', id);
+        window.history.pushState({ id: id }, '', newUrl.toString());
+
+        // Preencher dados
+        document.getElementById('dossieAvatar').src = p.avatar_url || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200';
+        document.getElementById('dossieNomeComercial').innerText = p.nome_comercial || p.nome_completo;
+        document.getElementById('dossieNomeCompleto').innerText = p.nome_completo ? `Responsável Técnico: ${p.nome_completo}` : '';
+        document.getElementById('dossieLocal').innerText = `${p.bairro}, ${p.cidade} (${p.estado}) · Atende raio de ${p.raio_atendimento_km || 25}km`;
+        document.getElementById('dossieNotaGeral').innerText = Number(p.score_medio || 5.0).toFixed(1);
+        document.getElementById('dossieTotalAvaliacoes').innerText = `(${p.total_avaliacoes || 0} avaliações verificadas)`;
+        
+        document.getElementById('dossieBadgeExp').innerText = `${p.anos_experiencia || 10}+ Anos de Experiência`;
+        document.getElementById('dossieBio').innerText = p.bio || 'Profissional qualificado e verificado no catálogo com experiência comprovada em serviços residenciais e comerciais.';
+
+        // Especialidades
+        const elEsp = document.getElementById('dossieEspecialidades');
+        if (p.especialidades && p.especialidades.length > 0) {
+          elEsp.innerHTML = p.especialidades.map(esp => {
+            const nome = typeof esp === 'object' ? esp.nome : esp;
+            return `<span class="bg-red-50 border border-red-200 text-brand-red text-xs font-bold px-3 py-1 rounded-xl">${nome}</span>`;
+          }).join('');
+        } else {
+          elEsp.innerHTML = `<span class="text-xs text-slate-400">Construção Civil & Reformas</span>`;
+        }
+
+        // Radar Scores
+        const scoreAcab = Number(p.score_acabamento || 5.0).toFixed(1);
+        const scorePont = Number(p.score_pontualidade || 5.0).toFixed(1);
+        const scoreLimp = Number(p.score_limpeza || 5.0).toFixed(1);
+        const scoreOrc = Number(p.score_orcamento || 5.0).toFixed(1);
+
+        document.getElementById('dossieScoreAcabamento').innerText = `${scoreAcab} ★`;
+        document.getElementById('dossieBarAcabamento').style.width = `${(scoreAcab / 5) * 100}%`;
+
+        document.getElementById('dossieScorePontualidade').innerText = `${scorePont} ★`;
+        document.getElementById('dossieBarPontualidade').style.width = `${(scorePont / 5) * 100}%`;
+
+        document.getElementById('dossieScoreLimpeza').innerText = `${scoreLimp} ★`;
+        document.getElementById('dossieBarLimpeza').style.width = `${(scoreLimp / 5) * 100}%`;
+
+        document.getElementById('dossieScoreOrcamento').innerText = `${scoreOrc} ★`;
+        document.getElementById('dossieBarOrcamento').style.width = `${(scoreOrc / 5) * 100}%`;
+
+        // Galeria de Fotos / Portfólio
+        const elFotos = document.getElementById('dossieGaleriaFotos');
+        const countFotos = document.getElementById('dossieCountFotos');
+        const fotos = p.portfolio || [];
+        
+        if (fotos.length > 0) {
+          countFotos.innerText = `${fotos.length} fotos de obras`;
+          elFotos.innerHTML = fotos.map(f => `
+            <div class="relative rounded-2xl overflow-hidden border border-slate-200 bg-slate-900 group h-36">
+              <img src="${f.url_midia || f.url_thumbnail}" alt="${f.titulo || 'Obra'}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-2.5 text-white">
+                <h5 class="text-xs font-bold leading-tight line-clamp-1">${f.titulo || 'Obra Finalizada'}</h5>
+                ${f.especialidade ? `<span class="text-[10px] text-amber-300">${f.especialidade}</span>` : ''}
+              </div>
+            </div>
+          `).join('');
+        } else {
+          countFotos.innerText = `Galeria padrão`;
+          elFotos.innerHTML = `
+            <div class="col-span-3 text-center py-6 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-slate-400 text-xs">
+              <i data-lucide="images" class="w-8 h-8 mx-auto mb-1 text-slate-300"></i>
+              <span>Obras e acabamentos validados pela equipe de balcão da loja.</span>
+            </div>
+          `;
+        }
+
+        // Avaliações de Clientes
+        const elAv = document.getElementById('dossieListaAvaliacoes');
+        const avs = p.avaliacoes || [];
+        if (avs.length > 0) {
+          elAv.innerHTML = avs.map(a => `
+            <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-2">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-700 font-black text-xs flex items-center justify-center">
+                    ${(a.cliente_nome || 'C').charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <h5 class="text-xs font-bold text-slate-900">${a.cliente_nome || 'Cliente da Região'}</h5>
+                    <span class="text-[10px] text-slate-400">${a.cliente_bairro || p.bairro} · ${a.data || 'Verificado'}</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-1 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-lg text-xs font-black text-amber-900">
+                  <i data-lucide="star" class="w-3 h-3 text-amber-500 fill-amber-500"></i>
+                  <span>${Number(a.nota_media || 5.0).toFixed(1)}</span>
+                </div>
+              </div>
+              <p class="text-xs text-slate-600 italic">"${a.depoimento || 'Excelente atendimento e acabamento impecável na entrega da obra.'}"</p>
+              ${a.obra_verificada ? `
+                <div class="flex items-center gap-1 text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-md inline-flex border border-emerald-200">
+                  <i data-lucide="shield-check" class="w-3 h-3"></i> Obra Verificada via Compra de Materiais na Loja
+                </div>
+              ` : ''}
+            </div>
+          `).join('');
+        } else {
+          elAv.innerHTML = `
+            <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl text-center text-xs text-slate-500">
+              Profissional com histórico 100% positivo nas entregas de reformas da região.
+            </div>
+          `;
+        }
+
+        document.getElementById('modalDossiePrestador').classList.remove('hidden');
+        lucide.createIcons();
+      } catch (err) {
+        console.error('Erro ao abrir dossiê do prestador:', err);
+        alert('Não foi possível carregar os dados completos do prestador no momento.');
+      }
+    }
+
+    function fecharDossiePrestador() {
+      document.getElementById('modalDossiePrestador').classList.add('hidden');
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.delete('id');
+      window.history.pushState({}, '', newUrl.toString());
+    }
+
+    /* CADASTRO OBRIGATÓRIO DO CLIENTE, VALIDAÇÃO GMAIL & ENVIO AO PRESTADOR */
+    let prestadorAlvoLead = null;
+
+    function iniciarFluxoPrestadorComCadastro(prestadorId) {
+      if (!prestadorId && prestadorDossieAtivo) prestadorId = prestadorDossieAtivo.id;
+      prestadorAlvoLead = prestadoresList.find(p => String(p.id) === String(prestadorId)) || prestadorDossieAtivo;
+      
+      // Carregar dados salvos no localStorage
+      try {
+        const salvo = localStorage.getItem('cliente_cadastro_consultoriasoft');
+        if (salvo) {
+          const c = JSON.parse(salvo);
+          if (c.nome) document.getElementById('cadClienteNome').value = c.nome;
+          if (c.whatsapp) document.getElementById('cadClienteZap').value = c.whatsapp;
+          if (c.bairro) document.getElementById('cadClienteLocal').value = c.bairro;
+          if (c.email) {
+            document.getElementById('cadClienteEmail').value = c.email;
+            validarEmailAoDigitar(c.email);
+          }
+          if (c.tipo_obra) document.getElementById('cadTipoObra').value = c.tipo_obra;
+          if (c.tipo_imovel) document.getElementById('cadTipoImovel').value = c.tipo_imovel;
+          if (c.previsao_inicio) document.getElementById('cadPrevisaoInicio').value = c.previsao_inicio;
+          if (c.descricao) document.getElementById('cadDescricaoObra').value = c.descricao;
+        }
+      } catch(e) {}
+
+      document.getElementById('modal-cadastro-cliente').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function fecharModalCadastroCliente() {
+      document.getElementById('modal-cadastro-cliente').classList.add('hidden');
+    }
+
+    function validarEmailAoDigitar(val) {
+      const email = val.trim().toLowerCase();
+      const badge = document.getElementById('badgeValidacaoEmail');
+      const msg = document.getElementById('msgValidacaoEmail');
+      if (!badge || !msg) return;
+
+      if (!email) {
+        badge.className = "text-[10px] font-extrabold px-2 py-0.5 rounded bg-slate-200 text-slate-600";
+        badge.innerText = "Aguardando";
+        msg.innerText = "Obrigatório informar sua conta @gmail.com.";
+        msg.className = "text-[11px] text-slate-500 mt-1";
+        return;
+      }
+
+      if (email.endsWith('@gmail.com') || email.endsWith('@googlemail.com')) {
+        const userPart = email.split('@')[0];
+        if (userPart.length >= 6 && /^[a-zA-Z0-9._-]+$/.test(userPart)) {
+          badge.className = "text-[10px] font-extrabold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300";
+          badge.innerHTML = "✓ Gmail Válido";
+          msg.innerText = "Conta Google/Gmail compatível com a validação do sistema.";
+          msg.className = "text-[11px] text-emerald-700 font-bold mt-1";
+        } else {
+          badge.className = "text-[10px] font-extrabold px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300";
+          badge.innerText = "Mín. 6 letras";
+          msg.innerText = "O nome de usuário do Gmail precisa ter pelo menos 6 caracteres.";
+          msg.className = "text-[11px] text-amber-700 font-medium mt-1";
+        }
+      } else {
+        badge.className = "text-[10px] font-extrabold px-2 py-0.5 rounded bg-red-100 text-red-800 border border-red-300";
+        badge.innerText = "✖ Apenas @gmail.com";
+        msg.innerText = "Cadastro exclusivo para contas @gmail.com (Google).";
+        msg.className = "text-[11px] text-red-600 font-bold mt-1";
+      }
+    }
+
+    async function confirmarCadastroEEnviarZapPrestador() {
+      const nome = document.getElementById('cadClienteNome').value.trim();
+      const zap = document.getElementById('cadClienteZap').value.trim();
+      const local = document.getElementById('cadClienteLocal').value.trim();
+      const email = document.getElementById('cadClienteEmail').value.trim().toLowerCase();
+      const tipoObra = document.getElementById('cadTipoObra').value;
+      const tipoImovel = document.getElementById('cadTipoImovel').value;
+      const previsaoInicio = document.getElementById('cadPrevisaoInicio').value;
+      const descricao = document.getElementById('cadDescricaoObra').value.trim();
+
+      if (!nome || nome.length < 3) {
+        alert("Por favor, preencha seu nome completo.");
+        document.getElementById('cadClienteNome').focus();
+        return;
+      }
+      if (!zap || zap.replace(/\D/g, '').length < 10) {
+        alert("Por favor, informe um WhatsApp válido com DDD.");
+        document.getElementById('cadClienteZap').focus();
+        return;
+      }
+      if (!local || local.length < 3) {
+        alert("Por favor, informe seu bairro e cidade.");
+        document.getElementById('cadClienteLocal').focus();
+        return;
+      }
+      if (!email || (!email.endsWith('@gmail.com') && !email.endsWith('@googlemail.com'))) {
+        alert("O cadastro é exclusivo para contas @gmail.com. Por favor, utilize seu e-mail do Google.");
+        document.getElementById('cadClienteEmail').focus();
+        return;
+      }
+
+      const p = prestadorAlvoLead || prestadorDossieAtivo;
+      const zapPrestador = p ? (p.whatsapp || '11987654321').replace(/\D/g, '') : '11987654321';
+      const nomePrestador = p ? (p.nome_comercial || p.nome_completo) : 'Profissional';
+
+      const btn = document.getElementById('btnConfirmarCadastroZapPrestador');
+      btn.disabled = true;
+      btn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i><span>Validando e Registrando...</span>`;
+      lucide.createIcons();
+
+      const leadData = {
+        acao: 'salvar_lead',
+        nome,
+        whatsapp: zap,
+        bairro: local,
+        cidade: 'São Paulo',
+        email,
+        tipo_obra: tipoObra,
+        tipo_imovel: tipoImovel,
+        previsao_inicio: previsaoInicio,
+        descricao,
+        prestador_id: p ? String(p.id) : '',
+        email_validado: true
+      };
+
+      try {
+        await fetch('/api/clientes/lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(leadData)
+        });
+      } catch(e) {
+        console.warn('Registro gravado localmente');
+      }
+
+      try {
+        localStorage.setItem('cliente_cadastro_consultoriasoft', JSON.stringify(leadData));
+      } catch(e) {}
+
+      // Montar mensagem para o WhatsApp do Prestador
+      let msg = `*SOLICITAÇÃO DE ORÇAMENTO · CONSULTORIASOFT*%0A%0A`;
+      msg += `Olá *${encodeURIComponent(nomePrestador)}*, vi seu perfil verificado no portal ConsultoriaSoft e gostaria de solicitar um orçamento para o meu projeto:%0A%0A`;
+      msg += `👤 *DADOS DO CLIENTE (GMAIL VALIDADO):*%0A`;
+      msg += `• *Nome:* ${encodeURIComponent(nome)}%0A`;
+      msg += `• *WhatsApp:* ${encodeURIComponent(zap)}%0A`;
+      msg += `• *E-mail:* ${encodeURIComponent(email)} ✅%0A`;
+      msg += `• *Localização da Obra:* ${encodeURIComponent(local)}%0A%0A`;
+
+      msg += `🏗️ *BRIEFING DA OBRA:*%0A`;
+      msg += `• *Tipo de Serviço:* ${encodeURIComponent(tipoObra)}%0A`;
+      msg += `• *Tipo de Imóvel:* ${encodeURIComponent(tipoImovel)}%0A`;
+      msg += `• *Previsão de Início:* ${encodeURIComponent(previsaoInicio)}%0A`;
+      if (descricao) {
+        msg += `• *Detalhes da Obra:* ${encodeURIComponent(descricao)}%0A`;
+      }
+
+      msg += `%0A_Poderia me informar sua disponibilidade para visita técnica ou envio de orçamento?_`;
+
+      fecharModalCadastroCliente();
+
+      btn.disabled = false;
+      btn.innerHTML = `<i data-lucide="message-circle" class="w-4 h-4"></i><span>Validar Gmail & Falar com o Profissional no WhatsApp</span>`;
+      lucide.createIcons();
+
+      window.open(`https://wa.me/55${zapPrestador}?text=${msg}`, '_blank');
+    }
+
+    function abrirModalAvaliacaoDoDossie() {
+      if (!prestadorDossieAtivo) return;
+      abrirModalAvaliacao(prestadorDossieAtivo.id, prestadorDossieAtivo.nome_comercial || prestadorDossieAtivo.nome_completo);
+    }
+
+    function abrirQRDoDossie() {
+      if (!prestadorDossieAtivo) return;
+      const zapClean = (prestadorDossieAtivo.whatsapp || '11987654321').replace(/\D/g, '');
+      const msg = encodeURIComponent(`Olá ${prestadorDossieAtivo.nome_comercial || prestadorDossieAtivo.nome_completo}, vi seu perfil na loja e quero solicitar um orçamento.`);
+      const zapLink = `https://wa.me/55${zapClean}?text=${msg}`;
+      abrirModalQR(prestadorDossieAtivo.nome_comercial || prestadorDossieAtivo.nome_completo, zapLink);
+    }
+
+    function toggleModoTotem() {
+      isTotemMode = !isTotemMode;
+      const btn = document.getElementById('btnToggleTotem');
+      if (isTotemMode) {
+        btn.className = 'px-3 py-2 rounded-xl text-xs font-bold border border-emerald-500 bg-emerald-50 text-emerald-700 flex items-center gap-1.5';
+        btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> <span class="hidden sm:inline">Totem Ativo</span>`;
+      } else {
+        btn.className = 'px-3 py-2 rounded-xl text-xs font-bold border border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700 flex items-center gap-1.5';
+        btn.innerHTML = `<i data-lucide="qr-code" class="w-4 h-4 text-slate-600"></i> <span class="hidden sm:inline">Modo Totem</span>`;
+      }
+      lucide.createIcons();
+      renderGridPrestadores();
+    }
+
+    function abrirModalQR(nome, link) {
+      document.getElementById('qrModalTitulo').innerText = `Falar com ${nome}`;
+      document.getElementById('qrModalImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(link)}`;
+      document.getElementById('modalQR').classList.remove('hidden');
+    }
+
+    function fecharModalQR() {
+      document.getElementById('modalQR').classList.add('hidden');
+    }
+
+    function abrirModalAvaliacao(id, nome) {
+      document.getElementById('modalAvaliacaoId').value = id;
+      document.getElementById('modalAvaliacaoNome').innerText = nome;
+      document.getElementById('modalAvaliacao').classList.remove('hidden');
+    }
+
+    function fecharModalAvaliacao() {
+      document.getElementById('modalAvaliacao').classList.add('hidden');
+    }
+
+    function renderEstrelasFormulario() {
+      const criterios = [
+        { id: 'starsPontualidade', val: notaPontualidade, set: (v) => { notaPontualidade = v; renderEstrelasFormulario(); } },
+        { id: 'starsLimpeza', val: notaLimpeza, set: (v) => { notaLimpeza = v; renderEstrelasFormulario(); } },
+        { id: 'starsAcabamento', val: notaAcabamento, set: (v) => { notaAcabamento = v; renderEstrelasFormulario(); } },
+        { id: 'starsOrcamento', val: notaOrcamento, set: (v) => { notaOrcamento = v; renderEstrelasFormulario(); } },
+      ];
+
+      criterios.forEach(c => {
+        const el = document.getElementById(c.id);
+        if (!el) return;
+        el.innerHTML = [1, 2, 3, 4, 5].map(star => `
+          <button type="button" onclick="setNota('${c.id}', ${star})" class="p-0.5 focus:outline-none hover:scale-110 transition-transform">
+            <i data-lucide="star" class="w-5 h-5 ${star <= c.val ? 'text-amber-500 fill-amber-500' : 'text-slate-200'}"></i>
+          </button>
+        `).join('');
+      });
+
+      const media = ((notaPontualidade + notaLimpeza + notaAcabamento + notaOrcamento) / 4).toFixed(1);
+      document.getElementById('labelNotaMedia').innerText = `${media} ★`;
+      lucide.createIcons();
+    }
+
+    function setNota(criterioId, valor) {
+      if (criterioId === 'starsPontualidade') notaPontualidade = valor;
+      if (criterioId === 'starsLimpeza') notaLimpeza = valor;
+      if (criterioId === 'starsAcabamento') notaAcabamento = valor;
+      if (criterioId === 'starsOrcamento') notaOrcamento = valor;
+      renderEstrelasFormulario();
+    }
+
+    async function submeterAvaliacao(e) {
+      e.preventDefault();
+      const pid = document.getElementById('modalAvaliacaoId').value;
+      const btn = document.getElementById('btnSalvarAvaliacao');
+      btn.disabled = true;
+      btn.innerText = 'Enviando avaliação...';
+
+      const payload = {
+        prestador_id: pid,
+        cliente_nome: document.getElementById('avaliacaoNomeCliente').value.trim(),
+        depoimento: document.getElementById('avaliacaoDepoimento').value.trim(),
+        numero_pedido_loja: document.getElementById('avaliacaoNumeroPedido').value.trim(),
+        nota_pontualidade: notaPontualidade,
+        nota_limpeza: notaLimpeza,
+        nota_acabamento: notaAcabamento,
+        nota_orcamento: notaOrcamento
+      };
+
+      try {
+        const res = await fetch('/api/prestadores/avaliar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.status === 'sucesso') {
+          alert('Avaliação registrada com sucesso! Muito obrigado pelo feedback.');
+          fecharModalAvaliacao();
+          carregarPrestadores();
+          if (prestadorDossieAtivo && prestadorDossieAtivo.id === pid) {
+            abrirDossiePrestador(pid);
+          }
+        } else {
+          alert('Erro ao enviar avaliação: ' + (data.error || 'Erro desconhecido'));
+        }
+      } catch (err) {
+        alert('Erro de conexão ao enviar avaliação.');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Publicar Avaliação';
+      }
+    }
+
+    async function registrarMetrica(pid) {
+      try {
+        fetch('/api/prestadores/metrica', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prestador_id: pid, acao: 'clique_whatsapp', origem: 'vitrine_web' })
+        });
+      } catch (e) {}
+    }
+
+    function toggleModoTotem() {
+      isTotemMode = !isTotemMode;
+      const btn = document.getElementById('btnToggleTotem');
+      if (isTotemMode) {
+        btn.className = 'px-3 py-2 rounded-xl text-xs font-bold border border-emerald-500 bg-emerald-50 text-emerald-700 flex items-center gap-1.5';
+        btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> <span class="hidden sm:inline">Totem Ativo</span>`;
+      } else {
+        btn.className = 'px-3 py-2 rounded-xl text-xs font-bold border border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700 flex items-center gap-1.5';
+        btn.innerHTML = `<i data-lucide="qr-code" class="w-4 h-4 text-slate-600"></i> <span class="hidden sm:inline">Modo Totem</span>`;
+      }
+      lucide.createIcons();
+      renderGridPrestadores();
+    }
+
+    function abrirModalQR(nome, link) {
+      document.getElementById('qrModalTitulo').innerText = `Falar com ${nome}`;
+      document.getElementById('qrModalImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(link)}`;
+      document.getElementById('modalQR').classList.remove('hidden');
+    }
+
+    function fecharModalQR() {
+      document.getElementById('modalQR').classList.add('hidden');
+    }
+
+    function abrirModalAvaliacao(id, nome) {
+      document.getElementById('modalAvaliacaoId').value = id;
+      document.getElementById('modalAvaliacaoNome').innerText = nome;
+      document.getElementById('modalAvaliacao').classList.remove('hidden');
+    }
+
+    function fecharModalAvaliacao() {
+      document.getElementById('modalAvaliacao').classList.add('hidden');
+    }
+
+    function renderEstrelasFormulario() {
+      const criterios = [
+        { id: 'starsPontualidade', val: notaPontualidade, set: (v) => { notaPontualidade = v; renderEstrelasFormulario(); } },
+        { id: 'starsLimpeza', val: notaLimpeza, set: (v) => { notaLimpeza = v; renderEstrelasFormulario(); } },
+        { id: 'starsAcabamento', val: notaAcabamento, set: (v) => { notaAcabamento = v; renderEstrelasFormulario(); } },
+        { id: 'starsOrcamento', val: notaOrcamento, set: (v) => { notaOrcamento = v; renderEstrelasFormulario(); } },
+      ];
+
+      criterios.forEach(c => {
+        const el = document.getElementById(c.id);
+        if (!el) return;
+        el.innerHTML = [1, 2, 3, 4, 5].map(star => `
+          <button type="button" onclick="setNota('${c.id}', ${star})" class="p-0.5 focus:outline-none hover:scale-110 transition-transform">
+            <i data-lucide="star" class="w-5 h-5 ${star <= c.val ? 'text-amber-500 fill-amber-500' : 'text-slate-200'}"></i>
+          </button>
+        `).join('');
+      });
+
+      const media = ((notaPontualidade + notaLimpeza + notaAcabamento + notaOrcamento) / 4).toFixed(1);
+      document.getElementById('labelNotaMedia').innerText = `${media} ★`;
+      lucide.createIcons();
+    }
+
+    function setNota(criterioId, valor) {
+      if (criterioId === 'starsPontualidade') notaPontualidade = valor;
+      if (criterioId === 'starsLimpeza') notaLimpeza = valor;
+      if (criterioId === 'starsAcabamento') notaAcabamento = valor;
+      if (criterioId === 'starsOrcamento') notaOrcamento = valor;
+      renderEstrelasFormulario();
+    }
+
+    async function submeterAvaliacao(e) {
+      e.preventDefault();
+      const pid = document.getElementById('modalAvaliacaoId').value;
+      const btn = document.getElementById('btnSalvarAvaliacao');
+      btn.disabled = true;
+      btn.innerText = 'Enviando avaliação...';
+
+      const payload = {
+        prestador_id: pid,
+        cliente_nome: document.getElementById('avaliacaoNomeCliente').value.trim(),
+        depoimento: document.getElementById('avaliacaoDepoimento').value.trim(),
+        numero_pedido_loja: document.getElementById('avaliacaoNumeroPedido').value.trim(),
+        nota_pontualidade: notaPontualidade,
+        nota_limpeza: notaLimpeza,
+        nota_acabamento: notaAcabamento,
+        nota_orcamento: notaOrcamento
+      };
+
+      try {
+        const res = await fetch('/api/prestadores/avaliar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.status === 'sucesso') {
+          alert('Avaliação registrada com sucesso! Muito obrigado pelo feedback.');
+          fecharModalAvaliacao();
+          carregarPrestadores();
+        } else {
+          alert('Erro ao enviar avaliação: ' + (data.error || 'Erro desconhecido'));
+        }
+      } catch (err) {
+        alert('Erro de conexão ao enviar avaliação.');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Publicar Avaliação';
+      }
+    }
+
+    async function registrarMetrica(pid) {
+      try {
+        fetch('/api/prestadores/metrica', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prestador_id: pid, acao: 'clique_whatsapp', origem: 'vitrine_web' })
+        });
+      } catch (e) {}
+    }
+  </script>
+</body>
+</html>

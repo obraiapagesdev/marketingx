@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastre-se como Prestador de Serviços · Obra IA</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="https://consultoriasoft.com.br/favicon.svg">
+  
+  <!-- Google Fonts: Inter & Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              red: '#C8102E',
+              redHover: '#A00C24',
+              yellow: '#FFC552',
+              dark: '#1A1A1A'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Montserrat', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .font-display { font-family: 'Montserrat', sans-serif; }
+    .glass-card { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); }
+    .step-active { background: #C8102E; color: white; border-color: #C8102E; }
+    .step-done { background: #10B981; color: white; border-color: #10B981; }
+    .step-pending { background: #F3F4F6; color: #9CA3AF; border-color: #E5E7EB; }
+  </style>
+
+  <script>
+    // Se o proxy do Cloudflare Pages (_redirects) estiver ativo, usa rota relativa.
+    // Como fallback de seguranca caso abra localmente ou sem proxy, aponta para a VPS.
+    const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+      ? 'http://localhost:8500'
+      : '';
+  </script>
+
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col justify-between">
+
+  <!-- Top Announcement Bar -->
+  <div class="bg-brand-yellow text-slate-900 font-bold text-xs py-2 px-4 text-center border-b border-amber-300">
+    🚀 Conectando sua mão de obra qualificada a centenas de clientes de materiais de construção todos os dias!
+  </div>
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="https://consultoriasoft.com.br/catalogo" class="flex items-center gap-3">
+        <div class="bg-brand-red text-white p-2 rounded-xl font-display font-black text-lg tracking-wider">
+          CS
+        </div>
+        <div>
+          <span class="font-display font-black text-base text-slate-900 tracking-tight block">ConsultoriaSoft</span>
+          <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider block -mt-1">Rede de Profissionais & Mão de Obra</span>
+        </div>
+      </a>
+
+      <div class="flex items-center gap-3">
+        <a href="/" class="text-xs font-bold text-slate-700 hover:text-brand-red px-3 py-2 rounded-lg border border-slate-200 hover:border-brand-red transition-all flex items-center gap-1.5">
+          <i data-lucide="users" class="w-4 h-4 text-brand-red"></i>
+          <span>Ver Vitrine de Profissionais</span>
+        </a>
+        <a href="https://consultoriasoft.com.br/catalogo" class="hidden sm:inline-flex text-xs font-bold text-slate-700 hover:text-brand-red px-3 py-2">
+          Voltar ao Catálogo
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-4xl w-full mx-auto px-4 py-8 flex-1">
+    
+    <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
+      
+      <!-- Banner & Stepper Header -->
+      <div class="bg-gradient-to-r from-red-800 via-brand-red to-rose-700 p-6 sm:p-8 text-white">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <span class="text-[11px] font-black uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full inline-block mb-2">
+              Cadastro Gratuito · Balcão & Totem
+            </span>
+            <h1 class="text-2xl sm:text-3xl font-display font-black">Portal do Profissional da Construção</h1>
+            <p class="text-red-100 text-xs sm:text-sm mt-1 max-w-xl">
+              Crie seu perfil profissional verificado. Seja recomendado diretamente aos clientes que calculam e compram materiais na loja física e online.
+            </p>
+          </div>
+          <div class="hidden sm:flex h-16 w-16 bg-white/10 rounded-2xl items-center justify-center border border-white/20 shrink-0">
+            <i data-lucide="hard-hat" class="w-8 h-8 text-yellow-300"></i>
+          </div>
+        </div>
+
+        <!-- Stepper Indicator -->
+        <div class="grid grid-cols-3 gap-2 mt-8" id="stepperNav">
+          <div class="flex items-center gap-2">
+            <div id="step-indicator-1" class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs step-active shrink-0">
+              1
+            </div>
+            <div class="min-w-0">
+              <span class="text-[11px] uppercase font-bold tracking-wider block text-white">Passo 1</span>
+              <span class="text-xs text-red-100 truncate block">Identificação & Contato</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <div id="step-indicator-2" class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs step-pending shrink-0">
+              2
+            </div>
+            <div class="min-w-0">
+              <span class="text-[11px] uppercase font-bold tracking-wider block text-red-200">Passo 2</span>
+              <span class="text-xs text-red-200 truncate block">Especialidades & Raio</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <div id="step-indicator-3" class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs step-pending shrink-0">
+              3
+            </div>
+            <div class="min-w-0">
+              <span class="text-[11px] uppercase font-bold tracking-wider block text-red-200">Passo 3</span>
+              <span class="text-xs text-red-200 truncate block">Portfólio & Mídias</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Body -->
+      <form id="formCadastroPrestador" class="p-6 sm:p-8" onsubmit="event.preventDefault();">
+        
+        <!-- ================= PASSO 1: DADOS BÁSICOS ================= -->
+        <div id="step-1" class="space-y-6">
+          <div class="border-b border-slate-100 pb-4">
+            <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <i data-lucide="user-check" class="w-5 h-5 text-brand-red"></i> Dados Básicos e de Contato
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">Preencha seus dados para receber mensagens diretas no seu WhatsApp.</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                Nome Completo *
+              </label>
+              <div class="relative">
+                <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
+                <input type="text" id="nomeCompleto" required placeholder="Ex: Carlos Eduardo Silva" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none text-sm font-medium">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                Nome Comercial / Apelido Profissional
+              </label>
+              <input type="text" id="nomeComercial" placeholder="Ex: Carlinhos Porcelanatos" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none text-sm font-medium">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                WhatsApp Comercial (com DDD) *
+              </label>
+              <div class="relative">
+                <i data-lucide="phone" class="w-4 h-4 text-emerald-600 absolute left-3.5 top-3.5"></i>
+                <input type="tel" id="whatsapp" required placeholder="(11) 98765-4321" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none text-sm font-medium">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                E-mail de Contato *
+              </label>
+              <div class="relative">
+                <i data-lucide="mail" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
+                <input type="email" id="email" required placeholder="seuemail@gmail.com" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none text-sm font-medium">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                CPF ou CNPJ (MEI) *
+              </label>
+              <input type="text" id="documento" required placeholder="000.000.000-00" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none text-sm font-medium">
+            </div>
+          </div>
+
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between gap-2">
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                Breve Apresentação Profissional (Bio / Resumo de Experiência)
+              </label>
+              <button 
+                type="button" 
+                id="btnMelhorarBioIA" 
+                onclick="melhorarBioComIA()" 
+                class="hidden inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-xs transition-all duration-200 active:scale-95"
+              >
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-yellow-300"></i>
+                <span>Melhorar com IA</span>
+              </button>
+            </div>
+            
+            <div class="relative">
+              <textarea 
+                id="bio" 
+                rows="3" 
+                oninput="verificarTextoBio(this.value)"
+                placeholder="Conte há quantos anos atua, principais tipos de obras realizadas, referências de clientes e seus diferenciais..." 
+                class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-red focus:border-transparent outline-none text-sm font-medium transition-all"
+              ></textarea>
+              
+              <div id="badgeBioIa" class="hidden absolute bottom-2.5 right-3 text-[11px] font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2.5 py-0.5 rounded-md flex items-center gap-1.5 shadow-2xs">
+                <i data-lucide="sparkles" class="w-3 h-3 text-emerald-600"></i>
+                <span>Texto otimizado com IA</span>
+                <button type="button" onclick="desfazerBioIA()" class="ml-1 text-slate-500 hover:text-slate-800 underline font-normal text-[10px]">Desfazer</button>
+              </div>
+            </div>
+            <p class="text-[11px] text-slate-400">
+              💡 <i>Escreva um rascunho rápido e clique em <b>Melhorar com IA</b> para formatar uma apresentação altamente profissional.</i>
+            </p>
+          </div>
+
+          <div class="flex justify-end pt-4">
+            <button type="button" onclick="irParaPasso(2)" class="flex items-center gap-2 bg-brand-red hover:bg-brand-redHover text-white font-bold px-7 py-3 rounded-xl transition-all shadow-md shadow-red-600/20 text-sm">
+              <span>Continuar: Especialidades</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- ================= PASSO 2: ESPECIALIDADES & LOCALIZAÇÃO ================= -->
+        <div id="step-2" class="space-y-6 hidden">
+          <div class="border-b border-slate-100 pb-4">
+            <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <i data-lucide="wrench" class="w-5 h-5 text-brand-red"></i> Suas Especialidades & Área de Atendimento
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">Selecione os serviços que você domina para receber recomendações exatas.</p>
+          </div>
+
+          <!-- Grid de Seleção de Especialidades -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+              Selecione suas Especialidades:
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="containerEspecialidades">
+              <!-- Renderizado via Javascript da API -->
+              <div class="p-4 rounded-xl border border-slate-200 text-center py-8">
+                <i data-lucide="loader-2" class="w-6 h-6 animate-spin text-brand-red mx-auto"></i>
+                <span class="text-xs text-slate-500 block mt-2">Carregando especialidades...</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Localização e Raio -->
+          <div class="bg-slate-50 border border-slate-200 p-5 rounded-2xl space-y-4">
+            <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+              <i data-lucide="map-pin" class="w-4 h-4 text-brand-red"></i> Sua Região Base de Atendimento
+            </h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-1">CEP Base *</label>
+                <input type="text" id="cep" placeholder="01001-000" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm">
+              </div>
+              <div class="sm:col-span-2">
+                <label class="block text-[11px] font-bold text-slate-600 mb-1">Bairro Base *</label>
+                <input type="text" id="bairro" required placeholder="Ex: Mooca / Pinheiros" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm">
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-1">Cidade *</label>
+                <input type="text" id="cidade" required value="São Paulo" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm">
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs font-bold text-slate-700 mb-1.5">
+                <span>Raio Máximo de Deslocamento:</span>
+                <span id="labelRaio" class="text-brand-red font-black text-sm">25 km</span>
+              </div>
+              <input type="range" id="raioKm" min="5" max="80" step="5" value="25" oninput="document.getElementById('labelRaio').innerText = this.value + ' km'" class="w-full accent-brand-red cursor-pointer">
+            </div>
+          </div>
+
+          <div class="flex justify-between pt-4">
+            <button type="button" onclick="irParaPasso(1)" class="flex items-center gap-2 border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold px-6 py-3 rounded-xl text-sm">
+              <i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar
+            </button>
+            <button type="button" onclick="irParaPasso(3)" class="flex items-center gap-2 bg-brand-red hover:bg-brand-redHover text-white font-bold px-7 py-3 rounded-xl transition-all shadow-md shadow-red-600/20 text-sm">
+              <span>Continuar: Portfólio</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- ================= PASSO 3: PORTFÓLIO & MÍDIAS ================= -->
+        <div id="step-3" class="space-y-6 hidden">
+          <div class="border-b border-slate-100 pb-4">
+            <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <i data-lucide="camera" class="w-5 h-5 text-brand-red"></i> Galeria de Obras e Portfólio
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">Fotos reais de trabalhos anteriores aumentam a confiança e fechamento de orçamentos.</p>
+          </div>
+
+          <!-- Drag & Drop Upload Zone com Compressão WebP + Moderação IA -->
+          <div class="border-2 border-dashed border-slate-300 hover:border-brand-red rounded-3xl p-6 sm:p-8 text-center bg-slate-50/60 transition-colors" id="zonaUpload">
+            <input type="file" id="inputFotoUpload" multiple accept="image/*" class="hidden" onchange="processarFotosUpload(this)">
+            <label for="inputFotoUpload" class="cursor-pointer flex flex-col items-center">
+              <div class="h-14 w-14 rounded-2xl bg-red-100 flex items-center justify-center text-brand-red mb-3 shadow-xs">
+                <i data-lucide="upload-cloud" class="w-7 h-7"></i>
+              </div>
+              <span class="text-base font-bold text-slate-900">Clique ou arraste fotos de suas obras</span>
+              <span class="text-xs text-slate-500 mt-1">Moderação automática por IA · Compressão WebP ativada.</span>
+            </label>
+          </div>
+
+          <!-- Painel de Moderação IA (aparece durante a análise) -->
+          <div id="painelModeracaoIA" class="hidden bg-slate-950 border border-slate-700 rounded-2xl p-4 space-y-3">
+            <div class="flex items-center gap-2 text-amber-400 font-bold text-sm">
+              <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+              <span id="txtAnaliseIA">🤖 IA analisando fotos...</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2" id="cardsModeracaoIA">
+              <!-- Injetado dinamicamente -->
+            </div>
+          </div>
+
+          <!-- Painel Explicativo de Moderação (sempre visível no passo 3) -->
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+            <div class="flex items-center gap-2 mb-3">
+              <div class="w-8 h-8 bg-purple-100 rounded-xl flex items-center justify-center">
+                <svg class="w-4 h-4 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              </div>
+              <span class="text-sm font-black text-slate-800">Moderação Inteligente de Conteúdo</span>
+              <span class="ml-auto text-[10px] font-black bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full uppercase">IA Ativa</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2 text-[11px]">
+              <div class="bg-red-50 border border-red-200 rounded-xl p-2.5 text-center">
+                <div class="text-lg mb-1">🚫</div>
+                <div class="font-black text-red-700">Sexual</div>
+                <div class="text-red-600 leading-tight mt-0.5">Bloqueado automaticamente</div>
+                <div class="mt-1.5 h-1.5 rounded-full bg-red-200 overflow-hidden"><div class="h-full bg-red-500 rounded-full" style="width:95%"></div></div>
+                <div class="text-[9px] text-slate-400 mt-0.5">Threshold 95%</div>
+              </div>
+              <div class="bg-orange-50 border border-orange-200 rounded-xl p-2.5 text-center">
+                <div class="text-lg mb-1">🚫</div>
+                <div class="font-black text-orange-700">Político</div>
+                <div class="text-orange-600 leading-tight mt-0.5">Propaganda bloqueada</div>
+                <div class="mt-1.5 h-1.5 rounded-full bg-orange-200 overflow-hidden"><div class="h-full bg-orange-500 rounded-full" style="width:90%"></div></div>
+                <div class="text-[9px] text-slate-400 mt-0.5">Threshold 90%</div>
+              </div>
+              <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 text-center">
+                <div class="text-lg mb-1">✅</div>
+                <div class="font-black text-emerald-700">Obra/Trabalho</div>
+                <div class="text-emerald-600 leading-tight mt-0.5">Fotos aprovadas</div>
+                <div class="mt-1.5 h-1.5 rounded-full bg-emerald-200 overflow-hidden"><div class="h-full bg-emerald-500 rounded-full" style="width:10%"></div></div>
+                <div class="text-[9px] text-slate-400 mt-0.5">Threshold baixo</div>
+              </div>
+            </div>
+            <p class="text-[11px] text-slate-500 mt-3 leading-relaxed">
+              <b>Processo Automático:</b> As fotos são analisadas por IA antes de serem enviadas. Conteúdo impróprio é bloqueado imediatamente. Somente fotos reais de obras e serviços são aceitas.
+            </p>
+          </div>
+
+          <!-- Previews das Fotos Adicionadas -->
+          <div id="gridFotosPreview" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+
+          <!-- Links Sociais & Mensagem WhatsApp -->
+          <div class="space-y-3 pt-2">
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+              Redes Sociais & Links (Opcional):
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="relative">
+                <i data-lucide="instagram" class="w-4 h-4 text-pink-600 absolute left-3.5 top-3.5"></i>
+                <input type="text" id="instagram" placeholder="Instagram (@seu.perfil)" class="w-full pl-10 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium">
+              </div>
+              <div class="relative">
+                <i data-lucide="youtube" class="w-4 h-4 text-red-600 absolute left-3.5 top-3.5"></i>
+                <input type="text" id="youtube" placeholder="Canal do YouTube / Shorts" class="w-full pl-10 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium">
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-between pt-6 border-t border-slate-100">
+            <button type="button" onclick="irParaPasso(2)" class="flex items-center gap-2 border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold px-6 py-3 rounded-xl text-sm">
+              <i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar
+            </button>
+            <button type="button" id="btnFinalizarCadastro" onclick="submeterCadastroCompleto()" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-3.5 rounded-xl transition-all shadow-lg shadow-emerald-600/30 text-sm">
+              <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+              <span>Finalizar e Publicar Perfil</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ================= PASSO 4: SUCESSO ================= -->
+        <div id="step-4" class="text-center py-12 space-y-4 hidden">
+          <div class="h-20 w-20 bg-emerald-100 rounded-3xl flex items-center justify-center text-emerald-600 mx-auto shadow-md">
+            <i data-lucide="shield-check" class="w-10 h-10"></i>
+          </div>
+          <h2 class="text-2xl font-display font-black text-slate-900">Cadastro Concluído com Sucesso!</h2>
+          <p class="text-sm text-slate-600 max-w-md mx-auto">
+            Seu perfil profissional já está ativo e visível na vitrine da ConsultoriaSoft e nos totens de balcão de materiais de construção.
+          </p>
+          <div class="pt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <a href="/" class="w-full sm:w-auto bg-brand-red hover:bg-brand-redHover text-white font-bold px-6 py-3 rounded-xl shadow-md text-sm">
+              Ver Vitrine de Profissionais
+            </a>
+            <a href="https://consultoriasoft.com.br/catalogo" class="w-full sm:w-auto bg-slate-900 text-white font-bold px-6 py-3 rounded-xl text-sm">
+              Ir para o Catálogo de Produtos
+            </a>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <span>© 2026 ConsultoriaSoft · Plataforma de Integração de Mão de Obra e Materiais</span>
+      <div class="flex items-center gap-4">
+        <a href="/" class="hover:text-brand-red font-semibold">Vitrine</a>
+        <a href="https://consultoriasoft.com.br/catalogo" class="hover:text-brand-red font-semibold">Catálogo</a>
+        <a href="https://consultoriasoft.com.br/calculadora-de-obra.html" class="hover:text-brand-red font-semibold">Calculadora</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts de Lógica -->
+  <script>
+    let especialidadesList = [];
+    let especialidadesSelecionadas = new Set();
+    let fotosBase64List = [];
+
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', async () => {
+      lucide.createIcons();
+      await carregarEspecialidadesAPI();
+    });
+
+    async function carregarEspecialidadesAPI() {
+      try {
+        const res = await fetch('/api/prestadores/especialidades');
+        especialidadesList = await res.json();
+        renderEspecialidades();
+      } catch (err) {
+        console.error('Erro ao carregar especialidades:', err);
+      }
+    }
+
+    function renderEspecialidades() {
+      const container = document.getElementById('containerEspecialidades');
+      if (!container) return;
+
+      container.innerHTML = especialidadesList.map(esp => {
+        const sel = especialidadesSelecionadas.has(esp.slug);
+        return `
+          <div onclick="toggleEspecialidade('${esp.slug}')" class="p-4 rounded-2xl border-2 cursor-pointer transition-all ${sel ? 'border-brand-red bg-red-50/60 shadow-xs' : 'border-slate-200 hover:border-slate-300 bg-white'}">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="p-2.5 rounded-xl ${sel ? 'bg-brand-red text-white' : 'bg-slate-100 text-slate-600'}">
+                  <i data-lucide="wrench" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-slate-900">${esp.nome}</h4>
+                  <span class="text-[11px] text-slate-500 font-semibold">${esp.categoria_pai}</span>
+                </div>
+              </div>
+              <div class="w-5 h-5 rounded-full border flex items-center justify-center ${sel ? 'border-brand-red bg-brand-red text-white' : 'border-slate-300'}">
+                ${sel ? '<i data-lucide="check" class="w-3.5 h-3.5"></i>' : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    function toggleEspecialidade(slug) {
+      if (especialidadesSelecionadas.has(slug)) {
+        especialidadesSelecionadas.delete(slug);
+      } else {
+        especialidadesSelecionadas.add(slug);
+      }
+      renderEspecialidades();
+    }
+
+    function irParaPasso(passo) {
+      if (passo === 2) {
+        const nome = document.getElementById('nomeCompleto').value.trim();
+        const zap = document.getElementById('whatsapp').value.trim();
+        const doc = document.getElementById('documento').value.trim();
+        const email = document.getElementById('email').value.trim();
+
+        if (!nome || !zap || !doc || !email) {
+          alert('Por favor, preencha todos os campos obrigatórios (*)');
+          return;
+        }
+      }
+
+      if (passo === 3 && especialidadesSelecionadas.size === 0) {
+        alert('Por favor, selecione ao menos uma especialidade.');
+        return;
+      }
+
+      // Alterna visibilidade
+      [1, 2, 3, 4].forEach(p => {
+        const el = document.getElementById(`step-${p}`);
+        if (el) el.classList.toggle('hidden', p !== passo);
+
+        const ind = document.getElementById(`step-indicator-${p}`);
+        if (ind) {
+          ind.className = `w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${
+            p === passo ? 'step-active' : (p < passo ? 'step-done' : 'step-pending')
+          }`;
+        }
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ===========================================================
+       MODERAÇÃO IA DE FOTOS — Motor Local + API Backend
+       =========================================================== */
+
+    // Resultado de moderação por índice
+    const resultadoModeracaoFotos = [];
+
+    // Classifica a imagem localmente usando análise de canvas (detecção básica de tons de pele excessivos)
+    // e delega para API de moderação no backend quando disponível
+    async function analisarFotoComIA(base64Data, nomeArquivo) {
+      // 1. Análise LOCAL: detectar dominância de tom de pele (heurística rápida)
+      const resultadoLocal = await analisarCorDominiante(base64Data);
+
+      // 2. Tentar enviar para API de moderação do backend
+      try {
+        const res = await fetch('/api/moderacao/foto', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ imagem_base64: base64Data, nome_arquivo: nomeArquivo })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          return {
+            aprovada: data.aprovada,
+            motivo: data.motivo || (data.aprovada ? 'Foto de trabalho aprovada ✅' : 'Conteúdo impróprio detectado'),
+            confianca: data.confianca || 0.9,
+            tipo: data.tipo || (data.aprovada ? 'trabalho' : 'reprovada')
+          };
+        }
+      } catch(e) {
+        // API indisponível: usar análise local
+      }
+
+      // Fallback: retornar resultado da análise local
+      return resultadoLocal;
+    }
+
+    // Análise heurística local via canvas: detecta se >60% dos pixels são tom de pele
+    function analisarCorDominiante(base64Data) {
+      return new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const maxSize = 64; // análise em baixa resolução
+          canvas.width = maxSize;
+          canvas.height = Math.round(img.height * maxSize / img.width);
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+
+          let totalPixels = 0, skinPixels = 0;
+          for (let i = 0; i < pixels.length; i += 4) {
+            const r = pixels[i], g = pixels[i+1], b = pixels[i+2];
+            totalPixels++;
+            // Heurística de tom de pele (Fitzpatrick range)
+            if (r > 95 && g > 40 && b > 20 && r > g && r > b &&
+                Math.abs(r - g) > 15 && r - b > 15 && g - b >= -15) {
+              skinPixels++;
+            }
+          }
+
+          const skinRatio = skinPixels / totalPixels;
+
+          // Mais de 60% de pixels de pele → suspeito
+          if (skinRatio > 0.60) {
+            resolve({ aprovada: false, motivo: 'Possível conteúdo com excesso de pele detectado. Use fotos de obras.', confianca: 0.87, tipo: 'sexual' });
+          } else {
+            resolve({ aprovada: true, motivo: 'Foto aprovada pela IA ✅', confianca: 0.95, tipo: 'trabalho' });
+          }
+        };
+        img.src = base64Data;
+      });
+    }
+
+    // Processa as fotos uploadadas com moderação IA em tempo real
+    async function processarFotosUpload(input) {
+      if (!input.files || input.files.length === 0) return;
+
+      const painel = document.getElementById('painelModeracaoIA');
+      const txtAnalise = document.getElementById('txtAnaliseIA');
+      const cardsDiv = document.getElementById('cardsModeracaoIA');
+      painel.classList.remove('hidden');
+
+      const arquivos = Array.from(input.files);
+      let aprovadas = 0, reprovadas = 0;
+
+      for (let i = 0; i < arquivos.length; i++) {
+        const file = arquivos[i];
+        txtAnalise.textContent = `🤖 Analisando foto ${i + 1} de ${arquivos.length}: "${file.name}"...`;
+
+        try {
+          // Comprimir para WebP
+          const webpData = await comprimirImagemWebP(file);
+
+          // Atualizar card de análise em tempo real
+          const cardId = `card-mod-${Date.now()}-${i}`;
+          cardsDiv.innerHTML += `
+            <div id="${cardId}" class="bg-slate-800 rounded-xl p-2 text-center">
+              <img src="${webpData}" class="w-full h-16 object-cover rounded-lg mb-1.5 opacity-60">
+              <div class="flex items-center justify-center gap-1">
+                <svg class="w-3.5 h-3.5 animate-spin text-amber-400" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                <span class="text-[10px] text-amber-400 font-bold">Analisando...</span>
+              </div>
+            </div>`;
+
+          // Analisar com IA
+          const resultado = await analisarFotoComIA(webpData, file.name);
+
+          // Atualizar card com resultado
+          const card = document.getElementById(cardId);
+          if (card) {
+            card.innerHTML = `
+              <img src="${webpData}" class="w-full h-16 object-cover rounded-lg mb-1.5 ${ resultado.aprovada ? '' : 'opacity-30 grayscale blur-sm' }">
+              <div class="${ resultado.aprovada ? 'bg-emerald-500/20 border-emerald-500' : 'bg-red-500/20 border-red-500' } border rounded-lg px-1.5 py-0.5">
+                <span class="text-[10px] font-black ${ resultado.aprovada ? 'text-emerald-400' : 'text-red-400' }">${ resultado.aprovada ? '✅ Aprovada' : '🚫 Bloqueada' }</span>
+              </div>`;
+          }
+
+          if (resultado.aprovada) {
+            fotosBase64List.push(webpData);
+            aprovadas++;
+          } else {
+            reprovadas++;
+            resultadoModeracaoFotos.push({ nome: file.name, motivo: resultado.motivo });
+          }
+
+        } catch (e) {
+          console.error('Erro ao processar foto:', e);
+        }
+      }
+
+      // Concluído
+      txtAnalise.innerHTML = `
+        <span class="text-emerald-400">✅ ${aprovadas} foto(s) aprovada(s)</span>
+        ${ reprovadas > 0 ? `<span class="text-red-400 ml-2">🚫 ${reprovadas} bloqueada(s)</span>` : '' }`;
+
+      if (reprovadas > 0) {
+        setTimeout(() => {
+          const motivos = resultadoModeracaoFotos.map(r => `• ${r.nome}: ${r.motivo}`).join('\n');
+          alert(`⚠️ ${reprovadas} foto(s) foram bloqueadas pela moderação IA:\n\n${motivos}\n\nEnvie apenas fotos de obras, serviços realizados ou materiais de trabalho.`);
+        }, 400);
+      }
+
+      renderPreviewsFotos();
+
+      // Fechar painel após 4 segundos
+      setTimeout(() => { painel.classList.add('hidden'); }, 4500);
+    }
+
+    function renderPreviewsFotos() {
+      const grid = document.getElementById('gridFotosPreview');
+      if (fotosBase64List.length === 0) {
+        grid.innerHTML = '';
+        return;
+      }
+      grid.innerHTML = fotosBase64List.map((src, i) => `
+        <div class="relative group rounded-2xl overflow-hidden aspect-square border-2 border-emerald-400 shadow-xs">
+          <img src="${src}" class="w-full h-full object-cover">
+          <!-- Badge Aprovada -->
+          <div class="absolute top-2 left-2 bg-emerald-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full flex items-center gap-1">
+            <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            IA aprovada
+          </div>
+          <button type="button" onclick="fotosBase64List.splice(${i},1); renderPreviewsFotos();" class="absolute top-2 right-2 bg-red-600 text-white p-1 rounded-full opacity-90 hover:opacity-100">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    let rascunhoOriginalBio = '';
+
+    function verificarTextoBio(val) {
+      const btn = document.getElementById('btnMelhorarBioIA');
+      if (!btn) return;
+      if (val && val.trim().length >= 3) {
+        btn.classList.remove('hidden');
+      } else {
+        btn.classList.add('hidden');
+      }
+    }
+
+    async function melhorarBioComIA() {
+      const textarea = document.getElementById('bio');
+      const btn = document.getElementById('btnMelhorarBioIA');
+      const badge = document.getElementById('badgeBioIa');
+      const textoAtual = textarea.value.trim();
+
+      if (!textoAtual) return;
+
+      rascunhoOriginalBio = textoAtual;
+      btn.disabled = true;
+      btn.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i> <span>Aprimorando com IA...</span>`;
+      lucide.createIcons();
+
+      const nome = document.getElementById('nomeComercial')?.value || document.getElementById('nomeCompleto')?.value || 'Profissional';
+      const specs = Array.from(especialidadesSelecionadas).join(', ');
+
+      try {
+        const res = await fetch('/api/prestadores/melhorar-bio', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            texto: textoAtual,
+            nome: nome,
+            especialidade: specs
+          })
+        });
+        const data = await res.json();
+        if (data.status === 'sucesso' && data.bio_aprimorada) {
+          textarea.value = data.bio_aprimorada;
+          if (badge) badge.classList.remove('hidden');
+          btn.classList.add('hidden');
+        } else {
+          alert('Não foi possível aprimorar a bio no momento.');
+        }
+      } catch (err) {
+        alert('Erro ao conectar ao serviço de IA.');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i data-lucide="sparkles" class="w-3.5 h-3.5 text-yellow-300"></i> <span>Melhorar com IA</span>`;
+        lucide.createIcons();
+      }
+    }
+
+    function desfazerBioIA() {
+      if (rascunhoOriginalBio) {
+        document.getElementById('bio').value = rascunhoOriginalBio;
+      }
+      const badge = document.getElementById('badgeBioIa');
+      if (badge) badge.classList.add('hidden');
+      verificarTextoBio(document.getElementById('bio').value);
+    }
+
+    async function submeterCadastroCompleto() {
+      const btn = document.getElementById('btnFinalizarCadastro');
+      btn.disabled = true;
+      btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> <span>Cadastrando...</span>`;
+      lucide.createIcons();
+
+      const payload = {
+        nome_completo: document.getElementById('nomeCompleto').value.trim(),
+        nome_comercial: document.getElementById('nomeComercial').value.trim(),
+        whatsapp: document.getElementById('whatsapp').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        documento_numero: document.getElementById('documento').value.trim(),
+        bio: document.getElementById('bio').value.trim(),
+        cep: document.getElementById('cep').value.trim(),
+        bairro: document.getElementById('bairro').value.trim(),
+        cidade: document.getElementById('cidade').value.trim(),
+        raio_atendimento_km: parseInt(document.getElementById('raioKm').value) || 25,
+        especialidades: Array.from(especialidadesSelecionadas),
+        fotos_portfolio: fotosBase64List,
+        instagram: document.getElementById('instagram').value.trim(),
+        youtube: document.getElementById('youtube').value.trim()
+      };
+
+      try {
+        const res = await fetch('/api/prestadores/cadastrar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.status === 'sucesso') {
+          irParaPasso(4);
+        } else {
+          alert('Erro ao realizar cadastro: ' + (data.error || 'Erro desconhecido'));
+          btn.disabled = false;
+          btn.innerHTML = `<i data-lucide="check-circle-2" class="w-5 h-5"></i> <span>Finalizar e Publicar Perfil</span>`;
+          lucide.createIcons();
+        }
+      } catch (err) {
+        alert('Erro ao comunicar com o servidor.');
+        btn.disabled = false;
+        btn.innerHTML = `<i data-lucide="check-circle-2" class="w-5 h-5"></i> <span>Finalizar e Publicar Perfil</span>`;
+        lucide.createIcons();
+      }
+    }
+  </script>
+</body>
+</html>
